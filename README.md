@@ -41,7 +41,7 @@ The meaning of each variable can be found below:
 > Download the code 
 
 ```bash
-$ git clone https://github.com/app-generator/flask-black-dashboard.git
+$ git clone https://github.com/TMichaelan/SBD-Cocktail-Project.git
 $ cd flask-black-dashboard
 ```
 
