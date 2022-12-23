@@ -6,7 +6,7 @@
 > 👉 **Step 1** - Download the code from the GH repository (using `GIT`) 
 
 ```bash
-$ git clone https://github.com/app-generator/flask-black-dashboard.git
+$ git clone https://github.com/TMichaelan/SBD-Cocktail-Project.git
 $ cd flask-black-dashboard
 ```
 
