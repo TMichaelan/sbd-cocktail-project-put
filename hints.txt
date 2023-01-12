@@ -1,0 +1,8 @@
+DROP SCHEMA public CASCADE;
+CREATE SCHEMA public;
+
+GRANT ALL ON SCHEMA public TO public;
+
+insert into "przepis" values ('Margarita', 6, null)
+
+insert into "Koktajl" values ('Margarita', 'obraz',8,8)
