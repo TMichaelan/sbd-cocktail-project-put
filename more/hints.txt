@@ -6,3 +6,12 @@ GRANT ALL ON SCHEMA public TO public;
 insert into "przepis" values ('Margarita', 6, null)
 
 insert into "Koktajl" values ('Margarita', 'obraz',8,8)
+
+insert into "barman" values ('Misha','Semenov', 78212313, 'Kornicka 5');
+insert into "barman" values ('Jora','Pop', 78212313, 'Kornicka 5');
+insert into "barman" values ('Andrei','Starij', 78212313, 'Kornicka 5');
+insert into "barman" values ('Ivan','Haindov', 78212313, 'Kornicka 5');
+
+INSERT INTO "Users" (username, email, password) VALUES ('jora', 'gdggd@ad.ru', '123');
+INSERT INTO "Users" (username, email, password) VALUES ('jora1', 'gdggd1@ad.ru', '123');
+INSERT INTO "Users" (username, email, password) VALUES ('jora2', 'gdggd2@ad.ru', '123');
