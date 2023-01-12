@@ -133,11 +133,11 @@ def skladnik():
 number = 11009
 # number = 11009
 
-for i in range(40):
+for i in range(1):
     number+=1
     parse_coctail(number)
     try:
         przepis()
         koktajl()
-    except Exception:
-        print('error')
+    except Exception as err:
+        print(f'error occurred: {err}')
