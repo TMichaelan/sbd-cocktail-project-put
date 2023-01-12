@@ -8,7 +8,9 @@ from flask import render_template, request, redirect
 from flask_login import login_required
 from jinja2 import TemplateNotFound
 
+
 from apps.costyl import costyl,get_barmans
+import psycopg2
 
 @blueprint.route('/index')
 @login_required
@@ -18,6 +20,7 @@ def index():
 
 
 @blueprint.route('/coctails_cards.html',methods=('GET', 'POST'))
+
 # @login_required
 def coctails_cards():
 
@@ -79,6 +82,26 @@ def barman():
         # Serve the file (if exists) from app/templates/home/FILE.html
         segment = get_segment(request)
         return render_template("home/barman.html" , segment=segment, barmans=barmans)
+    except TemplateNotFound:
+        return render_template('home/page-404.html'), 404
+        
+        if username and email and password:
+            conn = psycopg2.connect('postgresql://joramba:admin@localhost:5432/bazy_danych')
+            cur = conn.cursor()
+            querry_add_user = 'INSERT INTO \"Users\" (username, email, password, oauth_github) VALUES (\'{}\', \'{}\', \'{}\',\'{}\');'.format(username, email, password, github)
+            cur.execute(querry_add_user)
+        
+            conn.commit()
+            cur.close()
+            conn.close()
+            return redirect('coctails_cards.html')
+
+
+    try:
+        users = costyl()
+        # Serve the file (if exists) from app/templates/home/FILE.html
+        segment = get_segment(request)
+        return render_template("home/coctails_cards.html" , segment=segment, users=users)
     except TemplateNotFound:
         return render_template('home/page-404.html'), 404
 
