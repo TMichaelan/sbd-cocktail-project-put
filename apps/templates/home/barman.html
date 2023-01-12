@@ -19,33 +19,33 @@
               <div class="row">
                 <div class="col-md-6 pr-md-1">
                   <div class="form-group">
-                    <label for="username">Username</label>
-                    <input name="username" type="text" class="form-control" placeholder="Username">
+                    <label for="name">Name</label>
+                    <input name="name" type="text" class="form-control" placeholder="Name">
                   </div>
                 </div>
                 <div class="col-md-6 pl-md-1">
                   <div class="form-group">
-                    <label for="email">Email</label>
-                    <input name="email" type="text" class="form-control" placeholder="Email">
+                    <label for="surname">Surname</label>
+                    <input name="surname" type="text" class="form-control" placeholder="Surname">
                   </div>
                 </div>
               </div>
               <div class="row">
                 <div class="col-md-6 pr-md-1">
                   <div class="form-group">
-                    <label for="password">Password</label>
-                    <input name="password" type="text" class="form-control" placeholder="Password">
+                    <label for="phone">Phone Number</label>
+                    <input name="phone" type="text" class="form-control" placeholder="Phone Number">
                   </div>
                 </div>
                 <div class="col-md-6 pl-md-1">
                   <div class="form-group">
-                    <label for="github">Oauth_github</label>
-                    <input name="github" type="text" class="form-control" placeholder="Oauth_github">
+                    <label for="adres">Adres</label>
+                    <input name="adres" type="text" class="form-control" placeholder="Adres">
                   </div>
                 </div>
               </div>
               <div class="card-footer">
-                <button type="submit" class="btn btn-fill btn-primary">Add User</button>
+                <button type="submit" class="btn btn-fill btn-primary">Add Barman</button>
               </div>
             </form>
           </div>
@@ -53,15 +53,15 @@
         <table class="table">
           <tr>
             <th>Name</th>
-            <th>Email</th>
-            <th>Password</th>
-            <th>Oauth_github</th>
+            <th>Surname</th>
+            <th>Phone Number</th>
+            <th>Adres</th>
             <th></th>
             <th></th>
           </tr>
     
           <!-- here is a for-loop to give us all the socks -->
-          {% for user in users %}
+          {% for user in barmans %}
           <tr>
             <td>{{ user[0] }}</td>
             <td>{{ user[1] }}</td>
