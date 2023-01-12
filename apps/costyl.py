@@ -17,7 +17,7 @@ def get_barmans():
 def costyl():
     conn = psycopg2.connect('postgresql://joramba:admin@localhost:5432/bazy_danych')
     cur = conn.cursor()
-    cur.execute("SELECT * FROM \"barman\"")
+    cur.execute("SELECT * FROM \"Users\"")
     users = cur.fetchall()
     
     # print(users[0][0])
