@@ -3,11 +3,21 @@ from flask import render_template
 
 
 
+def get_barmans():
+    conn = psycopg2.connect('postgresql://joramba:admin@localhost:5432/bazy_danych')
+    cur = conn.cursor()
+    cur.execute("SELECT * FROM \"barman\"")
+    barmans = cur.fetchall()
+    cur.close()
+    conn.close()
+    return barmans
+
+
 
 def costyl():
     conn = psycopg2.connect('postgresql://joramba:admin@localhost:5432/bazy_danych')
     cur = conn.cursor()
-    cur.execute("SELECT * FROM \"Users\"")
+    cur.execute("SELECT * FROM \"barman\"")
     users = cur.fetchall()
     
     # print(users[0][0])
