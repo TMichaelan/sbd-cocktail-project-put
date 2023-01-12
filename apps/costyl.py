@@ -16,7 +16,6 @@ def costyl():
     #     name = 'Idsa' + str(i+2)
     #     querry = 'INSERT INTO \"Users\" (username, email, password) VALUES (\'{}\', \'gdggd@ad.ru\', \'gdgdg\');'.format(name)
     #     cur.execute(querry)
-
     cur.close()
     conn.close()
     return users
