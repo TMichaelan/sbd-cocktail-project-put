@@ -8,6 +8,8 @@ from flask import render_template, request
 from flask_login import login_required
 from jinja2 import TemplateNotFound
 
+from apps.costyl import costyl 
+
 @blueprint.route('/index')
 @login_required
 def index():
@@ -32,11 +34,6 @@ def index():
 
 
 @blueprint.route('/<template>', methods=('GET', 'POST'))
-
-    return render_template('home/index.html', segment='index')
-
-@blueprint.route('/<template>')
-
 @login_required
 def route_template(template):
 
