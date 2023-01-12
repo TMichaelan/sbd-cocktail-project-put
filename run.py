@@ -39,7 +39,5 @@ if DEBUG:
     app.logger.info('ASSETS_ROOT = ' + app_config.ASSETS_ROOT )
 
 
-from apps.costyl import costyl
 if __name__ == "__main__":
-    costyl()
     app.run()

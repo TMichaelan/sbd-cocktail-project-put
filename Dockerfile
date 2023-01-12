@@ -21,4 +21,4 @@ COPY . .
 # RUN flask db upgrade
 
 # gunicorn
-CMD ["gunicorn", "--config", "gunicorn-cfg.py", "run:app"]
+# CMD ["gunicorn", "--config", "gunicorn-cfg.py", "run:app"]

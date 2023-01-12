@@ -8,14 +8,10 @@ from flask import render_template, request
 from flask_login import login_required
 from jinja2 import TemplateNotFound
 
-from apps.costyl import costyl 
-
 @blueprint.route('/index')
 @login_required
 def index():
-    costyl()
     return render_template('home/index.html', segment='index')
-
 
 @blueprint.route('/<template>')
 @login_required
