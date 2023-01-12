@@ -2,6 +2,8 @@ import psycopg2
 from flask import render_template
 
 
+
+
 def costyl():
     conn = psycopg2.connect('postgresql://joramba:admin@localhost:5432/bazy_danych')
     cur = conn.cursor()
@@ -20,3 +22,11 @@ def costyl():
     return users
     # conn.commit()
     return 0
+
+def postgrees_connect():
+    conn = psycopg2.connect('postgresql://joramba:admin@localhost:5432/bazy_danych')
+    return conn
+
+# def postgrees_compare_users():
+    
+    

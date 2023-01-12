@@ -19,22 +19,15 @@ from apps.authentication.models import Users
 
 from apps.authentication.util import verify_pass
 
+#postgress
+from apps.costyl import postgrees_connect
+import psycopg2
+
 
 @blueprint.route('/')
 def route_default():
     return redirect(url_for('authentication_blueprint.login'))
 
-# Login & Registration
-
-@blueprint.route("/github")
-def login_github():
-    """ Github login """
-    if not github.authorized:
-        return redirect(url_for("github.login"))
-
-    res = github.get("/user")
-    return redirect(url_for('home_blueprint.index'))
-    
 @blueprint.route('/login', methods=['GET', 'POST'])
 def login():
     login_form = LoginForm(request.form)
@@ -46,10 +39,18 @@ def login():
 
         # Locate user
         user = Users.query.filter_by(username=username).first()
+        conn = postgrees_connect()
+        cur = conn.cursor()
+        querry_compare_users_username = "select * FROM \"Users\" WHERE username = '{}' LIMIT 1;".format(username)
+        cur.execute(querry_compare_users_username)
+        compare_users = cur.fetchone()
+        querry_compare_users_passwords = "select * FROM \"Users\" WHERE username = '{}' AND password = '{}' LIMIT 1;".format(username,password)
+        cur.execute(querry_compare_users_passwords)
+        compare_passwords = cur.fetchone()
 
         # Check the password
-        if user and verify_pass(password, user.password):
-
+        # if user and verify_pass(password, user.password):
+        if user and compare_users and compare_passwords:
             login_user(user)
             return redirect(url_for('authentication_blueprint.route_default'))
 
@@ -67,14 +68,24 @@ def login():
 @blueprint.route('/register', methods=['GET', 'POST'])
 def register():
     create_account_form = CreateAccountForm(request.form)
+    conn = postgrees_connect()
+    cur = conn.cursor()
+    
     if 'register' in request.form:
-
+        
         username = request.form['username']
         email = request.form['email']
+        password = request.form['password']
 
-        # Check usename exists
+        querry_compare_users_username = "select * FROM \"Users\" WHERE username = '{}' LIMIT 1;".format(username)
+        querry_compare_users_email = "select * FROM \"Users\" WHERE email = '{}' LIMIT 1;".format(email)
         user = Users.query.filter_by(username=username).first()
-        if user:
+        cur.execute(querry_compare_users_username)
+        compare_users = cur.fetchone()
+        cur.execute(querry_compare_users_email)
+        compare_email = cur.fetchone()
+        
+        if user or compare_users:
             return render_template('accounts/register.html',
                                    msg='Username already registered',
                                    success=False,
@@ -82,7 +93,7 @@ def register():
 
         # Check email exists
         user = Users.query.filter_by(email=email).first()
-        if user:
+        if user or compare_email:
             return render_template('accounts/register.html',
                                    msg='Email already registered',
                                    success=False,
@@ -90,8 +101,16 @@ def register():
 
         # else we can create the user
         user = Users(**request.form)
+
+        querry_add_user = 'INSERT INTO \"Users\" (username, email, password) VALUES (\'{}\', \'{}\', \'{}\');'.format(username, email, password)
+        cur.execute(querry_add_user)
+        conn.commit()
+
         db.session.add(user)
         db.session.commit()
+
+        cur.close()
+        conn.close()
 
         # Delete user from session
         logout_user()
