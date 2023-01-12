@@ -20,9 +20,9 @@ CREATE TABLE IF NOT EXISTS public."Kategoria_koktajli_Koktajl"
 CREATE TABLE IF NOT EXISTS public."Koktajl"
 (
     nazwa character(255) COLLATE pg_catalog."default" NOT NULL,
-    obraz bytea,
-    "srednia_ocena_użytkownika" bigint NOT NULL,
-    srednia_ocena_sommeliera bigint NOT NULL,
+    obraz character(255),
+    "srednia_ocena_użytkownika" double precision NOT NULL,
+    srednia_ocena_sommeliera double precision NOT NULL,
     CONSTRAINT "Koktajl_pkey" PRIMARY KEY (nazwa)
 );
 
@@ -95,7 +95,7 @@ CREATE TABLE IF NOT EXISTS public.przepis
 (
     nazwa_przepisa character(255) COLLATE pg_catalog."default" NOT NULL,
     ilosc_produktow numeric(3, 0) NOT NULL,
-    notatka character(255) COLLATE pg_catalog."default",
+    notatka character(1000) COLLATE pg_catalog."default",
     CONSTRAINT przepis_pkey PRIMARY KEY (nazwa_przepisa)
 );
 
