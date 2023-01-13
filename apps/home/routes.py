@@ -11,6 +11,7 @@ from jinja2 import TemplateNotFound
 
 from apps.costyl import costyl,get_coctail_sommelier,get_barmans, get_sommeliers, get_coctails
 import psycopg2
+import random
 
 @blueprint.route('/index')
 @login_required
@@ -20,9 +21,17 @@ def index():
     conn = psycopg2.connect('postgresql://joramba:admin@localhost:5432/bazy_danych')
     cur = conn.cursor()
 
-    querry_cotails = "select * FROM \"Koktajl\" LIMIT 15"
+    querry_cotails = "select * FROM \"Koktajl\" "
     cur.execute(querry_cotails)
-    coctails = cur.fetchall()
+    all_coctails = cur.fetchall()
+
+    random_indexes = random.sample(range(len(all_coctails)), 9)
+    
+    coctails = []
+    for index in random_indexes:
+        coctails.append(all_coctails[index])
+     
+
     cur.close()
     conn.close()
  
