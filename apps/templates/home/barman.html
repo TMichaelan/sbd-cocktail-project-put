@@ -98,14 +98,14 @@
       data: {name: name},
       
       success: function(result) {
+        window.location.reload(true);
         console.log(data)
-       
       },
       error: function(error) {
         // Handle error
       }
-    });
-    location.reload();
+    }); 
+    return false;
   }
 
   function modifyUser(id) {
