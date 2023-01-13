@@ -97,6 +97,27 @@ def delete_user():
 
     except (Exception, psycopg2.Error) as error :
         return jsonify({"error": str(error)}), 500
+        
+
+@blueprint.route('/delete-user', methods=['DELETE'])
+def delete_users():
+    # user_id = request.json
+    name = request.form.get('name')
+
+    try:
+        conn = psycopg2.connect('postgresql://joramba:admin@localhost:5432/bazy_danych')
+        cursor = conn.cursor()
+        query = f"DELETE FROM \"Users\" WHERE username=\'{name}\'"
+        cursor.execute(query)
+        conn.commit()
+        count = cursor.rowcount
+        cursor.close()
+        conn.close()
+        return jsonify({"message": f"{count} user deleted"}), 200
+        # return redirect('/', code=302)
+
+    except (Exception, psycopg2.Error) as error :
+        return jsonify({"error": str(error)}), 500
 
 
 

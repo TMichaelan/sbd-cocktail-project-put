@@ -6,7 +6,18 @@
 {% block stylesheets %}{% endblock stylesheets %}
 
 {% block content %}
-
+  <style>
+    .card {
+      width: 150%;
+    }
+    .card .card-footer{
+      
+      padding: 0;
+    }
+   .table{
+    width: 150%;
+   }
+  </style>
   <div class="content">
     <div class="row">
       <div class="col-md-8">
@@ -70,8 +81,8 @@
             <td>{{ user[1] }}</td>
             <td>{{ user[2] }}</td>
             <td>{{ user[3] }}</td>
-            <td><button>Delete</button></td>
-            <td><button>Modify</button></td>
+            <td><button class="btn btn-primary" onclick="deleteUser('{{user[0]}}')">Delete</button></td>
+            <td><button class="btn btn-primary" onclick="demo.showNotification('top','center')">Modify</button></td>
             </tr>
           {% endfor %}
         </table>
@@ -115,6 +126,38 @@
       </div>
     </div>
   </div>
+  <script>
+    function deleteUser(name) {
+      $.ajax({
+        url: '/delete-user',
+        type: 'DELETE',
+        data: {name: name},
+        
+        success: function(result) {
+          window.location.reload(true);
+          console.log(data)
+        },
+        error: function(error) {
+          // Handle error
+        }
+      }); 
+      return false;
+    }
+  
+    function modifyUser(id) {
+      $.ajax({
+        url: '/modify-user',
+        type: 'PUT',
+        data: {id: id},
+        success: function(result) {
+          // Handle successful modification
+        },
+        error: function(error) {
+          // Handle error
+        }
+      });
+    }
+  </script>
 
 {% endblock content %}
 
