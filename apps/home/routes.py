@@ -9,7 +9,7 @@ from flask_login import login_required
 from jinja2 import TemplateNotFound
 
 
-from apps.costyl import costyl,get_barmans
+from apps.costyl import costyl,get_barmans, get_sommeliers
 import psycopg2
 
 @blueprint.route('/index')
@@ -17,6 +17,40 @@ import psycopg2
 def index():
     # costyl()
     return render_template('home/index.html', segment='index')
+
+
+@blueprint.route('/sommelier.html',methods=('GET', 'POST'))
+# @login_required
+def sommelier():
+
+    if request.method == 'POST':
+        name = request.form['name']
+        recencja = request.form['recencja']
+        ocena = request.form['ocena']
+
+        # print(username, email, password, github)
+
+        conn = psycopg2.connect('postgresql://joramba:admin@localhost:5432/bazy_danych')
+        cur = conn.cursor()
+        querry_add_user = 'INSERT INTO \"Sommelier\" VALUES (\'{}\', \'{}\', \'{}\');'.format(name, recencja, ocena)
+        cur.execute(querry_add_user)
+     
+        conn.commit()
+        cur.close()
+        conn.close()
+        return redirect('sommelier.html')
+
+
+    try:
+        users = get_sommeliers()
+        # Serve the file (if exists) from app/templates/home/FILE.html
+        segment = get_segment(request)
+        return render_template("home/sommelier.html" , segment=segment, users=users)
+    except TemplateNotFound:
+        return render_template('home/page-404.html'), 404
+
+    except:
+        return render_template('home/page-500.html'), 500
 
 
 @blueprint.route('/coctails_cards.html',methods=('GET', 'POST'))
@@ -53,6 +87,27 @@ def coctails_cards():
 
     except:
         return render_template('home/page-500.html'), 500
+
+
+@blueprint.route('/delete-sommelier', methods=['DELETE'])
+def delete_sommelier():
+    # user_id = request.json
+    name = request.form.get('name')
+
+    try:
+        conn = psycopg2.connect('postgresql://joramba:admin@localhost:5432/bazy_danych')
+        cursor = conn.cursor()
+        query = f"DELETE FROM \"Sommelier\" WHERE pseudonim=\'{name}\'"
+        cursor.execute(query)
+        conn.commit()
+        count = cursor.rowcount
+        cursor.close()
+        conn.close()
+        return jsonify({"message": f"{count} user deleted"}), 200
+        # return redirect('/', code=302)
+
+    except (Exception, psycopg2.Error) as error :
+        return jsonify({"error": str(error)}), 500
 
 
 @blueprint.route('/delete-barman', methods=['DELETE'])
