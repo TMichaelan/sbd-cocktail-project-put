@@ -37,9 +37,9 @@
                 <div class="col-md-6 pl-md-1">
                   <div class="form-group">
                     <label for="coctail">Choose a coctail:</label>
-                    <select id="coctail">
-                      {% for koktail in koktails %}
-                        <option name="coctail" value="{{koktail[0]}}">{{koktail[0]}}</option>
+                    <select id="coctail" name="coctail">
+                      {% for coctail in coctails %}
+                        <option value="{{coctail[0]}}">{{coctail[0]}}</option>
                       {% endfor %}
                     </select>
                   </div>
@@ -76,18 +76,16 @@
           </tr>
     
           <!-- here is a for-loop to give us all the socks -->
-          {% for user in users %}
+          {%for i in range(0, len)%} 
           <tr>
-            <td>Koktajl</td>
-            <td>{{user[0]}}</td>
-            <td>{{user[1]}}</td>
-            <td>{{user[2]}}</td>
-            <td><button class="btn btn-primary" onclick="deleteSommelier('{{user[0]}}')">Delete</button></td>
+            <td>{{coctails_som[i][1]}}</td>
+            <td>{{users[i][0]}}</td>
+            <td>{{users[i][1]}}</td>
+            <td>{{users[i][2]}}</td>
+            <td><button class="btn btn-primary" onclick="deleteSommelier('{{users[i][0]}}')">Delete</button></td>
             <td><button class="btn btn-primary" onclick="demo.showNotification('top','center')">Modify</button></td>
-            <!-- <td><button>Delete</button></td> -->
-            <!-- <td><button>Modify</button></td> -->
-            </tr>
-          {% endfor %}
+          </tr>
+          {%endfor%} 
         </table>
       </div>
     </div>
