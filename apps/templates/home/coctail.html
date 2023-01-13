@@ -1,0 +1,112 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Dashboard {% endblock %} 
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+
+    <style>
+        
+        .card{
+            align-items: center;
+            justify-content: center ;
+        }
+       
+        .coctail-image {
+            width: 15vh;
+            height: 15vh;
+            /* align-items: center; */
+            /* justify-content: center ;  */
+        }
+        .card-body{
+            display: flex;
+            /* justify-content: center ; */
+            /* align-items: flex-start; */
+            /* flex: 2 1 200px; */
+            flex-direction: column;
+            align-items: center;
+        }
+        .card-grades{
+            margin-top: 10px;
+        }
+
+    </style>
+
+    <div class="content">
+        <div class="row">
+                <div class="col-lg-4">
+                    <div class="card card-chart">
+                        <div class="card-header">
+                            <h3 class="card-title"><i class="text-primary"></i>{{coctail[0]}}</h3>
+                        </div>
+                        <div class="card-body">
+                                <img class="coctail-image"src="{{coctail[1]}}" alt="...">
+                            <div class="card-grades">
+                                <h5 class="card-category">User grade: {{coctail[2]}}</h5>
+                                <h5 class="card-category">Sommelier Grade: {{coctail[3]}}</h5>
+                            </div>
+                        </div>         
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="card card-chart">
+                        <div class="card-header">
+                            <h3 class="card-title"><i class="text-primary"></i>Recipe:</h3>
+                        </div>
+                        <div class="card-body">
+                            Number of products: {{recipe[1]}} <br>
+                            Preparation: {{recipe[2]}} <br>
+                            <div class="card-grades">
+                                <!-- <h5 class="card-category">User grade: {{coctail[2]}}</h5>
+                                <h5 class="card-category">Sommelier Grade: {{coctail[3]}}</h5> -->
+                            </div>
+                        </div>         
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="card card-chart">
+                        <div class="card-header">
+                            <h3 class="card-title"><i class="text-primary"></i>Ingredients:</h3>
+                        </div>
+                        <div class="card-body">
+                                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ullam nihil, sunt unde impedit explicabo et commodi similique blanditiis laudantium perspiciatis a nisi aspernatur reprehenderit fugiat provident vitae quas, minus dignissimos!
+                            <div class="card-grades">
+                                <!-- <h5 class="card-category">User grade: {{coctail[2]}}</h5>
+                                <h5 class="card-category">Sommelier Grade: {{coctail[3]}}</h5> -->
+                            </div>
+                        </div>         
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="card card-chart">
+                        <div class="card-header">
+                            <h3 class="card-title"><i class="text-primary"></i>Przepis:</h3>
+                        </div>
+                        <div class="card-body">
+                                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ullam nihil, sunt unde impedit explicabo et commodi similique blanditiis laudantium perspiciatis a nisi aspernatur reprehenderit fugiat provident vitae quas, minus dignissimos!
+                            <div class="card-grades">
+                                <!-- <h5 class="card-category">User grade: {{coctail[2]}}</h5>
+                                <h5 class="card-category">Sommelier Grade: {{coctail[3]}}</h5> -->
+                            </div>
+                        </div>         
+                    </div>
+                </div>
+            </div>
+    </div>
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}
+
+<script>
+    $(document).ready(function () {
+        // Javascript method's body can be found in assets/js/demos.js
+        demo.initDashboardPageCharts();
+
+    });
+</script>
+
+{% endblock javascripts %}

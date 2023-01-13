@@ -42,6 +42,35 @@ def index():
     return render_template('home/index.html', segment='index', coctails=coctails)
 
 
+@blueprint.route('/index/<coctail_name>')
+def product_page(coctail_name):
+
+    coctail_name =  " ".join(coctail_name.split('-'))
+
+    try:
+        conn = psycopg2.connect('postgresql://joramba:admin@localhost:5432/bazy_danych')
+        cur = conn.cursor()
+        querry_cotails = "select * FROM \"Koktajl\" WHERE nazwa=\'{}\'".format(coctail_name)
+        cur.execute(querry_cotails)
+        coctail = cur.fetchone()
+        cur.close()
+        conn.close()
+    except Exception as err:
+        print(f'error occurred: {err}')
+    try:
+        conn = psycopg2.connect('postgresql://joramba:admin@localhost:5432/bazy_danych')
+        cur = conn.cursor()
+        querry_cotails = "select * FROM \"przepis\" WHERE nazwa_przepisa=\'{}\'".format(coctail_name)
+        cur.execute(querry_cotails)
+        recipe = cur.fetchone()
+        cur.close()
+        conn.close()
+    except Exception as err:
+        print(f'error occurred: {err}')
+    
+    return render_template('home/coctail.html', coctail=coctail, recipe=recipe)
+
+
 @blueprint.route('/sommelier.html',methods=('GET', 'POST'))
 # @login_required
 def sommelier():
