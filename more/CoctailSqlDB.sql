@@ -20,7 +20,7 @@ CREATE TABLE IF NOT EXISTS public."Kategoria_koktajli_Koktajl"
 CREATE TABLE IF NOT EXISTS public."Koktajl"
 (
     nazwa character(255) COLLATE pg_catalog."default" NOT NULL,
-    obraz character(255),
+    obraz character(255) COLLATE pg_catalog."default",
     "srednia_ocena_użytkownika" double precision NOT NULL,
     srednia_ocena_sommeliera double precision NOT NULL,
     CONSTRAINT "Koktajl_pkey" PRIMARY KEY (nazwa)
@@ -28,10 +28,16 @@ CREATE TABLE IF NOT EXISTS public."Koktajl"
 
 CREATE TABLE IF NOT EXISTS public."Sommelier"
 (
-    "Pseudonim" character(255) COLLATE pg_catalog."default" NOT NULL,
-    "Recenzja" character(255) COLLATE pg_catalog."default" NOT NULL,
-    "Ocena" numeric(3, 0) NOT NULL,
-    CONSTRAINT "Sommelier_pkey" PRIMARY KEY ("Pseudonim")
+    pseudonim character(255) COLLATE pg_catalog."default" NOT NULL,
+    recenzja character(255) COLLATE pg_catalog."default" NOT NULL,
+    ocena numeric(3, 0) NOT NULL,
+    CONSTRAINT "Sommelier_pkey" PRIMARY KEY (pseudonim)
+);
+
+CREATE TABLE IF NOT EXISTS public."Sommelier_Koktajl"
+(
+    "Sommelier_Pseudonim" character(255) COLLATE pg_catalog."default" NOT NULL,
+    "Koktajl_nazwa" character(255) COLLATE pg_catalog."default" NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS public."Users"
@@ -91,6 +97,12 @@ CREATE TABLE IF NOT EXISTS public.odpowiedz
     CONSTRAINT odpowiedz_pkey PRIMARY KEY (tekst_odpowiedzi)
 );
 
+CREATE TABLE IF NOT EXISTS public."odpowiedz_Koktajl"
+(
+    odpowiedz_tekst_odpowiedzi character(255) COLLATE pg_catalog."default" NOT NULL,
+    "Koktajl_nazwa" character(255) COLLATE pg_catalog."default" NOT NULL
+);
+
 CREATE TABLE IF NOT EXISTS public.przepis
 (
     nazwa_przepisa character(255) COLLATE pg_catalog."default" NOT NULL,
@@ -122,18 +134,6 @@ CREATE TABLE IF NOT EXISTS public.skladnik_przepis
     CONSTRAINT skladnik_przepis_pkey PRIMARY KEY (id)
 );
 
-CREATE TABLE IF NOT EXISTS public."Sommelier_Koktajl"
-(
-    "Sommelier_Pseudonim" character(255) COLLATE pg_catalog."default" NOT NULL,
-    "Koktajl_nazwa" character(255) COLLATE pg_catalog."default" NOT NULL
-);
-
-CREATE TABLE IF NOT EXISTS public."odpowiedz_Koktajl"
-(
-    odpowiedz_tekst_odpowiedzi character(255) COLLATE pg_catalog."default" NOT NULL,
-    "Koktajl_nazwa" character(255) COLLATE pg_catalog."default" NOT NULL
-);
-
 ALTER TABLE IF EXISTS public."Kategoria_koktajli_Koktajl"
     ADD CONSTRAINT "Kategoria_koktajli_Koktajl_Kategoria_koktajli_nazwa_katego_fkey" FOREIGN KEY ("Kategoria_koktajli_nazwa_kategorii")
     REFERENCES public."Kategoria_koktajli" (nazwa_kategorii) MATCH SIMPLE
@@ -158,6 +158,22 @@ ALTER TABLE IF EXISTS public."Koktajl"
     NOT VALID;
 CREATE INDEX IF NOT EXISTS "Koktajl_pkey"
     ON public."Koktajl"(nazwa);
+
+
+ALTER TABLE IF EXISTS public."Sommelier_Koktajl"
+    ADD CONSTRAINT "Sommelier_Koktajl_Koktajl_nazwa_fkey" FOREIGN KEY ("Koktajl_nazwa")
+    REFERENCES public."Koktajl" (nazwa) MATCH SIMPLE
+    ON UPDATE NO ACTION
+    ON DELETE NO ACTION
+    NOT VALID;
+
+
+ALTER TABLE IF EXISTS public."Sommelier_Koktajl"
+    ADD CONSTRAINT "Sommelier_Koktajl_Sommelier_Pseudonim_fkey" FOREIGN KEY ("Sommelier_Pseudonim")
+    REFERENCES public."Sommelier" (pseudonim) MATCH SIMPLE
+    ON UPDATE NO ACTION
+    ON DELETE NO ACTION
+    NOT VALID;
 
 
 ALTER TABLE IF EXISTS public."barman_Koktajl"
@@ -202,6 +218,22 @@ CREATE INDEX IF NOT EXISTS odpowiedz_pkey
     ON public.odpowiedz(tekst_odpowiedzi);
 
 
+ALTER TABLE IF EXISTS public."odpowiedz_Koktajl"
+    ADD CONSTRAINT "odpowiedz_Koktajl_Koktajl_nazwa_fkey" FOREIGN KEY ("Koktajl_nazwa")
+    REFERENCES public."Koktajl" (nazwa) MATCH SIMPLE
+    ON UPDATE NO ACTION
+    ON DELETE NO ACTION
+    NOT VALID;
+
+
+ALTER TABLE IF EXISTS public."odpowiedz_Koktajl"
+    ADD CONSTRAINT "odpowiedz_Koktajl_odpowiedz_tekst_odpowiedzi_fkey" FOREIGN KEY (odpowiedz_tekst_odpowiedzi)
+    REFERENCES public.odpowiedz (tekst_odpowiedzi) MATCH SIMPLE
+    ON UPDATE NO ACTION
+    ON DELETE NO ACTION
+    NOT VALID;
+
+
 ALTER TABLE IF EXISTS public.pytanie
     ADD CONSTRAINT pytanie_nazwa_pytanie_fkey FOREIGN KEY (nazwa_pytanie)
     REFERENCES public.ankieta (nazwa) MATCH SIMPLE
@@ -223,38 +255,6 @@ ALTER TABLE IF EXISTS public.skladnik_przepis
 ALTER TABLE IF EXISTS public.skladnik_przepis
     ADD CONSTRAINT skladnik_przepis_skladnik_nazwa_skladnika_fkey FOREIGN KEY (skladnik_nazwa_skladnika)
     REFERENCES public.skladnik (nazwa_skladnika) MATCH SIMPLE
-    ON UPDATE NO ACTION
-    ON DELETE NO ACTION
-    NOT VALID;
-
-
-ALTER TABLE IF EXISTS public."Sommelier_Koktajl"
-    ADD FOREIGN KEY ("Sommelier_Pseudonim")
-    REFERENCES public."Sommelier" ("Pseudonim") MATCH SIMPLE
-    ON UPDATE NO ACTION
-    ON DELETE NO ACTION
-    NOT VALID;
-
-
-ALTER TABLE IF EXISTS public."Sommelier_Koktajl"
-    ADD FOREIGN KEY ("Koktajl_nazwa")
-    REFERENCES public."Koktajl" (nazwa) MATCH SIMPLE
-    ON UPDATE NO ACTION
-    ON DELETE NO ACTION
-    NOT VALID;
-
-
-ALTER TABLE IF EXISTS public."odpowiedz_Koktajl"
-    ADD FOREIGN KEY (odpowiedz_tekst_odpowiedzi)
-    REFERENCES public.odpowiedz (tekst_odpowiedzi) MATCH SIMPLE
-    ON UPDATE NO ACTION
-    ON DELETE NO ACTION
-    NOT VALID;
-
-
-ALTER TABLE IF EXISTS public."odpowiedz_Koktajl"
-    ADD FOREIGN KEY ("Koktajl_nazwa")
-    REFERENCES public."Koktajl" (nazwa) MATCH SIMPLE
     ON UPDATE NO ACTION
     ON DELETE NO ACTION
     NOT VALID;
