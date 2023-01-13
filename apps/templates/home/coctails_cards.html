@@ -30,43 +30,60 @@
               <div class="row">
                 <div class="col-md-6 pr-md-1">
                   <div class="form-group">
-                    <label for="username">Username</label>
-                    <input name="username" type="text" class="form-control" placeholder="Username">
+                    <label for="nazwa">Coctail Name</label>
+                    <input name="nazwa" type="text" class="form-control" placeholder="Coctail">
                   </div>
                 </div>
                 <div class="col-md-6 pl-md-1">
                   <div class="form-group">
-                    <label for="email">Email</label>
-                    <input name="email" type="text" class="form-control" placeholder="Email">
+                    <label for="obraz">Link to image</label>
+                    <input name="obraz" type="text" class="form-control" placeholder="Image">
                   </div>
                 </div>
               </div>
               <div class="row">
                 <div class="col-md-6 pr-md-1">
                   <div class="form-group">
-                    <label for="password">Password</label>
-                    <input name="password" type="text" class="form-control" placeholder="Password">
+                    <label for="srednia_ocena_uzytkownika">Average User Grade</label>
+                    <input name="srednia_ocena_uzytkownika" type="text" class="form-control" placeholder="Average User Grade">
                   </div>
                 </div>
                 <div class="col-md-6 pl-md-1">
                   <div class="form-group">
-                    <label for="github">Oauth_github</label>
-                    <input name="github" type="text" class="form-control" placeholder="Oauth_github">
+                    <label for="srednia_ocena_sommelier">Average Sommelier Grade</label>
+                    <input name="srednia_ocena_sommelier" type="text" class="form-control" placeholder="Average Sommelier Grade">
                   </div>
                 </div>
               </div>
+              <div class="row">
+                <div class="col-md-8">
+                  <div class="form-group">
+                    <label for="notatka">Note</label>
+                    <textarea name="notatka" rows="4" cols="80" class="form-control" placeholder="Here can be your Note"></textarea>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6 pr-md-1">
+                  <div class="form-group">
+                    <label for="count">Count of Ingredients</label>
+                    <input name="count" type="text" class="form-control" placeholder="Count">
+                  </div>
+                </div>
+              </div>
+
               <div class="card-footer">
-                <button type="submit" class="btn btn-fill btn-primary">Add User</button>
+                <button type="submit" class="btn btn-fill btn-primary">Add Coctail</button>
               </div>
             </form>
           </div>
         </div>
         <table class="table">
           <tr>
-            <th>Name</th>
-            <th>Email</th>
-            <th>Password</th>
-            <th>Oauth_github</th>
+            <th>Coctail Name</th>
+            <th>Link to Coctail</th>
+            <th>Average User Grade</th>
+            <th>Average Sommelier Grade</th>
             <th></th>
             <th></th>
           </tr>

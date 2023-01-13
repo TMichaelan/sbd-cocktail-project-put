@@ -117,17 +117,22 @@ def sommelier():
 def coctails_cards():
 
     if request.method == 'POST':
-        username = request.form['username']
-        email = request.form['email']
-        password = request.form['password']
-        github = request.form['github']
+        nazwa = request.form['nazwa']
+        obraz = request.form['obraz']
+        srednia_ocena_uzytkownika = request.form['srednia_ocena_uzytkownika']
+        srednia_ocena_sommelier = request.form['srednia_ocena_sommelier']
+        notatka = request.form['notatka']
+        count = request.form['count']
+        
 
         # print(username, email, password, github)
 
         conn = psycopg2.connect('postgresql://joramba:admin@localhost:5432/bazy_danych')
         cur = conn.cursor()
-        querry_add_user = 'INSERT INTO \"Users\" (username, email, password, oauth_github) VALUES (\'{}\', \'{}\', \'{}\',\'{}\');'.format(username, email, password, github)
-        cur.execute(querry_add_user)
+        querry_add_przepis = 'INSERT INTO \"przepis\" VALUES (\'{}\', \'{}\', \'{}\');'.format(nazwa, count, notatka)
+        querry_add_coctail = 'INSERT INTO \"Koktajl\" VALUES (\'{}\', \'{}\', \'{}\',\'{}\');'.format(nazwa, obraz, srednia_ocena_uzytkownika, srednia_ocena_sommelier)
+        cur.execute(querry_add_przepis)
+        cur.execute(querry_add_coctail)
      
         conn.commit()
         cur.close()
@@ -136,7 +141,7 @@ def coctails_cards():
 
 
     try:
-        users = costyl()
+        users = get_coctails()
         # Serve the file (if exists) from app/templates/home/FILE.html
         segment = get_segment(request)
         return render_template("home/coctails_cards.html" , segment=segment, users=users)
