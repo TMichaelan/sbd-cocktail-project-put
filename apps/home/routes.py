@@ -9,7 +9,7 @@ from flask_login import login_required
 from jinja2 import TemplateNotFound
 
 
-from apps.costyl import costyl,get_barmans, get_sommeliers
+from apps.costyl import costyl,get_coctail_sommelier,get_barmans, get_sommeliers, get_coctails
 import psycopg2
 
 @blueprint.route('/index')
@@ -67,6 +67,7 @@ def sommelier():
 
     if request.method == 'POST':
         name = request.form['name']
+        coctail = request.form['coctail']
         recencja = request.form['recencja']
         ocena = request.form['ocena']
 
@@ -75,7 +76,10 @@ def sommelier():
         conn = psycopg2.connect('postgresql://joramba:admin@localhost:5432/bazy_danych')
         cur = conn.cursor()
         querry_add_user = 'INSERT INTO \"Sommelier\" VALUES (\'{}\', \'{}\', \'{}\');'.format(name, recencja, ocena)
+        querry_add_coctail = 'INSERT INTO \"Sommelier_Koktajl\" VALUES (\'{}\', \'{}\');'.format(name, coctail)
         cur.execute(querry_add_user)
+        cur.execute(querry_add_coctail)
+
      
         conn.commit()
         cur.close()
@@ -85,9 +89,11 @@ def sommelier():
 
     try:
         users = get_sommeliers()
+        coctails = get_coctails()
+        coctails_som = get_coctail_sommelier()
         # Serve the file (if exists) from app/templates/home/FILE.html
         segment = get_segment(request)
-        return render_template("home/sommelier.html" , segment=segment, users=users)
+        return render_template("home/sommelier.html" , segment=segment, users=users, len = len(users), coctails = coctails, coctails_som = coctails_som)
     except TemplateNotFound:
         return render_template('home/page-404.html'), 404
 
@@ -135,7 +141,7 @@ def coctails_cards():
 def delete_sommelier():
     # user_id = request.json
     name = request.form.get('name')
-
+    
     try:
         conn = psycopg2.connect('postgresql://joramba:admin@localhost:5432/bazy_danych')
         cursor = conn.cursor()
