@@ -48,8 +48,6 @@ ingritients = ['strIngredient1', 'strIngredient2', 'strIngredient3', 'strIngredi
 measures = ['strMeasure1', 'strMeasure2', 'strMeasure3', 'strMeasure4', 'strMeasure5', 'strMeasure6', 'strMeasure7', 'strMeasure8', 'strMeasure9', 
 'strMeasure10', 'strMeasure11', 'strMeasure12', 'strMeasure13', 'strMeasure14', 'strMeasure15']
 
-# print(round(random.uniform(3, 5), 2))
-
 coctail_name = ''
 coctail_tags = ''
 coctail_image = ''
@@ -91,10 +89,6 @@ def parse_coctail(number):
                     if edited_response[drink] != None:
                         coctail_measures.append(edited_response[drink])
                     
-                #  print( '\'' + str(i) + '\','  )
-                # print(edited_response[drink])
-
-        #     print( '\'' + str(i) + '\','  ) 
     except HTTPError as http_err:
         print(f'HTTP error occurred: {http_err}')
     except Exception as err:
@@ -122,7 +116,22 @@ def koktajl():
     conn.close()
 
 def kategoria_koktajl():
-    print(coctail_alc)
+    conn = psycopg2.connect(db_url)
+    cur = conn.cursor()
+    querry = 'INSERT INTO \"Kategoria_koktajli\" VALUES (\'{}\');'.format(coctail_alc) 
+    cur.execute(querry)
+    conn.commit()
+    cur.close()
+    conn.close()
+
+def kategoria_koktajli_koktajl():
+    conn = psycopg2.connect(db_url)
+    cur = conn.cursor()
+    querry = 'INSERT INTO \"Kategoria_koktajli_Koktajl\" VALUES (\'{}\', \'{}\');'.format(coctail_alc,coctail_name) 
+    cur.execute(querry)
+    conn.commit()
+    cur.close()
+    conn.close()
 
 def czynnosc():
     pass
@@ -130,8 +139,7 @@ def czynnosc():
 def skladnik():
     pass
 
-number = 11009
-# number = 11009
+number = 11000
 
 for i in range(25):
     number+=1
@@ -139,5 +147,7 @@ for i in range(25):
     try:
         przepis()
         koktajl()
+        kategoria_koktajl()
+        kategoria_koktajli_koktajl()
     except Exception as err:
         print(f'error occurred: {err}')
