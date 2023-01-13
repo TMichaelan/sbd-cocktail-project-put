@@ -40,7 +40,9 @@
         <div class="row">
 
             {% for coctail in coctails %}
+           
                 <div class="col-lg-4">
+                    <a href="/index/{{coctail[0]}}">
                     <div class="card card-chart">
                         <div class="card-header">
                             <h3 class="card-title"><i class="text-primary"></i>{{coctail[0]}}</h3>
@@ -53,8 +55,10 @@
                             </div>
                         </div>         
                     </div>
+                </a>
                 </div>
-                {% endfor %}
+           
+            {% endfor %}
 
             </div>
     </div>
