@@ -36,8 +36,12 @@
                 </div>
                 <div class="col-md-6 pl-md-1">
                   <div class="form-group">
-                    <label for="Cocktail">Cocktail</label>
-                    <input name="Cocktail" type="text" class="form-control" placeholder="Cocktail">
+                    <label for="coctail">Choose a coctail:</label>
+                    <select id="coctail">
+                      {% for koktail in koktails %}
+                        <option name="coctail" value="{{koktail[0]}}">{{koktail[0]}}</option>
+                      {% endfor %}
+                    </select>
                   </div>
                 </div>
               </div>

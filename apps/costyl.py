@@ -12,6 +12,15 @@ def get_barmans():
     conn.close()
     return barmans
 
+def get_coctails():
+    conn = psycopg2.connect('postgresql://joramba:admin@localhost:5432/bazy_danych')
+    cur = conn.cursor()
+    cur.execute("SELECT * FROM \"Koktajl\"")
+    barmans = cur.fetchall()
+    cur.close()
+    conn.close()
+    return barmans
+
 
 def get_sommeliers():
     conn = psycopg2.connect('postgresql://joramba:admin@localhost:5432/bazy_danych')
