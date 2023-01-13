@@ -4,7 +4,7 @@ Copyright (c) 2019 - present AppSeed.us
 """
 import psycopg2
 from apps.home import blueprint
-from flask import render_template, request, redirect
+from flask import render_template, request, redirect, jsonify
 from flask_login import login_required
 from jinja2 import TemplateNotFound
 
@@ -55,9 +55,30 @@ def coctails_cards():
         return render_template('home/page-500.html'), 500
 
 
+@blueprint.route('/delete-barman', methods=['DELETE'])
+def delete_user():
+    # user_id = request.json
+    name = request.form.get('name')
+
+    try:
+        conn = psycopg2.connect('postgresql://joramba:admin@localhost:5432/bazy_danych')
+        cursor = conn.cursor()
+        query = f"DELETE FROM \"barman\" WHERE imie=\'{name}\'"
+        cursor.execute(query)
+        conn.commit()
+        count = cursor.rowcount
+        cursor.close()
+        conn.close()
+        return jsonify({"message": f"{count} user deleted"}), 200
+        # return redirect('/', code=302)
+
+    except (Exception, psycopg2.Error) as error :
+        return jsonify({"error": str(error)}), 500
+
+
 
 @blueprint.route('/barman.html',methods=('GET', 'POST'))
-# @login_required
+@login_required
 def barman():
     if request.method == 'POST':
         name = request.form['name']

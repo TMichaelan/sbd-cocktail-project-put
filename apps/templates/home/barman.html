@@ -12,7 +12,7 @@
       <div class="col-md-8">
         <div class="card">
           <div class="card-header">
-            <h5 class="title">Add Coctail</h5>
+            <h5 class="title">Add Barman</h5>
           </div>
           <div class="card-body">
             <form method="post">
@@ -63,12 +63,14 @@
           <!-- here is a for-loop to give us all the socks -->
           {% for user in barmans %}
           <tr>
-            <td>{{ user[0] }}</td>
-            <td>{{ user[1] }}</td>
-            <td>{{ user[2] }}</td>
-            <td>{{ user[3] }}</td>
-            <td><button>Delete</button></td>
-            <td><button>Modify</button></td>
+            <td>{{user[0]}}</td>
+            <td>{{user[1]}}</td>
+            <td>{{user[2]}}</td>
+            <td>{{user[3]}}</td>
+            <td><button class="btn btn-primary" onclick="deleteBarman('{{user[0]}}')">Delete</button></td>
+            <td><button class="btn btn-primary" onclick="demo.showNotification('top','center')">Modify</button></td>
+            <!-- <td><button>Delete</button></td> -->
+            <!-- <td><button>Modify</button></td> -->
             </tr>
           {% endfor %}
         </table>
@@ -113,7 +115,42 @@
     </div>
   </div>
 
+  
+<script>
+  function deleteBarman(name) {
+    $.ajax({
+      url: '/delete-barman',
+      type: 'DELETE',
+      data: {name: name},
+      
+      success: function(result) {
+        console.log(data)
+       
+      },
+      error: function(error) {
+        // Handle error
+      }
+    });
+    location.reload();
+  }
+
+  function modifyUser(id) {
+    $.ajax({
+      url: '/modify-user',
+      type: 'PUT',
+      data: {id: id},
+      success: function(result) {
+        // Handle successful modification
+      },
+      error: function(error) {
+        // Handle error
+      }
+    });
+  }
+</script>
+
 {% endblock content %}
+
 
 <!-- Specific Page JS goes HERE  -->
 {% block javascripts %}{% endblock javascripts %}
