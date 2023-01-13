@@ -19,23 +19,10 @@ def index():
 
     conn = psycopg2.connect('postgresql://joramba:admin@localhost:5432/bazy_danych')
     cur = conn.cursor()
-   
-    # cur.execute(querry_add_user)
-     
-    # conn.commit()
-    # cur.close()
-    # conn.close()
 
     querry_cotails = "select * FROM \"Koktajl\" LIMIT 15"
     cur.execute(querry_cotails)
     coctails = cur.fetchall()
-    # print(coctails)
-    # for coc in coctails:
-    #     print(coc[0])
-    #     print(coc[1])
-    #     print(coc[2])
-    #     print(coc[3])
-
     cur.close()
     conn.close()
  
@@ -55,6 +42,9 @@ def product_page(coctail_name):
         coctail = cur.fetchone()
         cur.close()
         conn.close()
+
+        if coctail == None:
+            return render_template('home/page-404.html'), 404
     except Exception as err:
         print(f'error occurred: {err}')
     try:

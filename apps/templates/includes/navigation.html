@@ -75,11 +75,31 @@
                     <div class="modal-header">
                         <input type="text" class="form-control" id="inlineFormInputGroup" placeholder="SEARCH">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <button type="button" id="searchButton"></button>
+
                             <i class="tim-icons icon-simple-remove"></i>
                         </button>
                     </div>
                 </div>
             </div>
         </div>
+
+        <script>
+            document.getElementById("inlineFormInputGroup").addEventListener("keyup", function(event) {
+                if (event.keyCode === 13) {
+                    event.preventDefault();
+                    document.getElementById("searchButton").click();
+                }
+            });
+            document.getElementById("searchButton").addEventListener("click", function(){
+                var searchValue = document.getElementById("inlineFormInputGroup").value;
+                if (!window.location.href.endsWith("index/")) {
+                window.location.href = "index/" + searchValue;
+                } else {
+                    window.location.href = searchValue;
+                }
+
+            });
+        </script>
         <!-- End Navbar -->
         
