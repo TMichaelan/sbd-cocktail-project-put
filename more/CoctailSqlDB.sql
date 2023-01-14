@@ -3,30 +3,30 @@
 BEGIN;
 
 
-CREATE TABLE IF NOT EXISTS public."Kategoria_koktajli"
+CREATE TABLE IF NOT EXISTS public.kategoria_koktajli
 (
     nazwa_kategorii character(255) COLLATE pg_catalog."default" NOT NULL,
     CONSTRAINT "Kategoria_koktajli_pkey" PRIMARY KEY (nazwa_kategorii)
 );
 
-CREATE TABLE IF NOT EXISTS public."Kategoria_koktajli_Koktajl"
+CREATE TABLE IF NOT EXISTS public.kategoria_koktajli_koktajl
 (
-    "Kategoria_koktajli_nazwa_kategorii" character(255) COLLATE pg_catalog."default" NOT NULL,
-    "Koktajl_nazwa" character(255) COLLATE pg_catalog."default" NOT NULL,
+    kategoria_koktajli_nazwa_kategorii character(255) COLLATE pg_catalog."default" NOT NULL,
+    koktajl_nazwa character(255) COLLATE pg_catalog."default" NOT NULL,
     id bigint NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 9223372036854775807 CACHE 1 ),
     CONSTRAINT "Kategoria_koktajli_Koktajl_pkey" PRIMARY KEY (id)
 );
 
-CREATE TABLE IF NOT EXISTS public."Koktajl"
+CREATE TABLE IF NOT EXISTS public.koktajl
 (
     nazwa character(255) COLLATE pg_catalog."default" NOT NULL,
     obraz character(255) COLLATE pg_catalog."default",
-    "srednia_ocena_użytkownika" double precision NOT NULL,
-    srednia_ocena_sommeliera double precision NOT NULL,
+    "srednia_ocena_użytkownika" double precision,
+    srednia_ocena_sommeliera double precision,
     CONSTRAINT "Koktajl_pkey" PRIMARY KEY (nazwa)
 );
 
-CREATE TABLE IF NOT EXISTS public."Sommelier"
+CREATE TABLE IF NOT EXISTS public.sommelier
 (
     pseudonim character(255) COLLATE pg_catalog."default" NOT NULL,
     recenzja character(255) COLLATE pg_catalog."default" NOT NULL,
@@ -34,10 +34,10 @@ CREATE TABLE IF NOT EXISTS public."Sommelier"
     CONSTRAINT "Sommelier_pkey" PRIMARY KEY (pseudonim)
 );
 
-CREATE TABLE IF NOT EXISTS public."Sommelier_Koktajl"
+CREATE TABLE IF NOT EXISTS public.sommelier_koktajl
 (
-    "Sommelier_Pseudonim" character(255) COLLATE pg_catalog."default" NOT NULL,
-    "Koktajl_nazwa" character(255) COLLATE pg_catalog."default" NOT NULL
+    sommelier_pseudonim character(255) COLLATE pg_catalog."default" NOT NULL,
+    koktajl_nazwa character(255) COLLATE pg_catalog."default" NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS public."Users"
@@ -65,10 +65,10 @@ CREATE TABLE IF NOT EXISTS public.barman
     CONSTRAINT barman_pkey PRIMARY KEY (imie)
 );
 
-CREATE TABLE IF NOT EXISTS public."barman_Koktajl"
+CREATE TABLE IF NOT EXISTS public.barman_koktajl
 (
     barman_imie character(255) COLLATE pg_catalog."default" NOT NULL,
-    "Koktajl_nazwa" character(255) COLLATE pg_catalog."default" NOT NULL,
+    koktajl_nazwa character(255) COLLATE pg_catalog."default" NOT NULL,
     id bigint NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 9223372036854775807 CACHE 1 ),
     CONSTRAINT "barman_Koktajl_pkey" PRIMARY KEY (id)
 );
@@ -97,10 +97,10 @@ CREATE TABLE IF NOT EXISTS public.odpowiedz
     CONSTRAINT odpowiedz_pkey PRIMARY KEY (tekst_odpowiedzi)
 );
 
-CREATE TABLE IF NOT EXISTS public."odpowiedz_Koktajl"
+CREATE TABLE IF NOT EXISTS public.odpowiedz_koktajl
 (
     odpowiedz_tekst_odpowiedzi character(255) COLLATE pg_catalog."default" NOT NULL,
-    "Koktajl_nazwa" character(255) COLLATE pg_catalog."default" NOT NULL
+    koktajl_nazwa character(255) COLLATE pg_catalog."default" NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS public.przepis
@@ -134,57 +134,57 @@ CREATE TABLE IF NOT EXISTS public.skladnik_przepis
     CONSTRAINT skladnik_przepis_pkey PRIMARY KEY (id)
 );
 
-ALTER TABLE IF EXISTS public."Kategoria_koktajli_Koktajl"
-    ADD CONSTRAINT "Kategoria_koktajli_Koktajl_Kategoria_koktajli_nazwa_katego_fkey" FOREIGN KEY ("Kategoria_koktajli_nazwa_kategorii")
-    REFERENCES public."Kategoria_koktajli" (nazwa_kategorii) MATCH SIMPLE
+ALTER TABLE IF EXISTS public.kategoria_koktajli_koktajl
+    ADD CONSTRAINT "Kategoria_koktajli_Koktajl_Kategoria_koktajli_nazwa_katego_fkey" FOREIGN KEY (kategoria_koktajli_nazwa_kategorii)
+    REFERENCES public.kategoria_koktajli (nazwa_kategorii) MATCH SIMPLE
     ON UPDATE NO ACTION
     ON DELETE NO ACTION
     NOT VALID;
 
 
-ALTER TABLE IF EXISTS public."Kategoria_koktajli_Koktajl"
-    ADD CONSTRAINT "Kategoria_koktajli_Koktajl_Koktajl_nazwa_fkey" FOREIGN KEY ("Koktajl_nazwa")
-    REFERENCES public."Koktajl" (nazwa) MATCH SIMPLE
+ALTER TABLE IF EXISTS public.kategoria_koktajli_koktajl
+    ADD CONSTRAINT "Kategoria_koktajli_Koktajl_Koktajl_nazwa_fkey" FOREIGN KEY (koktajl_nazwa)
+    REFERENCES public.koktajl (nazwa) MATCH SIMPLE
     ON UPDATE NO ACTION
     ON DELETE NO ACTION
     NOT VALID;
 
 
-ALTER TABLE IF EXISTS public."Koktajl"
+ALTER TABLE IF EXISTS public.koktajl
     ADD CONSTRAINT "Koktajl_Przepis_fkey" FOREIGN KEY (nazwa)
     REFERENCES public.przepis (nazwa_przepisa) MATCH SIMPLE
     ON UPDATE NO ACTION
     ON DELETE NO ACTION
     NOT VALID;
 CREATE INDEX IF NOT EXISTS "Koktajl_pkey"
-    ON public."Koktajl"(nazwa);
+    ON public.koktajl(nazwa);
 
 
-ALTER TABLE IF EXISTS public."Sommelier_Koktajl"
-    ADD CONSTRAINT "Sommelier_Koktajl_Koktajl_nazwa_fkey" FOREIGN KEY ("Koktajl_nazwa")
-    REFERENCES public."Koktajl" (nazwa) MATCH SIMPLE
+ALTER TABLE IF EXISTS public.sommelier_koktajl
+    ADD CONSTRAINT "Sommelier_Koktajl_Koktajl_nazwa_fkey" FOREIGN KEY (koktajl_nazwa)
+    REFERENCES public.koktajl (nazwa) MATCH SIMPLE
     ON UPDATE NO ACTION
     ON DELETE NO ACTION
     NOT VALID;
 
 
-ALTER TABLE IF EXISTS public."Sommelier_Koktajl"
-    ADD CONSTRAINT "Sommelier_Koktajl_Sommelier_Pseudonim_fkey" FOREIGN KEY ("Sommelier_Pseudonim")
-    REFERENCES public."Sommelier" (pseudonim) MATCH SIMPLE
+ALTER TABLE IF EXISTS public.sommelier_koktajl
+    ADD CONSTRAINT "Sommelier_Koktajl_Sommelier_Pseudonim_fkey" FOREIGN KEY (sommelier_pseudonim)
+    REFERENCES public.sommelier (pseudonim) MATCH SIMPLE
     ON UPDATE NO ACTION
     ON DELETE NO ACTION
     NOT VALID;
 
 
-ALTER TABLE IF EXISTS public."barman_Koktajl"
-    ADD CONSTRAINT "barman_Koktajl_Koktajl_nazwa_fkey" FOREIGN KEY ("Koktajl_nazwa")
-    REFERENCES public."Koktajl" (nazwa) MATCH SIMPLE
+ALTER TABLE IF EXISTS public.barman_koktajl
+    ADD CONSTRAINT "barman_Koktajl_Koktajl_nazwa_fkey" FOREIGN KEY (koktajl_nazwa)
+    REFERENCES public.koktajl (nazwa) MATCH SIMPLE
     ON UPDATE NO ACTION
     ON DELETE NO ACTION
     NOT VALID;
 
 
-ALTER TABLE IF EXISTS public."barman_Koktajl"
+ALTER TABLE IF EXISTS public.barman_koktajl
     ADD CONSTRAINT "barman_Koktajl_barman_imie_fkey" FOREIGN KEY (barman_imie)
     REFERENCES public.barman (imie) MATCH SIMPLE
     ON UPDATE NO ACTION
@@ -218,15 +218,15 @@ CREATE INDEX IF NOT EXISTS odpowiedz_pkey
     ON public.odpowiedz(tekst_odpowiedzi);
 
 
-ALTER TABLE IF EXISTS public."odpowiedz_Koktajl"
-    ADD CONSTRAINT "odpowiedz_Koktajl_Koktajl_nazwa_fkey" FOREIGN KEY ("Koktajl_nazwa")
-    REFERENCES public."Koktajl" (nazwa) MATCH SIMPLE
+ALTER TABLE IF EXISTS public.odpowiedz_koktajl
+    ADD CONSTRAINT "odpowiedz_Koktajl_Koktajl_nazwa_fkey" FOREIGN KEY (koktajl_nazwa)
+    REFERENCES public.koktajl (nazwa) MATCH SIMPLE
     ON UPDATE NO ACTION
     ON DELETE NO ACTION
     NOT VALID;
 
 
-ALTER TABLE IF EXISTS public."odpowiedz_Koktajl"
+ALTER TABLE IF EXISTS public.odpowiedz_koktajl
     ADD CONSTRAINT "odpowiedz_Koktajl_odpowiedz_tekst_odpowiedzi_fkey" FOREIGN KEY (odpowiedz_tekst_odpowiedzi)
     REFERENCES public.odpowiedz (tekst_odpowiedzi) MATCH SIMPLE
     ON UPDATE NO ACTION

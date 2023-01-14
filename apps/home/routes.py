@@ -21,7 +21,7 @@ def index():
     conn = psycopg2.connect('postgresql://joramba:admin@localhost:5432/bazy_danych')
     cur = conn.cursor()
 
-    querry_cotails = "select * FROM \"Koktajl\" "
+    querry_cotails = "select * FROM \"koktajl\" "
     cur.execute(querry_cotails)
     all_coctails = cur.fetchall()
 
@@ -46,7 +46,7 @@ def product_page(coctail_name):
     try:
         conn = psycopg2.connect('postgresql://joramba:admin@localhost:5432/bazy_danych')
         cur = conn.cursor()
-        querry_cotails = "select * FROM \"Koktajl\" WHERE nazwa=\'{}\'".format(coctail_name)
+        querry_cotails = "select * FROM \"koktajl\" WHERE nazwa=\'{}\'".format(coctail_name)
         cur.execute(querry_cotails)
         coctail = cur.fetchone()
         cur.close()
@@ -62,12 +62,21 @@ def product_page(coctail_name):
         querry_cotails = "select * FROM \"przepis\" WHERE nazwa_przepisa=\'{}\'".format(coctail_name)
         cur.execute(querry_cotails)
         recipe = cur.fetchone()
+
+        querry_ingredients = "select * FROM \"skladnik_przepis\" WHERE przepis_nazwa_przepisa=\'{}\'".format(coctail_name)
+        cur.execute(querry_ingredients)
+        ingredients = cur.fetchall()
+
+        querry_category =  "select * FROM \"kategoria_koktajli_koktajl\" WHERE koktajl_nazwa=\'{}\'".format(coctail_name)
+        cur.execute(querry_category)
+        category = cur.fetchall()
+
         cur.close()
         conn.close()
     except Exception as err:
         print(f'error occurred: {err}')
     
-    return render_template('home/coctail.html', coctail=coctail, recipe=recipe)
+    return render_template('home/coctail.html', coctail=coctail, recipe=recipe, ingredients = ingredients, category= category)
 
 
 @blueprint.route('/sommelier.html',methods=('GET', 'POST'))
@@ -84,8 +93,8 @@ def sommelier():
 
         conn = psycopg2.connect('postgresql://joramba:admin@localhost:5432/bazy_danych')
         cur = conn.cursor()
-        querry_add_user = 'INSERT INTO \"Sommelier\" VALUES (\'{}\', \'{}\', \'{}\');'.format(name, recencja, ocena)
-        querry_add_coctail = 'INSERT INTO \"Sommelier_Koktajl\" VALUES (\'{}\', \'{}\');'.format(name, coctail)
+        querry_add_user = 'INSERT INTO \"sommelier\" VALUES (\'{}\', \'{}\', \'{}\');'.format(name, recencja, ocena)
+        querry_add_coctail = 'INSERT INTO \"sommelier_koktajl\" VALUES (\'{}\', \'{}\');'.format(name, coctail)
         cur.execute(querry_add_user)
         cur.execute(querry_add_coctail)
 
@@ -118,8 +127,7 @@ def coctails_cards():
     if request.method == 'POST':
         nazwa = request.form['nazwa']
         obraz = request.form['obraz']
-        srednia_ocena_uzytkownika = request.form['srednia_ocena_uzytkownika']
-        srednia_ocena_sommelier = request.form['srednia_ocena_sommelier']
+        category = request.form['coctail']
         notatka = request.form['notatka']
         count = request.form['count']
         
@@ -129,13 +137,29 @@ def coctails_cards():
         conn = psycopg2.connect('postgresql://joramba:admin@localhost:5432/bazy_danych')
         cur = conn.cursor()
         querry_add_przepis = 'INSERT INTO \"przepis\" VALUES (\'{}\', \'{}\', \'{}\');'.format(nazwa, count, notatka)
-        querry_add_coctail = 'INSERT INTO \"Koktajl\" VALUES (\'{}\', \'{}\', \'{}\',\'{}\');'.format(nazwa, obraz, srednia_ocena_uzytkownika, srednia_ocena_sommelier)
+        querry_add_coctail = 'INSERT INTO \"koktajl\" VALUES (\'{}\', \'{}\');'.format(nazwa, obraz)
+        
+        
+        # try: 
+        #     querry_add_category = 'INSERT INTO \"kategoria_koktajli\" VALUES (\'{}\');'.format(category)
+        #     cur.execute(querry_add_category)
+        # except Exception as err:
+        #     print(f'error occurred: {err}')
 
+       
+    
         cur.execute(querry_add_przepis)
         cur.execute(querry_add_coctail)
 
         conn.commit()
-        
+
+
+        querry_add_category_koktail = 'INSERT INTO \"kategoria_koktajli_koktajl\" VALUES (\'{}\', \'{}\');'.format(category, nazwa)
+        cur.execute(querry_add_category_koktail)
+
+        conn.commit()
+
+
         for i in range(int(count)):
             skladnik = request.form['ingredient'+str(i)]
             miara = request.form['measure'+str(i)]
@@ -176,7 +200,7 @@ def delete_sommelier():
     try:
         conn = psycopg2.connect('postgresql://joramba:admin@localhost:5432/bazy_danych')
         cursor = conn.cursor()
-        query = f"DELETE FROM \"Sommelier\" WHERE pseudonim=\'{name}\'"
+        query = f"DELETE FROM \"sommelier\" WHERE pseudonim=\'{name}\'"
         cursor.execute(query)
         conn.commit()
         count = cursor.rowcount
@@ -218,7 +242,7 @@ def delete_users():
     try:
         conn = psycopg2.connect('postgresql://joramba:admin@localhost:5432/bazy_danych')
         cursor = conn.cursor()
-        query = f"DELETE FROM \"Koktajl\" WHERE nazwa=\'{name}\'"
+        query = f"DELETE FROM \"koktajl\" WHERE nazwa=\'{name}\'"
         querry_delete_przepis = f"DELETE FROM \"przepis\" WHERE nazwa_przepisa=\'{name}\'"
 
         cursor.execute(query)

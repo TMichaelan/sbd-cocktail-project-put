@@ -109,7 +109,7 @@ def koktajl():
     cur = conn.cursor()
     ocena1 = round(random.uniform(3, 5), 2)
     ocena2 = round(random.uniform(3, 5), 2)
-    querry = 'INSERT INTO \"Koktajl\" VALUES (\'{}\', \'{}\', \'{}\',\'{}\');'.format(coctail_name,coctail_image,ocena1,ocena2) 
+    querry = 'INSERT INTO \"koktajl\" VALUES (\'{}\', \'{}\', \'{}\',\'{}\');'.format(coctail_name,coctail_image,ocena1,ocena2) 
     cur.execute(querry)
     conn.commit()
     cur.close()
@@ -118,7 +118,7 @@ def koktajl():
 def kategoria_koktajl():
     conn = psycopg2.connect(db_url)
     cur = conn.cursor()
-    querry = 'INSERT INTO \"Kategoria_koktajli\" VALUES (\'{}\');'.format(coctail_alc) 
+    querry = 'INSERT INTO \"kategoria_koktajli\" VALUES (\'{}\');'.format(coctail_alc) 
     cur.execute(querry)
     conn.commit()
     cur.close()
@@ -127,7 +127,7 @@ def kategoria_koktajl():
 def kategoria_koktajli_koktajl():
     conn = psycopg2.connect(db_url)
     cur = conn.cursor()
-    querry = 'INSERT INTO \"Kategoria_koktajli_Koktajl\" VALUES (\'{}\', \'{}\');'.format(coctail_alc,coctail_name) 
+    querry = 'INSERT INTO \"kategoria_koktajli_koktajl\" VALUES (\'{}\', \'{}\');'.format(coctail_alc,coctail_name) 
     cur.execute(querry)
     conn.commit()
     cur.close()
