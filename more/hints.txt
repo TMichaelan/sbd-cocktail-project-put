@@ -15,3 +15,6 @@ insert into "barman" values ('Ivan','Haindov', 78212313, 'Kornicka 5');
 INSERT INTO "Users" (username, email, password) VALUES ('jora', 'gdggd@ad.ru', '123');
 INSERT INTO "Users" (username, email, password) VALUES ('jora1', 'gdggd1@ad.ru', '123');
 INSERT INTO "Users" (username, email, password) VALUES ('jora2', 'gdggd2@ad.ru', '123');
+
+insert into "kategoria_koktajli" values ('Alcoholic')
+insert into "kategoria_koktajli" values ('Non Alcoholic')

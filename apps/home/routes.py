@@ -128,6 +128,8 @@ def coctails_cards():
         nazwa = request.form['nazwa']
         obraz = request.form['obraz']
         category = request.form['coctail']
+        # srednia_ocena_uzytkownika = request.form['srednia_ocena_uzytkownika']
+        # srednia_ocena_sommelier = request.form['srednia_ocena_sommelier']
         notatka = request.form['notatka']
         count = request.form['count']
         
@@ -138,22 +140,22 @@ def coctails_cards():
         cur = conn.cursor()
         querry_add_przepis = 'INSERT INTO \"przepis\" VALUES (\'{}\', \'{}\', \'{}\');'.format(nazwa, count, notatka)
         querry_add_coctail = 'INSERT INTO \"koktajl\" VALUES (\'{}\', \'{}\');'.format(nazwa, obraz)
-        
-        
+
+
         # try: 
         #     querry_add_category = 'INSERT INTO \"kategoria_koktajli\" VALUES (\'{}\');'.format(category)
         #     cur.execute(querry_add_category)
         # except Exception as err:
         #     print(f'error occurred: {err}')
 
-       
-    
+
+
         cur.execute(querry_add_przepis)
         cur.execute(querry_add_coctail)
 
         conn.commit()
 
-
+        
         querry_add_category_koktail = 'INSERT INTO \"kategoria_koktajli_koktajl\" VALUES (\'{}\', \'{}\');'.format(category, nazwa)
         cur.execute(querry_add_category_koktail)
 
@@ -214,13 +216,17 @@ def delete_sommelier():
 
 
 @blueprint.route('/modify-barman', methods=['PUT'])
-def modify_user():
+def modifyBarman():
+    id = request.form.get('id')
     name = request.form.get('name')
+    surname = request.form.get('surname')
+    phone = request.form.get('phone')
+    adress = request.form.get('adress')
 
     try:
         conn = psycopg2.connect('postgresql://joramba:admin@localhost:5432/bazy_danych')
         cursor = conn.cursor()
-        query = f"DELETE FROM \"barman\" WHERE imie=\'{name}\'"
+        query = f"UPDATE \"barman\" SET imie=\'{name}\',nazwisko=\'{surname}\',numer_telefonu=\'{phone}\',adres=\'{adress}\' WHERE id=\'{id}\';"
         cursor.execute(query)
         conn.commit()
         count = cursor.rowcount
@@ -242,7 +248,7 @@ def getBarmanData():
         barman_data = cursor.fetchone()
         cursor.close()
         conn.close()
-        return jsonify({"name": barman_data[0], "surname": barman_data[1],"phone": barman_data[2], "address": barman_data[3]}), 200
+        return jsonify({"name": barman_data[0], "surname": barman_data[1],"phone": barman_data[2], "address": barman_data[3],"id": barman_data[4], }), 200
 
     except (Exception, psycopg2.Error) as error :
         return jsonify({"error": str(error)}), 500
