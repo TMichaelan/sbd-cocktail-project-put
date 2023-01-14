@@ -65,6 +65,7 @@
           <tr>
             <th>Name of questionnaire</th>
             <th>Count of questions</th>
+            <th>Questions</th>
             <th></th>
             <th></th>
           </tr>
@@ -73,6 +74,7 @@
           {% for user in users %}
           <tr>
             <td>{{user[0]}}</td>
+            <td>{{user[1]}}</td>
             <td>{{user[1]}}</td>
             <td><button class="btn btn-primary" onclick="deleteQuestionnaire('{{user[0]}}')">Delete</button></td>
             <td><button class="btn btn-primary" onclick="demo.showNotification('top','center')">Modify</button></td>
