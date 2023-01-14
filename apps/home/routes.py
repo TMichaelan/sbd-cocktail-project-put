@@ -122,7 +122,6 @@ def sommelier():
 @blueprint.route('/questionnaire.html',methods=('GET', 'POST'))
 # @login_required
 def questionnaire():
-
     if request.method == 'POST':
         name = request.form['name']
         count = request.form['count']
@@ -131,6 +130,21 @@ def questionnaire():
         cur = conn.cursor()
         querry_add_user = 'INSERT INTO \"ankieta\" VALUES (\'{}\', \'{}\');'.format(name, count)
         cur.execute(querry_add_user)
+        conn.commit()
+
+        for i in range(int(count)):
+            question_name = request.form['question_name'+str(i)]
+            text = request.form['question_text'+str(i)]
+            
+            try: 
+                querry_add_pytanie = 'INSERT INTO \"pytanie\" VALUES (\'{}\', \'{}\');'.format(question_name, text)
+                cur.execute(querry_add_pytanie)
+            except Exception as err:
+                print(f'error occurred: {err}')
+
+            querry_add_ankieta_pytanie = 'INSERT INTO \"ankieta_pytanie\" VALUES (\'{}\', \'{}\');'.format(name, question_name)
+            conn.commit()
+            cur.execute(querry_add_ankieta_pytanie)
 
         conn.commit()
         cur.close()
@@ -157,9 +171,11 @@ def delete_questionnaire():
     try:
         conn = psycopg2.connect('postgresql://joramba:admin@localhost:5432/bazy_danych')
         cursor = conn.cursor()
-        query = f"DELETE FROM \"ankieta\" WHERE nazwa=\'{name}\'"
-        cursor.execute(query)
-
+        querry_delete_ankieta_pytanie = f"DELETE FROM \"ankieta_pytanie\" WHERE ankieta_nazwa=\'{name}\'"
+        querry_delete_ankieta = f"DELETE FROM \"ankieta\" WHERE nazwa=\'{name}\'"
+        cursor.execute(querry_delete_ankieta_pytanie)
+        conn.commit()
+        cursor.execute(querry_delete_ankieta)
         conn.commit()
         count = cursor.rowcount
         cursor.close()

@@ -102,7 +102,7 @@ CREATE TABLE IF NOT EXISTS public.pytanie
 (
     nazwa_pytanie character(255) COLLATE pg_catalog."default" NOT NULL,
     tekst_pytania character(255) COLLATE pg_catalog."default" NOT NULL,
-    typ_pytania character(255) COLLATE pg_catalog."default" NOT NULL,
+    typ_pytania character(255) COLLATE pg_catalog."default",
     CONSTRAINT pytanie_pkey PRIMARY KEY (nazwa_pytanie)
 );
 

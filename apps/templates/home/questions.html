@@ -1,0 +1,134 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} User Profile {% endblock %} 
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+  <style>
+  .card {
+    width: 150%;
+  }
+  .card .card-footer {
+    padding: 0;
+  }
+  .table {
+    width: 150%;
+  }
+
+  .card label {
+    margin: 0 10px 0 20px;
+  }
+  </style>
+  <div class="content">
+    <div class="row">
+      <div class="col-md-8">
+        <div class="card">
+          <div class="card-header">
+            <h5 class="title">Add Question</h5>
+          </div>
+          <div class="card-body">
+            <form method="post">
+              <div class="row">
+                <div class="col-md-6 pr-md-1">
+                  <div class="form-group">
+                    <label for="name">Name of Question</label>
+                    <input name="name" type="text" class="form-control" placeholder="Name">
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-8">
+                  <div class="form-group">
+                    <label for="question_text">Question Text</label>
+                    <textarea name="question_text" rows="4" cols="80" class="form-control" placeholder="Here can be your Review"></textarea>
+                  </div>
+                </div>
+              </div>
+              <div class="card-footer">
+                <button type="submit" class="btn btn-fill btn-primary">Add Question</button>
+              </div>
+            </form>
+          </div>
+        </div>
+        <table class="table">
+          <tr>
+            <th>Name of questionnaire</th>
+            <th>Count of questions</th>
+            <th></th>
+            <th></th>
+          </tr>
+    
+          <!-- here is a for-loop to give us all the socks -->
+          {% for user in users %}
+          <tr>
+            <td>{{user[0]}}</td>
+            <td>{{user[1]}}</td>
+            <td><button class="btn btn-primary" onclick="deleteQuestionnaire('{{user[0]}}')">Delete</button></td>
+            <td><button class="btn btn-primary" onclick="demo.showNotification('top','center')">Modify</button></td>
+          </tr>
+          {% endfor %}
+        </table>
+      </div>
+    </div>
+  </div>
+
+  
+<script>
+  function deleteQuestionnaire(name) {
+    $.ajax({
+      url: '/delete-questionnaire',
+      type: 'DELETE',
+      data: {name: name},
+      
+      success: function(result) {
+        window.location.reload(true);
+        console.log(data)
+      },
+      error: function(error) {
+        // Handle error
+      }
+    }); 
+    return false;
+  }
+
+  function modifyUser(id) {
+    $.ajax({
+      url: '/modify-user',
+      type: 'PUT',
+      data: {id: id},
+      success: function(result) {
+        // Handle successful modification
+      },
+      error: function(error) {
+        // Handle error
+      }
+    });
+  }
+
+  const count = document.querySelector(".count");
+  count.addEventListener("change", (e) => {
+    console.log(e.target.value);
+    document.querySelector(".questions").innerHTML = "";
+    
+
+    for (let i = 0; i < e.target.value; i++) {
+      document.querySelector(".questions").innerHTML += `
+        <div class="form-group">
+          <label for="question_name${i}">Name of Question ${i + 1}: </label>
+          <input name="question_name${i}" type="text" class="count" placeholder="Name of Question">
+          <div class="form-group">
+            <label for="question_text${i}">Text: </label>
+            <textarea name="question_text${i}" rows="3" cols="50" class="form-control" placeholder="Enter the Question"></textarea>
+          </div>
+        </div>
+      `;
+    }})
+</script>
+
+{% endblock content %}
+
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}{% endblock javascripts %}
