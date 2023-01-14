@@ -1,0 +1,120 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} User Profile {% endblock %} 
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+  <style>
+  .card {
+    width: 150%;
+  }
+  .card .card-footer {
+    padding: 0;
+  }
+  .table {
+    width: 150%;
+  }
+
+  .card label {
+    margin: 0 10px 0 20px;
+  }
+  .questions {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+  }
+  </style>
+  <div class="content">
+    <div class="row">
+      <div class="col-md-8">
+        <div class="card">
+          <div class="card-header">
+            <h5 class="title">Add Review</h5>
+          </div>
+          <div class="card-body">
+            <form method="post">
+              <div class="row">
+                <div class="col-md-6 pl-md-1">
+                  <div class="form-group">
+                    <label for="coctail">Choose a coctail:</label>
+                    <select id="coctail" name="coctail">
+                      {% for coctail in coctails %}
+                        <option value="{{coctail[0]}}">{{coctail[0]}}</option>
+                      {% endfor %}
+                    </select>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6 pl-md-1">
+                  <div class="form-group">
+                    <label for="questionnaire">Choose a Questionnaire:</label>
+                    <select id="questionnaire" name="questionnaire">
+                      {% for questionnaire in questionnaires %}
+                        <option value="{{questionnaire[0]}}">{{questionnaire[0]}}</option>
+                      {% endfor %}
+                    </select>
+                  </div>
+                </div>
+                <div class="col-md-6 pr-md-1 questionnaires"></div>
+              </div>
+              <div class="card-footer">
+                <button type="submit" class="btn btn-fill btn-primary">Add Review</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  
+<script>
+  function getQuestionnaires(name) {
+    $.ajax({
+        url: '/get-questionnaire-data',
+        type: "GET",
+        data: {name: name},
+        success: function(data) {
+          for(let i=0; i <data.length; i++){
+            console.log(data[i][1]);
+            document.querySelector('.questions').innerHTML += `
+              <li><label for="question_name">${data[i][1]}</label></li>
+            `
+          }
+        },
+        error: function(error) {
+            // handle error response here
+            console.log(error);
+      }
+    });
+  }
+
+  const questionnaire = document.querySelector("#questionnaire");
+  console.log(questionnaire.value);
+
+  questionnaire.addEventListener("change", (e) => {
+    document.querySelector(".questionnaires").innerHTML = `
+        <div class="form-group">
+          <label for="question_text">When writing a review, pay attention to the following questions from the questionnaire you have chosen: </label>
+          <div class=questions>
+          </div>
+          <div class="form-group">
+            <label for="question_text">Review: </label>
+            <textarea name="question_text" rows="4" cols="80" class="form-control" placeholder="Enter the Question"></textarea>
+            <label for="ocena">Ocena</label>
+            <input name="ocena" type="text" class="form-control" placeholder="Grade">
+        </div>
+      `;
+    console.log(questionnaire.value);
+    getQuestionnaires(questionnaire.value)
+    })
+</script>
+
+{% endblock content %}
+
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}{% endblock javascripts %}

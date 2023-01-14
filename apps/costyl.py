@@ -39,7 +39,14 @@ def get_coctail_sommelier():
     conn.close()
     return coctail_som
 
-
+def get_questions():
+    conn = psycopg2.connect('postgresql://joramba:admin@localhost:5432/bazy_danych')
+    cur = conn.cursor()
+    cur.execute("SELECT * FROM \"pytanie\"")
+    questionnaire = cur.fetchall()
+    cur.close()
+    conn.close()
+    return questionnaire
 
 def get_sommeliers():
     conn = psycopg2.connect('postgresql://joramba:admin@localhost:5432/bazy_danych')

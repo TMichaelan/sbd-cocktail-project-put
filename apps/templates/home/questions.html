@@ -1,4 +1,4 @@
-{% extends "layouts/base.html" %}
+ {% extends "layouts/base.html" %}
 
 {% block title %} User Profile {% endblock %} 
 
@@ -24,40 +24,10 @@
   <div class="content">
     <div class="row">
       <div class="col-md-8">
-        <div class="card">
-          <div class="card-header">
-            <h5 class="title">Add Question</h5>
-          </div>
-          <div class="card-body">
-            <form method="post">
-              <div class="row">
-                <div class="col-md-6 pr-md-1">
-                  <div class="form-group">
-                    <label for="name">Name of Question</label>
-                    <input name="name" type="text" class="form-control" placeholder="Name">
-                  </div>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-md-8">
-                  <div class="form-group">
-                    <label for="question_text">Question Text</label>
-                    <textarea name="question_text" rows="4" cols="80" class="form-control" placeholder="Here can be your Review"></textarea>
-                  </div>
-                </div>
-              </div>
-              <div class="card-footer">
-                <button type="submit" class="btn btn-fill btn-primary">Add Question</button>
-              </div>
-            </form>
-          </div>
-        </div>
         <table class="table">
           <tr>
             <th>Name of questionnaire</th>
-            <th>Count of questions</th>
-            <th></th>
-            <th></th>
+            <th>Count of questions</th>>
           </tr>
     
           <!-- here is a for-loop to give us all the socks -->
@@ -65,8 +35,6 @@
           <tr>
             <td>{{user[0]}}</td>
             <td>{{user[1]}}</td>
-            <td><button class="btn btn-primary" onclick="deleteQuestionnaire('{{user[0]}}')">Delete</button></td>
-            <td><button class="btn btn-primary" onclick="demo.showNotification('top','center')">Modify</button></td>
           </tr>
           {% endfor %}
         </table>

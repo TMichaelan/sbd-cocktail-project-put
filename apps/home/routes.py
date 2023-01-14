@@ -7,9 +7,10 @@ from apps.home import blueprint
 from flask import render_template, request, redirect, jsonify
 from flask_login import login_required
 from jinja2 import TemplateNotFound
+import json
 
 
-from apps.costyl import costyl,get_questionnaire,get_coctail_sommelier,get_barmans, get_sommeliers, get_coctails
+from apps.costyl import costyl, get_questions,get_questionnaire,get_coctail_sommelier,get_barmans, get_sommeliers, get_coctails
 import psycopg2
 import random
 
@@ -119,6 +120,45 @@ def sommelier():
         return render_template('home/page-500.html'), 500
 
 
+@blueprint.route('/add_review.html',methods=('GET', 'POST'))
+# @login_required
+def review():
+
+    # if request.method == 'POST':
+    #     name = request.form['name']
+    #     coctail = request.form['coctail']
+    #     recencja = request.form['recencja']
+    #     ocena = request.form['ocena']
+
+    #     # print(username, email, password, github)
+
+    #     conn = psycopg2.connect('postgresql://joramba:admin@localhost:5432/bazy_danych')
+    #     cur = conn.cursor()
+    #     querry_add_user = 'INSERT INTO \"sommelier\" VALUES (\'{}\', \'{}\', \'{}\');'.format(name, recencja, ocena)
+    #     querry_add_coctail = 'INSERT INTO \"sommelier_koktajl\" VALUES (\'{}\', \'{}\');'.format(name, coctail)
+    #     cur.execute(querry_add_user)
+    #     cur.execute(querry_add_coctail)
+
+     
+    #     conn.commit()
+    #     cur.close()
+    #     conn.close()
+    #     return redirect('add_review.html')
+
+
+    try:
+        coctails = get_coctails()
+        questionnaires = get_questionnaire()
+        # Serve the file (if exists) from app/templates/home/FILE.html
+        segment = get_segment(request)
+        return render_template("home/add_review.html" , segment=segment,coctails = coctails, questionnaires = questionnaires)
+    except TemplateNotFound:
+        return render_template('home/page-404.html'), 404
+
+    except:
+        return render_template('home/page-500.html'), 500
+
+
 @blueprint.route('/questionnaire.html',methods=('GET', 'POST'))
 # @login_required
 def questionnaire():
@@ -145,7 +185,6 @@ def questionnaire():
             querry_add_ankieta_pytanie = 'INSERT INTO \"ankieta_pytanie\" VALUES (\'{}\', \'{}\');'.format(name, question_name)
             conn.commit()
             cur.execute(querry_add_ankieta_pytanie)
-
             
         conn.commit()
         cur.close()
@@ -157,6 +196,20 @@ def questionnaire():
         users = get_questionnaire()
         segment = get_segment(request)
         return render_template("home/questionnaire.html" , segment=segment, users=users)
+    except TemplateNotFound:
+        return render_template('home/page-404.html'), 404
+
+    except:
+        return render_template('home/page-500.html'), 500
+
+
+@blueprint.route('/questions.html',methods=('GET', 'POST'))
+# @login_required
+def question():
+    try:
+        users = get_questions()
+        segment = get_segment(request)
+        return render_template("home/questions.html" , segment=segment, users=users)
     except TemplateNotFound:
         return render_template('home/page-404.html'), 404
 
@@ -316,6 +369,24 @@ def getBarmanData():
         cursor.close()
         conn.close()
         return jsonify({"name": barman_data[0], "surname": barman_data[1],"phone": barman_data[2], "address": barman_data[3],"id": barman_data[4], }), 200
+
+    except (Exception, psycopg2.Error) as error :
+        return jsonify({"error": str(error)}), 500
+
+
+@blueprint.route('/get-questionnaire-data', methods=(['GET']))
+def getQuestionnaire():
+    name = request.args.get('name')
+    try:
+        conn = psycopg2.connect('postgresql://joramba:admin@localhost:5432/bazy_danych')
+        cursor = conn.cursor()
+        query = f"SELECT * FROM \"ankieta_pytanie\" WHERE ankieta_nazwa=\'{name}\'"
+        cursor.execute(query)
+        questionnaire = cursor.fetchall()
+        cursor.close()
+        conn.close()
+        return jsonify(questionnaire), 200
+
 
     except (Exception, psycopg2.Error) as error :
         return jsonify({"error": str(error)}), 500
