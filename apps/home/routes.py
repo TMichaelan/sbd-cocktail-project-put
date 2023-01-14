@@ -67,6 +67,8 @@ def product_page(coctail_name):
         cur.execute(querry_ingredients)
         ingredients = cur.fetchall()
 
+        print(ingredients)
+
         querry_category =  "select * FROM \"kategoria_koktajli_koktajl\" WHERE koktajl_nazwa=\'{}\'".format(coctail_name)
         cur.execute(querry_category)
         category = cur.fetchall()

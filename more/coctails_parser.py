@@ -2,6 +2,7 @@ import requests
 from requests.exceptions import HTTPError
 import random
 import psycopg2
+import time 
 
 data = [
         'strDrink',
@@ -48,46 +49,51 @@ ingridients = ['strIngredient1', 'strIngredient2', 'strIngredient3', 'strIngredi
 measures = ['strMeasure1', 'strMeasure2', 'strMeasure3', 'strMeasure4', 'strMeasure5', 'strMeasure6', 'strMeasure7', 'strMeasure8', 'strMeasure9', 
 'strMeasure10', 'strMeasure11', 'strMeasure12', 'strMeasure13', 'strMeasure14', 'strMeasure15']
 
-coctail_name = ''
-coctail_tags = ''
-coctail_image = ''
-coctail_instruction = ''
-coctail_alc = ''
-coctail_ingridients = []
-coctail_measures = []
 
 def parse_coctail(number):
     global coctail_name, coctail_tags, coctail_image, coctail_instruction, coctail_alc, coctail_ingridients, coctail_measures
+
+    coctail_name = ''
+    coctail_tags = ''
+    coctail_image = ''
+    coctail_instruction = ''
+    coctail_alc = ''
+    coctail_ingridients = []
+    coctail_measures = []
+
     try:
         id = number
         response = requests.get('https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i={}'.format(id))
         response.raise_for_status()
         jsonResponse = response.json()
 
-        edited_response = jsonResponse['drinks'][0]
-        for drink in edited_response:
-            if drink in data:
-                if drink == 'strDrink':
-                    coctail_name = edited_response[drink]
-                elif drink == 'strTags':
-                    coctail_tags = edited_response[drink]
-                elif drink == 'strDrinkThumb':
-                    coctail_image = edited_response[drink]
-                elif drink == 'strInstructions':
-                    coctail_instruction = edited_response[drink]
-                elif drink == 'strAlcoholic':
-                    coctail_alc = edited_response[drink]
-                elif drink == 'strInstructions':
-                    coctail_instruction = edited_response[drink]
-                elif drink == 'strInstructions':
-                    coctail_instruction = edited_response[drink]
+        if jsonResponse['drinks'] != None:  
+            edited_response = jsonResponse['drinks'][0]
 
-                if drink in ingridients:
-                    if edited_response[drink] != None:
-                        coctail_ingridients.append(edited_response[drink])
-                if drink in measures:
-                    if edited_response[drink] != None:
-                        coctail_measures.append(edited_response[drink])
+            for drink in edited_response:
+                if drink in data:
+                    if drink == 'strDrink':
+                        coctail_name = edited_response[drink]
+                    elif drink == 'strTags':
+                        coctail_tags = edited_response[drink]
+                    elif drink == 'strDrinkThumb':
+                        coctail_image = edited_response[drink]
+                    elif drink == 'strInstructions':
+                        coctail_instruction = edited_response[drink]
+                    elif drink == 'strAlcoholic':
+                        coctail_alc = edited_response[drink]
+                    elif drink == 'strInstructions':
+                        coctail_instruction = edited_response[drink]
+                    elif drink == 'strInstructions':
+                        coctail_instruction = edited_response[drink]
+
+                    if drink in ingridients:
+                        if edited_response[drink] != None:
+                            coctail_ingridients.append(edited_response[drink])
+                            
+                    if drink in measures:
+                        if edited_response[drink] != None:
+                            coctail_measures.append(edited_response[drink])
                     
     except HTTPError as http_err:
         print(f'HTTP error occurred: {http_err}')
@@ -99,7 +105,13 @@ def przepis():
     conn = psycopg2.connect(db_url)
     cur = conn.cursor()
     querry = 'INSERT INTO \"przepis\" VALUES (\'{}\', \'{}\', \'{}\');'.format(coctail_name,len(coctail_ingridients),coctail_instruction) 
-    cur.execute(querry)
+    
+    try:
+        cur.execute(querry)
+    except Exception as err:
+        print(f'error occurred: {err}')
+        conn.rollback()
+
     conn.commit()
     cur.close()
     conn.close()
@@ -110,7 +122,13 @@ def koktajl():
     ocena1 = round(random.uniform(3, 5), 2)
     ocena2 = round(random.uniform(3, 5), 2)
     querry = 'INSERT INTO \"koktajl\" VALUES (\'{}\', \'{}\', \'{}\',\'{}\');'.format(coctail_name,coctail_image,ocena1,ocena2) 
-    cur.execute(querry)
+
+    try:
+        cur.execute(querry)
+    except Exception as err:
+        print(f'error occurred: {err}')
+        conn.rollback()
+
     conn.commit()
     cur.close()
     conn.close()
@@ -119,7 +137,13 @@ def kategoria_koktajl():
     conn = psycopg2.connect(db_url)
     cur = conn.cursor()
     querry = 'INSERT INTO \"kategoria_koktajli\" VALUES (\'{}\');'.format(coctail_alc) 
-    cur.execute(querry)
+    
+    try:
+        cur.execute(querry)
+    except Exception as err:
+        print(f'error occurred: {err}')
+        conn.rollback()
+        
     conn.commit()
     cur.close()
     conn.close()
@@ -129,7 +153,13 @@ def kategoria_koktajli_koktajl():
     conn = psycopg2.connect(db_url)
     cur = conn.cursor()
     querry = 'INSERT INTO \"kategoria_koktajli_koktajl\" VALUES (\'{}\', \'{}\');'.format(coctail_alc,coctail_name) 
-    cur.execute(querry)
+    
+    try:
+        cur.execute(querry)
+    except Exception as err:
+        print(f'error occurred: {err}')
+        conn.rollback()
+
     conn.commit()
     cur.close()
     conn.close()
@@ -139,62 +169,59 @@ def czynnosc():
 
 def skladnik():
     conn = psycopg2.connect(db_url)
-    cur = conn.cursor()
-    for ingredient in coctail_ingridients:
-        querry = 'INSERT INTO \"skladnik\" VALUES (\'{}\');'.format(ingredient) 
-        cur.execute(querry)
-        conn.commit()
+    for i in range(len(coctail_ingridients)):
+        print(coctail_ingridients[i])
+        cur = conn.cursor()
+        querry = 'INSERT INTO \"skladnik\" VALUES (\'{}\');'.format(coctail_ingridients[i]) 
 
-    cur.close()
+        try:
+            cur.execute(querry)
+            conn.commit()
+            cur.close()    
+        except Exception as err:
+            print(f'error occurred: {err}')
+            conn.rollback()
+
     conn.close()
 
 def skladnik_przepis():
+    
     conn = psycopg2.connect(db_url)
-    cur = conn.cursor()
+    
     for ingr_measure in range(len(coctail_ingridients)):
-        querry = 'INSERT INTO \"skladnik_przepis\" VALUES (\'{}\',\'{}\',\'{}\');'.format(coctail_ingridients[ingr_measure],coctail_name,coctail_measures[ingr_measure]) 
-        # print(querry)
-        cur.execute(querry)
-        conn.commit()
-    cur.close()
+        cur = conn.cursor()
+        try:
+            querry = 'INSERT INTO \"skladnik_przepis\" VALUES (\'{}\',\'{}\',\'{}\');'.format(coctail_ingridients[ingr_measure],coctail_name,coctail_measures[ingr_measure])
+        except Exception as err:
+            querry = 'INSERT INTO \"skladnik_przepis\" VALUES (\'{}\',\'{}\',\'{}\');'.format(coctail_ingridients[ingr_measure],coctail_name,'  ')
+            print(f'error occurred: {err}')
+
+        try:
+            cur.execute(querry)
+            conn.commit()
+            cur.close()
+        except Exception as err:
+            print(f'error occurred: {err}')
+            conn.rollback()
+            cur.close()
+    
     conn.close()
 
-amount = 30
-number = 11000
+def start(start_id,amount):
+    for i in range(0,amount):
+        start_id+=1
+        parse_coctail(start_id)
+        try:
+            przepis()
+            koktajl()
+            skladnik()
+            kategoria_koktajl()
+            kategoria_koktajli_koktajl()
+            skladnik_przepis()
+        except Exception as err:
+            print(f'error occurred: {err}')
 
-for i in range(0,amount):
-    number+=1
-    parse_coctail(number)
-    try:
-        przepis()
-        koktajl()
-        kategoria_koktajl()
-    except Exception as err:
-        print(f'error occurred: {err}')
-    
-    try:
-        kategoria_koktajli_koktajl()
-    except Exception as err:
-        print(f'error occurred: {err}')
+# start(11000,25)
+start(12560,30)
 
-amount = 30
-number = 12560
-
-for i in range(0,amount):
-    number+=1
-    parse_coctail(number)
-    try:
-        pass
-        przepis()
-        koktajl()
-        kategoria_koktajl()
-        skladnik()
-    except Exception as err:
-        print(f'error occurred: {err}')
-    
-    try:
-        kategoria_koktajli_koktajl()
-        skladnik_przepis()
-    except Exception as err:
-        print(f'error occurred: {err}')
 
