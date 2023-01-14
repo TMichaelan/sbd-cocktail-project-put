@@ -172,6 +172,42 @@ def delete_sommelier():
         return jsonify({"error": str(error)}), 500
 
 
+@blueprint.route('/modify-barman', methods=['PUT'])
+def modify_user():
+    name = request.form.get('name')
+
+    try:
+        conn = psycopg2.connect('postgresql://joramba:admin@localhost:5432/bazy_danych')
+        cursor = conn.cursor()
+        query = f"DELETE FROM \"barman\" WHERE imie=\'{name}\'"
+        cursor.execute(query)
+        conn.commit()
+        count = cursor.rowcount
+        cursor.close()
+        conn.close()
+        return jsonify({"message": f"{count} user modified"}), 200
+    except (Exception, psycopg2.Error) as error :
+        return jsonify({"error": str(error)}), 500 
+
+
+@blueprint.route('/get-barman-data', methods=(['GET']))
+def getBarmanData():
+    name = request.args.get('name')
+    try:
+        conn = psycopg2.connect('postgresql://joramba:admin@localhost:5432/bazy_danych')
+        cursor = conn.cursor()
+        query = f"SELECT * FROM \"barman\" WHERE imie=\'{name}\'"
+        cursor.execute(query)
+        barman_data = cursor.fetchone()
+        cursor.close()
+        conn.close()
+        return jsonify({"name": barman_data[0], "surname": barman_data[1],"phone": barman_data[2], "address": barman_data[3]}), 200
+
+    except (Exception, psycopg2.Error) as error :
+        return jsonify({"error": str(error)}), 500
+
+
+  
 @blueprint.route('/delete-barman', methods=['DELETE'])
 def delete_user():
     # user_id = request.json
@@ -222,6 +258,7 @@ def delete_users():
 @login_required
 def barman():
     if request.method == 'POST':
+
         name = request.form['name']
         surname = request.form['surname']
         phone = request.form['phone']

@@ -17,11 +17,15 @@
    .table{
     width: 150%;
    }
+   #modify-form{
+    /* display: none; */
+   }
+
   </style>
   <div class="content">
     <div class="row">
       <div class="col-md-8">
-        <div class="card">
+        <div id="add-barman" class="card">
           <div class="card-header">
             <h5 class="title">Add Barman</h5>
           </div>
@@ -61,6 +65,46 @@
             </form>
           </div>
         </div>
+        <div id="modify-form" class="card">
+          <div class="card-header">
+            <h5 class="title">Modify Barman</h5>
+          </div>
+          <div class="card-body">
+            <form method="post">
+              <div class="row">
+                <div class="col-md-6 pr-md-1">
+                  <div class="form-group">
+                    <label for="name">Name</label>
+                    <input id="input-name"  name="name" type="text" class="form-control" placeholder="Name">
+                  </div>
+                </div>
+                <div class="col-md-6 pl-md-1">
+                  <div class="form-group">
+                    <label for="surname">Surname</label>
+                    <input id="input-surname" name="surname" type="text" class="form-control" placeholder="Surname">
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6 pr-md-1">
+                  <div class="form-group">
+                    <label for="phone">Phone Number</label>
+                    <input id="input-phone" name="phone" type="text" class="form-control" placeholder="Phone Number">
+                  </div>
+                </div>
+                <div class="col-md-6 pl-md-1">
+                  <div class="form-group">
+                    <label for="adres">Adres</label>
+                    <input id="input-address" name="adres" type="text" class="form-control" placeholder="Adres">
+                  </div>
+                </div>
+              </div>
+              <div class="card-footer">
+                <button class="btn btn-primary" onclick="modifyUser($('#input-name').val())">Modify</button>
+              </div>
+            </form>
+          </div>
+        </div>
         <table class="table">
           <tr>
             <th>Name</th>
@@ -79,9 +123,8 @@
             <td>{{user[2]}}</td>
             <td>{{user[3]}}</td>
             <td><button class="btn btn-primary" onclick="deleteBarman('{{user[0]}}')">Delete</button></td>
-            <td><button class="btn btn-primary" onclick="demo.showNotification('top','center')">Modify</button></td>
-            <!-- <td><button>Delete</button></td> -->
-            <!-- <td><button>Modify</button></td> -->
+            <td><button class="modify-button btn btn-primary" onclick="getBarmanData('{{user[0]}}')">Modify</button></td>
+            <!-- <td><button class="btn btn-primary" onclick="demo.showNotification('top','center')">Modify</button></td> -->
             </tr>
           {% endfor %}
         </table>
@@ -108,19 +151,46 @@
     return false;
   }
 
-  function modifyUser(id) {
-    $.ajax({
-      url: '/modify-user',
-      type: 'PUT',
-      data: {id: id},
-      success: function(result) {
-        // Handle successful modification
-      },
-      error: function(error) {
-        // Handle error
-      }
-    });
-  }
+  function getBarmanData(name) {
+        name = decodeURIComponent(name);
+       
+        $.ajax({
+            url: '/get-barman-data',
+            type: "GET",
+            data: {name: name},
+            success: function(data) {
+
+                $("#input-name").val(data.name);
+                $("#input-surname").val(data.surname);
+                $("#input-phone").val(data.phone);
+                $("#input-address").val(data.address);
+                $("#modify-form").show();
+            },
+            error: function(error) {
+                // handle error response here
+                console.log(error);
+            }
+        });
+    }
+
+  function modifyUser(name) {
+
+        $.ajax({
+            type: "PUT",
+            url: '/modify-barman',
+            data: {name: name},
+            success: function(data) {
+                // handle success response here
+                alert("User has been modified!");
+                location.reload();
+            },
+            error: function(error) {
+                // handle error response here
+                console.log(error);
+            }
+        });
+    }
+
 </script>
 
 {% endblock content %}

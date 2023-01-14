@@ -141,7 +141,7 @@ def skladnik():
 
 number = 11000
 
-for i in range(25):
+for i in range(50):
     number+=1
     parse_coctail(number)
     try:
