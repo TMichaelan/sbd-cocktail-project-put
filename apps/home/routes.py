@@ -139,9 +139,14 @@ def coctails_cards():
         for i in range(int(count)):
             skladnik = request.form['ingredient'+str(i)]
             miara = request.form['measure'+str(i)]
-            querry_add_skladnik = 'INSERT INTO \"skladnik\" VALUES (\'{}\');'.format(skladnik)
+            
+            try: 
+                querry_add_skladnik = 'INSERT INTO \"skladnik\" VALUES (\'{}\');'.format(skladnik)
+                cur.execute(querry_add_skladnik)
+            except Exception as err:
+                print(f'error occurred: {err}')
+
             querry_add_skladnik_przepis = 'INSERT INTO \"skladnik_przepis\" VALUES (\'{}\', \'{}\', \'{}\');'.format(skladnik, nazwa, miara)
-            cur.execute(querry_add_skladnik)
             conn.commit()
             cur.execute(querry_add_skladnik_przepis)
      
