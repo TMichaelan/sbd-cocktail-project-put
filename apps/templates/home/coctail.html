@@ -57,7 +57,7 @@
                         </div>
                         <div class="card-body">
                             Number of products: {{recipe[1]}} <br>
-                            Category: Alcoholic-Non Alcoholic <br>
+                            Category: {{category[0][0]}} <br>
                             Preparation: {{recipe[2]}} <br>
                             <div class="card-grades">
                                 <!-- <h5 class="card-category">User grade: {{coctail[2]}}</h5>
@@ -72,7 +72,21 @@
                             <h3 class="card-title"><i class="text-primary"></i>Ingredients:</h3>
                         </div>
                         <div class="card-body">
-                                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ullam nihil, sunt unde impedit explicabo et commodi similique blanditiis laudantium perspiciatis a nisi aspernatur reprehenderit fugiat provident vitae quas, minus dignissimos!
+                            <table class="table">
+                                <tr>
+                                  <th>Ingredient</th>
+                                  <th>Measure</th>
+                                </tr>
+                        
+                                <!-- here is a for-loop to give us all the socks -->
+                                {% for ingredient in ingredients %}
+                        
+                                <tr>
+                                  <td>{{ ingredient[0] }}</td>
+                                  <td>{{ ingredient[2] }}</td>
+                                </tr>
+                                {% endfor %}
+                              </table>
                             <div class="card-grades">
                                 <!-- <h5 class="card-category">User grade: {{coctail[2]}}</h5>
                                 <h5 class="card-category">Sommelier Grade: {{coctail[3]}}</h5> -->
