@@ -146,6 +146,7 @@ def questionnaire():
             conn.commit()
             cur.execute(querry_add_ankieta_pytanie)
 
+            
         conn.commit()
         cur.close()
         conn.close()
