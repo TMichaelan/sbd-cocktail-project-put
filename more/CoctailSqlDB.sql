@@ -126,7 +126,6 @@ CREATE TABLE IF NOT EXISTS public.sommelier
     pseudonim character(255) COLLATE pg_catalog."default" NOT NULL,
     recenzja character(255) COLLATE pg_catalog."default" NOT NULL,
     ocena numeric(3, 0) NOT NULL,
-    id bigserial NOT NULL,
     CONSTRAINT "Sommelier_pkey" PRIMARY KEY (pseudonim)
 );
 
@@ -134,6 +133,14 @@ CREATE TABLE IF NOT EXISTS public.sommelier_koktajl
 (
     sommelier_pseudonim character(255) COLLATE pg_catalog."default" NOT NULL,
     koktajl_nazwa character(255) COLLATE pg_catalog."default" NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS public.ankieta_pytanie
+(
+    ankieta_nazwa character(255) COLLATE pg_catalog."default" NOT NULL,
+    pytanie_nazwa_pytanie character(255) COLLATE pg_catalog."default" NOT NULL,
+    id bigint NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 ),
+    CONSTRAINT "Pk_id" PRIMARY KEY (id)
 );
 
 ALTER TABLE IF EXISTS public.barman_koktajl
@@ -220,16 +227,6 @@ ALTER TABLE IF EXISTS public.odpowiedz_koktajl
     NOT VALID;
 
 
-ALTER TABLE IF EXISTS public.pytanie
-    ADD CONSTRAINT pytanie_nazwa_pytanie_fkey FOREIGN KEY (nazwa_pytanie)
-    REFERENCES public.ankieta (nazwa) MATCH SIMPLE
-    ON UPDATE NO ACTION
-    ON DELETE NO ACTION
-    NOT VALID;
-CREATE INDEX IF NOT EXISTS pytanie_pkey
-    ON public.pytanie(nazwa_pytanie);
-
-
 ALTER TABLE IF EXISTS public.skladnik_przepis
     ADD CONSTRAINT skladnik_przepis_przepis_nazwa_przepisa_fkey FOREIGN KEY (przepis_nazwa_przepisa)
     REFERENCES public.przepis (nazwa_przepisa) MATCH SIMPLE
@@ -257,6 +254,22 @@ ALTER TABLE IF EXISTS public.sommelier_koktajl
 ALTER TABLE IF EXISTS public.sommelier_koktajl
     ADD CONSTRAINT "Sommelier_Koktajl_Sommelier_Pseudonim_fkey" FOREIGN KEY (sommelier_pseudonim)
     REFERENCES public.sommelier (pseudonim) MATCH SIMPLE
+    ON UPDATE NO ACTION
+    ON DELETE NO ACTION
+    NOT VALID;
+
+
+ALTER TABLE IF EXISTS public.ankieta_pytanie
+    ADD FOREIGN KEY (ankieta_nazwa)
+    REFERENCES public.ankieta (nazwa) MATCH SIMPLE
+    ON UPDATE NO ACTION
+    ON DELETE NO ACTION
+    NOT VALID;
+
+
+ALTER TABLE IF EXISTS public.ankieta_pytanie
+    ADD FOREIGN KEY (pytanie_nazwa_pytanie)
+    REFERENCES public.pytanie (nazwa_pytanie) MATCH SIMPLE
     ON UPDATE NO ACTION
     ON DELETE NO ACTION
     NOT VALID;

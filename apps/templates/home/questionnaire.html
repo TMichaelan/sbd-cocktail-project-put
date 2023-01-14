@@ -52,7 +52,7 @@
                     />
                   </div>
                 </div>
-                <div class="col-md-6 pr-md-1 ingredients"></div>
+                <div class="col-md-6 pr-md-1 questions"></div>
 
               </div>
               <div class="card-footer">
@@ -115,6 +115,25 @@
       }
     });
   }
+
+  const count = document.querySelector(".count");
+  count.addEventListener("change", (e) => {
+    console.log(e.target.value);
+    document.querySelector(".questions").innerHTML = "";
+    
+
+    for (let i = 0; i < e.target.value; i++) {
+      document.querySelector(".questions").innerHTML += `
+        <div class="form-group">
+          <label for="question_name${i}">Name of Question ${i + 1}: </label>
+          <input name="question_name${i}" type="text" class="count" placeholder="Name of Question">
+          <div class="form-group">
+            <label for="question_text${i}">Text: </label>
+            <textarea name="question_text${i}" rows="3" cols="50" class="form-control" placeholder="Enter the Question"></textarea>
+          </div>
+        </div>
+      `;
+    }})
 </script>
 
 {% endblock content %}
