@@ -42,7 +42,7 @@ data = [
     ]
 
 
-ingritients = ['strIngredient1', 'strIngredient2', 'strIngredient3', 'strIngredient4', 'strIngredient5', 'strIngredient6', 'strIngredient7', 
+ingridients = ['strIngredient1', 'strIngredient2', 'strIngredient3', 'strIngredient4', 'strIngredient5', 'strIngredient6', 'strIngredient7', 
 'strIngredient8', 'strIngredient9', 'strIngredient10', 'strIngredient11', 'strIngredient12', 'strIngredient13', 'strIngredient14', 'strIngredient15']
 
 measures = ['strMeasure1', 'strMeasure2', 'strMeasure3', 'strMeasure4', 'strMeasure5', 'strMeasure6', 'strMeasure7', 'strMeasure8', 'strMeasure9', 
@@ -53,11 +53,11 @@ coctail_tags = ''
 coctail_image = ''
 coctail_instruction = ''
 coctail_alc = ''
-coctail_ingritients = []
+coctail_ingridients = []
 coctail_measures = []
 
 def parse_coctail(number):
-    global coctail_name, coctail_tags, coctail_image, coctail_instruction, coctail_alc, coctail_ingritients, coctail_measures
+    global coctail_name, coctail_tags, coctail_image, coctail_instruction, coctail_alc, coctail_ingridients, coctail_measures
     try:
         id = number
         response = requests.get('https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i={}'.format(id))
@@ -82,9 +82,9 @@ def parse_coctail(number):
                 elif drink == 'strInstructions':
                     coctail_instruction = edited_response[drink]
 
-                if drink in ingritients:
+                if drink in ingridients:
                     if edited_response[drink] != None:
-                        coctail_ingritients.append(edited_response[drink])
+                        coctail_ingridients.append(edited_response[drink])
                 if drink in measures:
                     if edited_response[drink] != None:
                         coctail_measures.append(edited_response[drink])
@@ -98,7 +98,7 @@ db_url = 'postgresql://joramba:admin@localhost:5432/bazy_danych'
 def przepis():
     conn = psycopg2.connect(db_url)
     cur = conn.cursor()
-    querry = 'INSERT INTO \"przepis\" VALUES (\'{}\', \'{}\', \'{}\');'.format(coctail_name,len(coctail_ingritients),coctail_instruction) 
+    querry = 'INSERT INTO \"przepis\" VALUES (\'{}\', \'{}\', \'{}\');'.format(coctail_name,len(coctail_ingridients),coctail_instruction) 
     cur.execute(querry)
     conn.commit()
     cur.close()
@@ -138,7 +138,26 @@ def czynnosc():
     pass
 
 def skladnik():
-    pass
+    conn = psycopg2.connect(db_url)
+    cur = conn.cursor()
+    for ingredient in coctail_ingridients:
+        querry = 'INSERT INTO \"skladnik\" VALUES (\'{}\');'.format(ingredient) 
+        cur.execute(querry)
+        conn.commit()
+
+    cur.close()
+    conn.close()
+
+def skladnik_przepis():
+    conn = psycopg2.connect(db_url)
+    cur = conn.cursor()
+    for ingr_measure in range(len(coctail_ingridients)):
+        querry = 'INSERT INTO \"skladnik_przepis\" VALUES (\'{}\',\'{}\',\'{}\');'.format(coctail_ingridients[ingr_measure],coctail_name,coctail_measures[ingr_measure]) 
+        # print(querry)
+        cur.execute(querry)
+        conn.commit()
+    cur.close()
+    conn.close()
 
 amount = 30
 number = 11000
@@ -160,19 +179,22 @@ for i in range(0,amount):
 
 amount = 30
 number = 12560
-   
+
 for i in range(0,amount):
     number+=1
     parse_coctail(number)
     try:
+        pass
         przepis()
         koktajl()
         kategoria_koktajl()
+        skladnik()
     except Exception as err:
         print(f'error occurred: {err}')
     
     try:
         kategoria_koktajli_koktajl()
+        skladnik_przepis()
     except Exception as err:
         print(f'error occurred: {err}')
 
