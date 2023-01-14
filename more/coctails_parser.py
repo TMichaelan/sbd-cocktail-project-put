@@ -139,15 +139,21 @@ def czynnosc():
 def skladnik():
     pass
 
+amount = 30
 number = 11000
 
-for i in range(50):
+for i in range(0,amount):
     number+=1
     parse_coctail(number)
     try:
         przepis()
         koktajl()
         kategoria_koktajl()
+    except Exception as err:
+        print(f'error occurred: {err}')
+    
+    try:
         kategoria_koktajli_koktajl()
     except Exception as err:
         print(f'error occurred: {err}')
+
