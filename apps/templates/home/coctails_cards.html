@@ -1,144 +1,213 @@
-{% extends "layouts/base.html" %}
-
-{% block title %} User Profile {% endblock %} 
+{% extends "layouts/base.html" %} {% block title %} User Profile {% endblock %}
 
 <!-- Specific Page CSS goes HERE  -->
-{% block stylesheets %}{% endblock stylesheets %}
-
-{% block content %}
-  <style>
-    .card {
-      width: 150%;
-    }
-    .card .card-footer{
-      
-      padding: 0;
-    }
-   .table{
+{% block stylesheets %}{% endblock stylesheets %} {% block content %}
+<style>
+  .card {
     width: 150%;
-   }
-  </style>
-  <div class="content">
-    <div class="row">
-      <div class="col-md-8">
-        <div class="card">
-          <div class="card-header">
-            <h5 class="title">Add Coctail</h5>
-          </div>
-          <div class="card-body">
-            <form method="post">
-              <div class="row">
-                <div class="col-md-6 pr-md-1">
-                  <div class="form-group">
-                    <label for="nazwa">Coctail Name</label>
-                    <input name="nazwa" type="text" class="form-control" placeholder="Coctail">
-                  </div>
-                </div>
-                <div class="col-md-6 pl-md-1">
-                  <div class="form-group">
-                    <label for="obraz">Link to image</label>
-                    <input name="obraz" type="text" class="form-control" placeholder="Image">
-                  </div>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-md-6 pr-md-1">
-                  <div class="form-group">
-                    <label for="srednia_ocena_uzytkownika">Average User Grade</label>
-                    <input name="srednia_ocena_uzytkownika" type="text" class="form-control" placeholder="Average User Grade">
-                  </div>
-                </div>
-                <div class="col-md-6 pl-md-1">
-                  <div class="form-group">
-                    <label for="srednia_ocena_sommelier">Average Sommelier Grade</label>
-                    <input name="srednia_ocena_sommelier" type="text" class="form-control" placeholder="Average Sommelier Grade">
-                  </div>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-md-8">
-                  <div class="form-group">
-                    <label for="notatka">Note</label>
-                    <textarea name="notatka" rows="4" cols="80" class="form-control" placeholder="Here can be your Note"></textarea>
-                  </div>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-md-6 pr-md-1">
-                  <div class="form-group">
-                    <label for="count">Count of Ingredients</label>
-                    <input name="count" type="text" class="form-control" placeholder="Count">
-                  </div>
-                </div>
-              </div>
+  }
+  .card .card-footer {
+    padding: 0;
+  }
+  .table {
+    width: 150%;
+  }
 
-              <div class="card-footer">
-                <button type="submit" class="btn btn-fill btn-primary">Add Coctail</button>
-              </div>
-            </form>
-          </div>
+  .card label {
+    margin: 0 10px 0 20px;
+  }
+</style>
+<div class="content">
+  <div class="row">
+    <div class="col-md-8">
+      <div class="card">
+        <div class="card-header">
+          <h5 class="title">Add Coctail</h5>
         </div>
-        <table class="table">
-          <tr>
-            <th>Coctail Name</th>
-            <th>Image</th>
-            <th>Average User Grade</th>
-            <th>Average Sommelier Grade</th>
-            <th></th>
-            <th></th>
-          </tr>
-          
-          
-         
-          <!-- here is a for-loop to give us all the socks -->
-          {% for user in users %}
-               
-          <tr>
-            <td>{{ user[0] }}</td>
-            <td> <img src="{{ user[1] }}" alt="Image Coctail"width="100" height="120"></td>
-            <td>{{ user[2] }}</td>
-            <td>{{ user[3] }}</td>
-            <td><button class="btn btn-primary" onclick="deleteUser('{{user[0]}}')">Delete</button></td>
-            <td><button class="btn btn-primary" onclick="demo.showNotification('top','center')">Modify</button></td>
-            </tr>
-          {% endfor %}
-        </table>
+        <div class="card-body">
+          <form method="post">
+            <div class="row">
+              <div class="col-md-6 pr-md-1">
+                <div class="form-group">
+                  <label for="nazwa">Coctail Name</label>
+                  <input
+                    name="nazwa"
+                    type="text"
+                    class="form-control"
+                    placeholder="Coctail"
+                  />
+                </div>
+              </div>
+              <div class="col-md-6 pl-md-1">
+                <div class="form-group">
+                  <label for="obraz">Link to image</label>
+                  <input
+                    name="obraz"
+                    type="text"
+                    class="form-control"
+                    placeholder="Image"
+                  />
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6 pr-md-1">
+                <div class="form-group">
+                  <label for="srednia_ocena_uzytkownika"
+                    >Average User Grade</label
+                  >
+                  <input
+                    name="srednia_ocena_uzytkownika"
+                    type="text"
+                    class="form-control"
+                    placeholder="Average User Grade"
+                  />
+                </div>
+              </div>
+              <div class="col-md-6 pl-md-1">
+                <div class="form-group">
+                  <label for="srednia_ocena_sommelier"
+                    >Average Sommelier Grade</label
+                  >
+                  <input
+                    name="srednia_ocena_sommelier"
+                    type="text"
+                    class="form-control"
+                    placeholder="Average Sommelier Grade"
+                  />
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-8">
+                <div class="form-group">
+                  <label for="notatka">Note</label>
+                  <textarea
+                    name="notatka"
+                    rows="4"
+                    cols="80"
+                    class="form-control"
+                    placeholder="Here can be your Note"
+                  ></textarea>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6 pr-md-1">
+                <div class="form-group">
+                  <label for="count">Count of Ingredients</label>
+                  <input
+                    name="count"
+                    type="number"
+                    class="count"
+                    placeholder="Count"
+                  />
+                </div>
+              </div>
+              <div class="col-md-6 pr-md-1 ingredients"></div>
+            </div>
+
+            <div class="card-footer">
+              <button type="submit" class="btn btn-fill btn-primary">
+                Add Coctail
+              </button>
+            </div>
+          </form>
+        </div>
       </div>
-    
+      <table class="table">
+        <tr>
+          <th>Coctail Name</th>
+          <th>Image</th>
+          <th>Average User Grade</th>
+          <th>Average Sommelier Grade</th>
+          <th></th>
+          <th></th>
+        </tr>
+
+        <!-- here is a for-loop to give us all the socks -->
+        {% for user in users %}
+
+        <tr>
+          <td>{{ user[0] }}</td>
+          <td>
+            <img
+              src="{{ user[1] }}"
+              alt="Image Coctail"
+              width="100"
+              height="120"
+            />
+          </td>
+          <td>{{ user[2] }}</td>
+          <td>{{ user[3] }}</td>
+          <td>
+            <button class="btn btn-primary" onclick="deleteUser('{{user[0]}}')">
+              Delete
+            </button>
+          </td>
+          <td>
+            <button
+              class="btn btn-primary"
+              onclick="demo.showNotification('top','center')"
+            >
+              Modify
+            </button>
+          </td>
+        </tr>
+        {% endfor %}
+      </table>
     </div>
   </div>
-  <script>
-    function deleteUser(name) {
-      $.ajax({
-        url: '/delete-user',
-        type: 'DELETE',
-        data: {name: name},
-        
-        success: function(result) {
-          window.location.reload(true);
-          console.log(data)
-        },
-        error: function(error) {
-          // Handle error
-        }
-      }); 
-      return false;
+</div>
+<script>
+  function deleteUser(name) {
+    $.ajax({
+      url: "/delete-user",
+      type: "DELETE",
+      data: { name: name },
+
+      success: function (result) {
+        window.location.reload(true);
+        console.log(data);
+      },
+      error: function (error) {
+        // Handle error
+      },
+    });
+    return false;
+  }
+
+  function modifyUser(id) {
+    $.ajax({
+      url: "/modify-user",
+      type: "PUT",
+      data: { id: id },
+      success: function (result) {
+        // Handle successful modification
+      },
+      error: function (error) {
+        // Handle error
+      },
+    });
+  }
+
+  const count = document.querySelector(".count");
+  count.addEventListener("change", (e) => {
+    console.log(e.target.value);
+    document.querySelector(".ingredients").innerHTML = "";
+
+    for (let i = 0; i < e.target.value; i++) {
+      document.querySelector(".ingredients").innerHTML += `
+        <div class="form-group">
+          <label for="ingredient${i}">Ingredient ${i + 1}: </label>
+          <input name="ingredient${i}" type="text" class="count" placeholder="Ingredient">
+          <label for="measure${i}">Measure: </label>
+          <input name="measure${i}" type="text" class="count" placeholder="Measure">
+        </div>
+      `;
     }
-  
-    function modifyUser(id) {
-      $.ajax({
-        url: '/modify-user',
-        type: 'PUT',
-        data: {id: id},
-        success: function(result) {
-          // Handle successful modification
-        },
-        error: function(error) {
-          // Handle error
-        }
-      });
-    }
-  </script>
+  });
+</script>
 
 {% endblock content %}
 

@@ -122,7 +122,6 @@ CREATE TABLE IF NOT EXISTS public.pytanie
 CREATE TABLE IF NOT EXISTS public.skladnik
 (
     nazwa_skladnika character(255) COLLATE pg_catalog."default" NOT NULL,
-    miara character(45) COLLATE pg_catalog."default" NOT NULL,
     CONSTRAINT skladnik_pkey PRIMARY KEY (nazwa_skladnika)
 );
 
@@ -130,6 +129,7 @@ CREATE TABLE IF NOT EXISTS public.skladnik_przepis
 (
     skladnik_nazwa_skladnika character(255) COLLATE pg_catalog."default" NOT NULL,
     przepis_nazwa_przepisa character(255) COLLATE pg_catalog."default" NOT NULL,
+    miara character(45) NOT NULL,
     id bigint NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 9223372036854775807 CACHE 1 ),
     CONSTRAINT skladnik_przepis_pkey PRIMARY KEY (id)
 );

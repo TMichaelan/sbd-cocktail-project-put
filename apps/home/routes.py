@@ -130,8 +130,20 @@ def coctails_cards():
         cur = conn.cursor()
         querry_add_przepis = 'INSERT INTO \"przepis\" VALUES (\'{}\', \'{}\', \'{}\');'.format(nazwa, count, notatka)
         querry_add_coctail = 'INSERT INTO \"Koktajl\" VALUES (\'{}\', \'{}\', \'{}\',\'{}\');'.format(nazwa, obraz, srednia_ocena_uzytkownika, srednia_ocena_sommelier)
+
         cur.execute(querry_add_przepis)
         cur.execute(querry_add_coctail)
+
+        conn.commit()
+        
+        for i in range(int(count)):
+            skladnik = request.form['ingredient'+str(i)]
+            miara = request.form['measure'+str(i)]
+            querry_add_skladnik = 'INSERT INTO \"skladnik\" VALUES (\'{}\');'.format(skladnik)
+            querry_add_skladnik_przepis = 'INSERT INTO \"skladnik_przepis\" VALUES (\'{}\', \'{}\', \'{}\');'.format(skladnik, nazwa, miara)
+            cur.execute(querry_add_skladnik)
+            conn.commit()
+            cur.execute(querry_add_skladnik_przepis)
      
         conn.commit()
         cur.close()
