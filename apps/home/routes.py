@@ -9,7 +9,7 @@ from flask_login import login_required
 from jinja2 import TemplateNotFound
 
 
-from apps.costyl import costyl,get_coctail_sommelier,get_barmans, get_sommeliers, get_coctails
+from apps.costyl import costyl,get_questionnaire,get_coctail_sommelier,get_barmans, get_sommeliers, get_coctails
 import psycopg2
 import random
 
@@ -119,9 +119,59 @@ def sommelier():
         return render_template('home/page-500.html'), 500
 
 
-@blueprint.route('/coctails_cards.html',methods=('GET', 'POST'))
-
+@blueprint.route('/questionnaire.html',methods=('GET', 'POST'))
 # @login_required
+def questionnaire():
+
+    if request.method == 'POST':
+        name = request.form['name']
+        count = request.form['count']
+
+        conn = psycopg2.connect('postgresql://joramba:admin@localhost:5432/bazy_danych')
+        cur = conn.cursor()
+        querry_add_user = 'INSERT INTO \"ankieta\" VALUES (\'{}\', \'{}\');'.format(name, count)
+        cur.execute(querry_add_user)
+
+        conn.commit()
+        cur.close()
+        conn.close()
+        return redirect('questionnaire.html')
+
+
+    try:
+        users = get_questionnaire()
+        segment = get_segment(request)
+        return render_template("home/questionnaire.html" , segment=segment, users=users)
+    except TemplateNotFound:
+        return render_template('home/page-404.html'), 404
+
+    except:
+        return render_template('home/page-500.html'), 500
+
+
+@blueprint.route('/delete-questionnaire', methods=['DELETE'])
+def delete_questionnaire():
+    # user_id = request.json
+    name = request.form.get('name')
+
+    try:
+        conn = psycopg2.connect('postgresql://joramba:admin@localhost:5432/bazy_danych')
+        cursor = conn.cursor()
+        query = f"DELETE FROM \"ankieta\" WHERE nazwa=\'{name}\'"
+        cursor.execute(query)
+
+        conn.commit()
+        count = cursor.rowcount
+        cursor.close()
+        conn.close()
+        return jsonify({"message": f"{count} user deleted"}), 200
+        # return redirect('/', code=302)
+
+    except (Exception, psycopg2.Error) as error :
+        return jsonify({"error": str(error)}), 500
+
+
+@blueprint.route('/coctails_cards.html',methods=('GET', 'POST'))
 def coctails_cards():
 
     if request.method == 'POST':

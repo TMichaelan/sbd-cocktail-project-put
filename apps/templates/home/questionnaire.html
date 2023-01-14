@@ -63,13 +63,19 @@
           <tr>
             <th>Name of questionnaire</th>
             <th>Count of questions</th>
+            <th></th>
+            <th></th>
           </tr>
     
           <!-- here is a for-loop to give us all the socks -->
+          {% for user in users %}
           <tr>
-            <td></td>
-            <td></td>
+            <td>{{user[0]}}</td>
+            <td>{{user[1]}}</td>
+            <td><button class="btn btn-primary" onclick="deleteQuestionnaire('{{user[0]}}')">Delete</button></td>
+            <td><button class="btn btn-primary" onclick="demo.showNotification('top','center')">Modify</button></td>
           </tr>
+          {% endfor %}
         </table>
       </div>
     </div>
@@ -77,9 +83,9 @@
 
   
 <script>
-  function deleteBarman(name) {
+  function deleteQuestionnaire(name) {
     $.ajax({
-      url: '/delete-barman',
+      url: '/delete-questionnaire',
       type: 'DELETE',
       data: {name: name},
       
