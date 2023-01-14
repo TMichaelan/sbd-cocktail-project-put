@@ -1,0 +1,116 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} User Profile {% endblock %} 
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+  <style>
+  .card {
+    width: 150%;
+  }
+  .card .card-footer {
+    padding: 0;
+  }
+  .table {
+    width: 150%;
+  }
+
+  .card label {
+    margin: 0 10px 0 20px;
+  }
+  </style>
+  <div class="content">
+    <div class="row">
+      <div class="col-md-8">
+        <div class="card">
+          <div class="card-header">
+            <h5 class="title">Add Questionnaire</h5>
+          </div>
+          <div class="card-body">
+            <form method="post">
+              <div class="row">
+                <div class="col-md-6 pr-md-1">
+                  <div class="form-group">
+                    <label for="name">Name of questionnaire</label>
+                    <input name="name" type="text" class="form-control" placeholder="Name">
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6 pr-md-1">
+                  <div class="form-group">
+                    <label for="count">Count of questions</label>
+                    <input
+                      name="count"
+                      type="number"
+                      class="count"
+                      placeholder="Count"
+                    />
+                  </div>
+                </div>
+                <div class="col-md-6 pr-md-1 ingredients"></div>
+
+              </div>
+              <div class="card-footer">
+                <button type="submit" class="btn btn-fill btn-primary">Add Questionnaire</button>
+              </div>
+            </form>
+          </div>
+        </div>
+        <table class="table">
+          <tr>
+            <th>Name of questionnaire</th>
+            <th>Count of questions</th>
+          </tr>
+    
+          <!-- here is a for-loop to give us all the socks -->
+          <tr>
+            <td></td>
+            <td></td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  
+<script>
+  function deleteBarman(name) {
+    $.ajax({
+      url: '/delete-barman',
+      type: 'DELETE',
+      data: {name: name},
+      
+      success: function(result) {
+        window.location.reload(true);
+        console.log(data)
+      },
+      error: function(error) {
+        // Handle error
+      }
+    }); 
+    return false;
+  }
+
+  function modifyUser(id) {
+    $.ajax({
+      url: '/modify-user',
+      type: 'PUT',
+      data: {id: id},
+      success: function(result) {
+        // Handle successful modification
+      },
+      error: function(error) {
+        // Handle error
+      }
+    });
+  }
+</script>
+
+{% endblock content %}
+
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}{% endblock javascripts %}
