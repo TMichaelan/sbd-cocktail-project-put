@@ -21,6 +21,15 @@ def get_coctails():
     conn.close()
     return koktail
 
+def get_odpowiedz_koktajl():
+    conn = psycopg2.connect('postgresql://joramba:admin@localhost:5432/bazy_danych')
+    cur = conn.cursor()
+    cur.execute("SELECT * FROM \"odpowiedz_koktajl\"")
+    koktail_review = cur.fetchall()
+    cur.close()
+    conn.close()
+    return koktail_review
+
 def get_questionnaire():
     conn = psycopg2.connect('postgresql://joramba:admin@localhost:5432/bazy_danych')
     cur = conn.cursor()

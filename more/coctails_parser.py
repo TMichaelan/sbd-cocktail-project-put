@@ -221,7 +221,7 @@ def start(start_id,amount):
         except Exception as err:
             print(f'error occurred: {err}')
 
-# start(11000,25)
-start(12560,30)
+start(11000,25)
+# start(12560,30)
 
 

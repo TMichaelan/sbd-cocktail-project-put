@@ -10,7 +10,7 @@ from jinja2 import TemplateNotFound
 import json
 
 
-from apps.costyl import costyl, get_questions,get_questionnaire,get_coctail_sommelier,get_barmans, get_sommeliers, get_coctails
+from apps.costyl import costyl, get_odpowiedz_koktajl, get_questions,get_questionnaire,get_coctail_sommelier,get_barmans, get_sommeliers, get_coctails
 import psycopg2
 import random
 
@@ -126,34 +126,38 @@ def sommelier():
 # @login_required
 def review():
 
-    # if request.method == 'POST':
-    #     name = request.form['name']
-    #     coctail = request.form['coctail']
-    #     recencja = request.form['recencja']
-    #     ocena = request.form['ocena']
+    if request.method == 'POST':
+        coctail = request.form['coctail']
+        questionnaire = request.form['questionnaire']
+        question_text = request.form['question_text']
+        ocena = request.form['ocena']
 
-    #     # print(username, email, password, github)
+        # print(username, email, password, github)
 
-    #     conn = psycopg2.connect('postgresql://joramba:admin@localhost:5432/bazy_danych')
-    #     cur = conn.cursor()
-    #     querry_add_user = 'INSERT INTO \"sommelier\" VALUES (\'{}\', \'{}\', \'{}\');'.format(name, recencja, ocena)
-    #     querry_add_coctail = 'INSERT INTO \"sommelier_koktajl\" VALUES (\'{}\', \'{}\');'.format(name, coctail)
-    #     cur.execute(querry_add_user)
-    #     cur.execute(querry_add_coctail)
+        conn = psycopg2.connect('postgresql://joramba:admin@localhost:5432/bazy_danych')
+        cur = conn.cursor()
+        querry_add_odpowiedz= 'INSERT INTO \"odpowiedz\" VALUES (\'{}\', \'{}\');'.format(question_text, ocena)
+        cur.execute(querry_add_odpowiedz)
+        conn.commit()
+
+        querry_add_coctail = 'INSERT INTO \"odpowiedz_koktajl\" VALUES (\'{}\', \'{}\');'.format(question_text, coctail)
+        cur.execute(querry_add_coctail)
 
      
-    #     conn.commit()
-    #     cur.close()
-    #     conn.close()
-    #     return redirect('add_review.html')
+        conn.commit()
+        cur.close()
+        conn.close()
+        return redirect('add_review.html')
 
 
     try:
         coctails = get_coctails()
         questionnaires = get_questionnaire()
+        reviews = get_odpowiedz_koktajl()
+        print(review)
         # Serve the file (if exists) from app/templates/home/FILE.html
         segment = get_segment(request)
-        return render_template("home/add_review.html" , segment=segment,coctails = coctails, questionnaires = questionnaires)
+        return render_template("home/add_review.html" , segment=segment, reviews = reviews, coctails = coctails, questionnaires = questionnaires)
     except TemplateNotFound:
         return render_template('home/page-404.html'), 404
 

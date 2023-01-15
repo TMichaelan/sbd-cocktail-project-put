@@ -66,6 +66,24 @@
             </form>
           </div>
         </div>
+        <table class="table">
+          <tr>
+            <th>Coctail Name</th>
+            <th>Review</th>
+            <th></th>
+            <th></th>
+          </tr>
+    
+          <!-- here is a for-loop to give us all the socks -->
+          {% for review in reviews %}
+          <tr>
+            <td>{{review[1]}}</td>
+            <td>{{review[0]}}</td>
+            <td><button class="btn btn-primary" onclick="deleteQuestionnaire('{{review[1]}}')">Delete</button></td>
+            <td><button class="btn btn-primary" onclick="demo.showNotification('top','center')">Modify</button></td>
+          </tr>
+          {% endfor %}
+        </table>
       </div>
     </div>
   </div>
@@ -79,7 +97,6 @@
         data: {name: name},
         success: function(data) {
           for(let i=0; i <data.length; i++){
-            console.log(data[i][1]);
             document.querySelector('.questions').innerHTML += `
               <li><label for="question_name">${data[i][1]}</label></li>
             `
@@ -93,7 +110,6 @@
   }
 
   const questionnaire = document.querySelector("#questionnaire");
-  console.log(questionnaire.value);
 
   questionnaire.addEventListener("change", (e) => {
     document.querySelector(".questionnaires").innerHTML = `
