@@ -319,6 +319,29 @@ def coctails_cards():
     except:
         return render_template('home/page-500.html'), 500
 
+@blueprint.route('/delete-review', methods=['DELETE'])
+def delete_review():
+    # user_id = request.json
+    name = request.form.get('name')
+    print(name)
+
+    try:
+        conn = psycopg2.connect('postgresql://joramba:admin@localhost:5432/bazy_danych')
+        cursor = conn.cursor()
+        query = f"DELETE FROM \"odpowiedz_koktajl\" WHERE odpowiedz_tekst_odpowiedzi=\'{name}\'"
+        querry_delete_review = f"DELETE FROM \"odpowiedz\" WHERE tekst_odpowiedzi=\'{name}\'"
+        cursor.execute(query)
+        conn.commit()
+
+        cursor.execute(querry_delete_review)
+        conn.commit()
+        count = cursor.rowcount
+        cursor.close()
+        conn.close()
+        return jsonify({"message": f"{count} user deleted"}), 200
+    except (Exception, psycopg2.Error) as error :
+        return jsonify({"error": str(error)}), 500
+
 
 @blueprint.route('/delete-sommelier', methods=['DELETE'])
 def delete_sommelier():

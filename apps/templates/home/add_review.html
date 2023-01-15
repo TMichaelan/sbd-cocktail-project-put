@@ -79,7 +79,7 @@
           <tr>
             <td>{{review[1]}}</td>
             <td>{{review[0]}}</td>
-            <td><button class="btn btn-primary" onclick="deleteQuestionnaire('{{review[1]}}')">Delete</button></td>
+            <td><button class="btn btn-primary" onclick="deleteReview('{{review[0]}}')">Delete</button></td>
             <td><button class="btn btn-primary" onclick="demo.showNotification('top','center')">Modify</button></td>
           </tr>
           {% endfor %}
@@ -90,6 +90,23 @@
 
   
 <script>
+  function deleteReview(name) {
+    $.ajax({
+      url: '/delete-review',
+      type: 'DELETE',
+      data: {name: name},
+      
+      success: function(result) {
+        window.location.reload(true);
+        console.log(data)
+      },
+      error: function(error) {
+        // Handle error
+      }
+    }); 
+    return false;
+  }
+
   function getQuestionnaires(name) {
     $.ajax({
         url: '/get-questionnaire-data',
