@@ -123,7 +123,21 @@
                             <h3 class="card-title"><i class="text-primary"></i>Sommelier :</h3>
                         </div>
                         <div class="card-body">
-                                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ullam nihil, sunt unde impedit explicabo et commodi similique blanditiis laudantium perspiciatis a nisi aspernatur reprehenderit fugiat provident vitae quas, minus dignissimos!
+                            <table class="table">
+                                <tr>
+                                  <th>Sommelier</th>
+                                  <th>Grade</th>
+                                </tr>
+                        
+                                <!-- here is a for-loop to give us all the socks -->
+                                {% for sommelier in sommeliers %}
+                        
+                                <tr>
+                                  <td>{{ sommelier[1] }}</td>
+                                  <td>{{ sommelier[2] }}</td>
+                                </tr>
+                                {% endfor %}
+                            </table>
                             <div class="card-grades">
                                 <!-- <h5 class="card-category">User grade: {{coctail[2]}}</h5>
                                 <h5 class="card-category">Sommelier Grade: {{coctail[3]}}</h5> -->
