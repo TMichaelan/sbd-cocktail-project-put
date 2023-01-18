@@ -128,8 +128,6 @@
                                   <th>Sommelier</th>
                                   <th>Grade</th>
                                 </tr>
-                        
-                                <!-- here is a for-loop to give us all the socks -->
                                 {% for sommelier in sommeliers %}
                         
                                 <tr>
@@ -138,10 +136,9 @@
                                 </tr>
                                 {% endfor %}
                             </table>
-                            <div class="card-grades">
-                                <!-- <h5 class="card-category">User grade: {{coctail[2]}}</h5>
-                                <h5 class="card-category">Sommelier Grade: {{coctail[3]}}</h5> -->
-                            </div>
+                            {% if sommeliers|length == 0 %}
+                            <i class="text-primary"></i>There are no reviews from sommeliers yet...</h3>
+                            {% endif %}
                         </div>         
                     </div>
                 </div>
