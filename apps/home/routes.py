@@ -96,12 +96,18 @@ def sommelier():
 
         conn = psycopg2.connect('postgresql://joramba:admin@localhost:5432/bazy_danych')
         cur = conn.cursor()
-        querry_add_user = 'INSERT INTO \"sommelier\" VALUES (\'{}\', \'{}\', \'{}\');'.format(name, recencja, ocena)
-        querry_add_coctail = 'INSERT INTO \"sommelier_koktajl\" VALUES (\'{}\', \'{}\');'.format(name, coctail)
-        cur.execute(querry_add_user)
-        cur.execute(querry_add_coctail)
 
-     
+
+        try: 
+            querry_add_user = 'INSERT INTO \"sommelier\" VALUES (\'{}\');'.format(name)
+            cur.execute(querry_add_user)
+            conn.commit()
+        except Exception as err:
+            print(f'error occurred: {err}')
+            conn.rollback()
+
+        querry_add_coctail = 'INSERT INTO \"koktajl_sommelier\" VALUES (\'{}\', \'{}\',\'{}\',\'{}\');'.format(coctail, name, recencja, ocena)
+        cur.execute(querry_add_coctail)
         conn.commit()
         cur.close()
         conn.close()
@@ -112,6 +118,7 @@ def sommelier():
         users = get_sommeliers()
         coctails = get_coctails()
         coctails_som = get_coctail_sommelier()
+
         # Serve the file (if exists) from app/templates/home/FILE.html
         segment = get_segment(request)
         return render_template("home/sommelier.html" , segment=segment, users=users, len = len(users), coctails = coctails, coctails_som = coctails_som)
@@ -136,11 +143,11 @@ def review():
 
         conn = psycopg2.connect('postgresql://joramba:admin@localhost:5432/bazy_danych')
         cur = conn.cursor()
-        querry_add_odpowiedz= 'INSERT INTO \"odpowiedz\" VALUES (\'{}\', \'{}\');'.format(question_text, ocena)
+        querry_add_odpowiedz= 'INSERT INTO \"odpowiedz\" VALUES (\'{}\');'.format(question_text)
         cur.execute(querry_add_odpowiedz)
         conn.commit()
 
-        querry_add_coctail = 'INSERT INTO \"odpowiedz_koktajl\" VALUES (\'{}\', \'{}\');'.format(question_text, coctail)
+        querry_add_coctail = 'INSERT INTO \"odpowiedz_koktajl\" VALUES (\'{}\', \'{}\');'.format(question_text, coctail, ocena)
         cur.execute(querry_add_coctail)
 
      
@@ -348,6 +355,7 @@ def delete_sommelier():
     # user_id = request.json
     name = request.form.get('name')
     
+    print(name)
     try:
         conn = psycopg2.connect('postgresql://joramba:admin@localhost:5432/bazy_danych')
         cursor = conn.cursor()

@@ -74,18 +74,18 @@
             <th></th>
             <th></th>
           </tr>
-    
-          <!-- here is a for-loop to give us all the socks -->
           {%for i in range(0, len)%} 
           <tr>
+            <td>{{coctails_som[i][0]}}</td>
             <td>{{coctails_som[i][1]}}</td>
-            <td>{{users[i][0]}}</td>
-            <td>{{users[i][1]}}</td>
-            <td>{{users[i][2]}}</td>
+            <td>{{coctails_som[i][2]}}</td>
+            <td>{{coctails_som[i][3]}}</td>
             <td><button class="btn btn-primary" onclick="deleteSommelier('{{users[i][0]}}')">Delete</button></td>
             <td><button class="btn btn-primary" onclick="demo.showNotification('top','center')">Modify</button></td>
           </tr>
           {%endfor%} 
+          <!-- here is a for-loop to give us all the socks -->
+
         </table>
       </div>
     </div>

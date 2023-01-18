@@ -35,7 +35,7 @@ CREATE TABLE IF NOT EXISTS public.barman
     adres character(255) COLLATE pg_catalog."default" NOT NULL,
     id bigserial NOT NULL,
     CONSTRAINT barman_pkey PRIMARY KEY (imie)
-);;
+);
 
 CREATE TABLE IF NOT EXISTS public.barman_koktajl
 (
@@ -87,16 +87,16 @@ CREATE TABLE IF NOT EXISTS public.koktajl
 
 CREATE TABLE IF NOT EXISTS public.odpowiedz
 (
-    tekst_odpowiedzi character(255) COLLATE pg_catalog."default" NOT NULL,
-    ocena_uzytkownika numeric NOT NULL,
+    tekst_odpowiedzi character(2000) COLLATE pg_catalog."default" NOT NULL,
     CONSTRAINT odpowiedz_pkey PRIMARY KEY (tekst_odpowiedzi)
 );
 
 CREATE TABLE IF NOT EXISTS public.odpowiedz_koktajl
 (
-    odpowiedz_tekst_odpowiedzi character(255) COLLATE pg_catalog."default" NOT NULL,
+    odpowiedz_tekst_odpowiedzi character(2000) COLLATE pg_catalog."default" NOT NULL,
     koktajl_nazwa character(255) COLLATE pg_catalog."default" NOT NULL,
-    id bigint NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 ),
+    ocena_uzytkownika numeric(3) NOT NULL,
+    id bigint NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 9223372036854775807 CACHE 1 ),
     CONSTRAINT "PK_odpowiedz_koktajl" PRIMARY KEY (id)
 );
 
@@ -134,15 +134,17 @@ CREATE TABLE IF NOT EXISTS public.skladnik_przepis
 CREATE TABLE IF NOT EXISTS public.sommelier
 (
     pseudonim character(255) COLLATE pg_catalog."default" NOT NULL,
-    recenzja character(255) COLLATE pg_catalog."default" NOT NULL,
-    ocena numeric(3, 0) NOT NULL,
-    CONSTRAINT "Sommelier_pkey" PRIMARY KEY (pseudonim)
+    CONSTRAINT "PK_sommelier" PRIMARY KEY (pseudonim)
 );
 
-CREATE TABLE IF NOT EXISTS public.sommelier_koktajl
+CREATE TABLE IF NOT EXISTS public.koktajl_sommelier
 (
+    koktajl_nazwa character(255) COLLATE pg_catalog."default" NOT NULL,
     sommelier_pseudonim character(255) COLLATE pg_catalog."default" NOT NULL,
-    koktajl_nazwa character(255) COLLATE pg_catalog."default" NOT NULL
+    recenzja character(2000) NOT NULL,
+    ocena bigint NOT NULL,
+    id bigint NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 ),
+    CONSTRAINT "PK_koktajl_sommelier" PRIMARY KEY (id)
 );
 
 ALTER TABLE IF EXISTS public.ankieta_pytanie
@@ -251,16 +253,16 @@ ALTER TABLE IF EXISTS public.skladnik_przepis
     NOT VALID;
 
 
-ALTER TABLE IF EXISTS public.sommelier_koktajl
-    ADD CONSTRAINT "Sommelier_Koktajl_Koktajl_nazwa_fkey" FOREIGN KEY (koktajl_nazwa)
+ALTER TABLE IF EXISTS public.koktajl_sommelier
+    ADD FOREIGN KEY (koktajl_nazwa)
     REFERENCES public.koktajl (nazwa) MATCH SIMPLE
     ON UPDATE NO ACTION
     ON DELETE NO ACTION
     NOT VALID;
 
 
-ALTER TABLE IF EXISTS public.sommelier_koktajl
-    ADD CONSTRAINT "Sommelier_Koktajl_Sommelier_Pseudonim_fkey" FOREIGN KEY (sommelier_pseudonim)
+ALTER TABLE IF EXISTS public.koktajl_sommelier
+    ADD FOREIGN KEY (sommelier_pseudonim)
     REFERENCES public.sommelier (pseudonim) MATCH SIMPLE
     ON UPDATE NO ACTION
     ON DELETE NO ACTION
