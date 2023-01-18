@@ -68,23 +68,35 @@ def product_page(coctail_name):
         cur.execute(querry_ingredients)
         ingredients = cur.fetchall()
 
-        print(ingredients)
-
         querry_category =  "select * FROM \"kategoria_koktajli_koktajl\" WHERE koktajl_nazwa=\'{}\'".format(coctail_name)
         cur.execute(querry_category)
         category = cur.fetchall()
 
 
-        querry_category =  "select * FROM \"odpowiedz_koktajl\" WHERE koktajl_nazwa=\'{}\'".format(coctail_name)
-        cur.execute(querry_category)
+        querry_reviews =  "select * FROM \"odpowiedz_koktajl\" WHERE koktajl_nazwa=\'{}\'".format(coctail_name)
+        cur.execute(querry_reviews)
         reviews = cur.fetchall()
+
+        mark = 0
+        count_mark = 0
+        for review in reviews:
+            if review[2]:
+                count_mark+=1
+                mark += review[2]
+
+        coctail_edited = [coctail[0],coctail[1],coctail[2],coctail[3]]
+
+        if count_mark != 0:
+            coctail_edited[2] = mark/count_mark
+        else:
+            coctail_edited[2] = 'There are no ratings yet'
 
         cur.close()
         conn.close()
     except Exception as err:
         print(f'error occurred: {err}')
     
-    return render_template('home/coctail.html', coctail=coctail, recipe=recipe, ingredients = ingredients, category= category, reviews=reviews)
+    return render_template('home/coctail.html', coctail=coctail_edited, recipe=recipe, ingredients = ingredients, category= category, reviews=reviews)
 
 
 @blueprint.route('/sommelier.html',methods=('GET', 'POST'))
