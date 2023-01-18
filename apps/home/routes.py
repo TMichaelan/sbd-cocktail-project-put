@@ -123,10 +123,11 @@ def sommelier():
         users = get_sommeliers()
         coctails = get_coctails()
         coctails_som = get_coctail_sommelier()
+        print(coctails_som)
 
         # Serve the file (if exists) from app/templates/home/FILE.html
         segment = get_segment(request)
-        return render_template("home/sommelier.html" , segment=segment, users=users, len = len(users), coctails = coctails, coctails_som = coctails_som)
+        return render_template("home/sommelier.html" , segment=segment, users=users, len = len(coctails_som), coctails = coctails, coctails_som = coctails_som)
     except TemplateNotFound:
         return render_template('home/page-404.html'), 404
 
@@ -364,7 +365,7 @@ def delete_sommelier():
     try:
         conn = psycopg2.connect('postgresql://joramba:admin@localhost:5432/bazy_danych')
         cursor = conn.cursor()
-        query = f"DELETE FROM \"sommelier\" WHERE pseudonim=\'{name}\'"
+        query = f"DELETE from \"koktajl_sommelier\" WHERE id=\'{name}\'"
         cursor.execute(query)
         conn.commit()
         count = cursor.rowcount
