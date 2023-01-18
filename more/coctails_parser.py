@@ -207,6 +207,7 @@ def skladnik_przepis():
     
     conn.close()
 
+
 def start(start_id,amount):
     for i in range(0,amount):
         start_id+=1
