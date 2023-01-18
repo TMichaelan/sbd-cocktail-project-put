@@ -530,16 +530,28 @@ def delete_user():
 def delete_users():
     # user_id = request.json
     name = request.form.get('name')
+    print(name)
 
     try:
         conn = psycopg2.connect('postgresql://joramba:admin@localhost:5432/bazy_danych')
         cursor = conn.cursor()
-        query = f"DELETE FROM \"koktajl\" WHERE nazwa=\'{name}\'"
+        query_delete_skladnik_przepis = f"DELETE FROM \"skladnik_przepis\" WHERE przepis_nazwa_przepisa=\'{name}\'"
+        querry_delete_kategoria_koktajli_koktajl = f"DELETE FROM \"kategoria_koktajli_koktajl\" WHERE koktajl_nazwa=\'{name}\'"
+        querry_delete_koktajl = f"DELETE FROM \"koktajl\" WHERE nazwa=\'{name}\'"
         querry_delete_przepis = f"DELETE FROM \"przepis\" WHERE nazwa_przepisa=\'{name}\'"
 
-        cursor.execute(query)
+        cursor.execute(query_delete_skladnik_przepis)
+        conn.commit()
+
+        cursor.execute(querry_delete_kategoria_koktajli_koktajl)
+        conn.commit()
+
+        cursor.execute(querry_delete_koktajl)
+        conn.commit()
+
         cursor.execute(querry_delete_przepis)
         conn.commit()
+        
         count = cursor.rowcount
         cursor.close()
         conn.close()
