@@ -364,10 +364,39 @@ def coctails_cards():
 
 
     try:
-        users = get_coctails()
-        # Serve the file (if exists) from app/templates/home/FILE.html
+        conn = psycopg2.connect('postgresql://joramba:admin@localhost:5432/bazy_danych')
+        cur = conn.cursor()
+
+        coctails = get_coctails()
+
+        # print(coctai)
+        coctails_edited = []
+
+        for i in range(len(coctails)):
+
+            querry_reviews =  "select * FROM \"odpowiedz_koktajl\" WHERE koktajl_nazwa=\'{}\'".format(coctails[i][0])
+            cur.execute(querry_reviews)
+            reviews = cur.fetchall()
+
+            mark = 0
+            count_mark = 0
+
+            coctails_edited.append([coctails[i][0],coctails[i][1],coctails[i][2],coctails[i][3]])
+            coctails_edited[i][2] = 'There Are No Ratings Yet'
+
+            for review in reviews:   
+                print(review)
+                if review[2]:
+                    count_mark+=1
+                    mark += review[2]
+
+                if count_mark != 0:
+                    coctails_edited[i][2] = mark/count_mark
+                if count_mark == 0:
+                    coctails_edited[i][2] = 0
+
         segment = get_segment(request)
-        return render_template("home/coctails_cards.html" , segment=segment, users=users)
+        return render_template("home/coctails_cards.html" , segment=segment, users=coctails_edited)
     except TemplateNotFound:
         return render_template('home/page-404.html'), 404
 
