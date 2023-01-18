@@ -152,7 +152,7 @@ def review():
         cur.execute(querry_add_odpowiedz)
         conn.commit()
 
-        querry_add_coctail = 'INSERT INTO \"odpowiedz_koktajl\" VALUES (\'{}\', \'{}\');'.format(question_text, coctail, ocena)
+        querry_add_coctail = 'INSERT INTO \"odpowiedz_koktajl\" VALUES (\'{}\', \'{}\', \'{}\');'.format(question_text, coctail, ocena)
         cur.execute(querry_add_coctail)
 
      
