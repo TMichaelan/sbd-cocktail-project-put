@@ -152,6 +152,9 @@
                             <h3 class="card-title"><i class="text-primary"></i>Reviews:</h3>
                         </div>
                         <div class="card-body">
+                            {% if reviews|length == 0 %}
+                            <i class="text-primary"></i>There are no reviews yet...</h3>
+                            {% else %}
                             {% for review in reviews %}
                             <div class="card review-container">
                                 <p><span>Anonim</span>:</p>
@@ -159,6 +162,7 @@
                                 <p>Grade:{{review[2]}}</p>
                               </div>
                             {% endfor %}
+                            {% endif %}
                         </div>         
                     </div>
             
