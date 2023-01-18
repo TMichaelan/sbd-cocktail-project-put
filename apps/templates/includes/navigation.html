@@ -91,12 +91,13 @@
             });
             document.getElementById("searchButton").addEventListener("click", function(){
                 var searchValue = document.getElementById("inlineFormInputGroup").value;
-                if (!window.location.href.endsWith("index/")) {
+
+                if (!window.location.href.endsWith("index/") && !window.location.href.includes("index/")) {
                 window.location.href = "index/" + searchValue;
+
                 } else {
                     window.location.href = searchValue;
                 }
-
             });
         </script>
         <!-- End Navbar -->
