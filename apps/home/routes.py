@@ -309,13 +309,11 @@ def coctails_cards():
         nazwa = request.form['nazwa']
         obraz = request.form['obraz']
         category = request.form['coctail']
-        # srednia_ocena_uzytkownika = request.form['srednia_ocena_uzytkownika']
-        # srednia_ocena_sommelier = request.form['srednia_ocena_sommelier']
         notatka = request.form['notatka']
         count = request.form['count']
         
-
-        # print(username, email, password, github)
+        if (len(obraz) == 0):
+            obraz = 'https://st4.depositphotos.com/14953852/22772/v/600/depositphotos_227725020-stock-illustration-image-available-icon-flat-vector.jpg'
 
         conn = psycopg2.connect('postgresql://joramba:admin@localhost:5432/bazy_danych')
         cur = conn.cursor()
