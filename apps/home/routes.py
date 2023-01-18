@@ -29,14 +29,39 @@ def index():
     random_indexes = random.sample(range(len(all_coctails)), 9)
     
     coctails = []
+    coctails_edited = []
     for index in random_indexes:
         coctails.append(all_coctails[index])
-     
+
+    
+
+    for i in range(len(coctails)):
+
+        querry_reviews =  "select * FROM \"odpowiedz_koktajl\" WHERE koktajl_nazwa=\'{}\'".format(coctails[i][0])
+        cur.execute(querry_reviews)
+        reviews = cur.fetchall()
+
+        mark = 0
+        count_mark = 0
+
+        coctails_edited.append([coctails[i][0],coctails[i][1],coctails[i][2],coctails[i][3]])
+        coctails_edited[i][2] = 'There Are No Ratings Yet'
+
+        for review in reviews:   
+            print(review)
+            if review[2]:
+                count_mark+=1
+                mark += review[2]
+
+            if count_mark != 0:
+                coctails_edited[i][2] = mark/count_mark
+            if count_mark == 0:
+                coctails_edited[i][2] = 0
 
     cur.close()
     conn.close()
  
-    return render_template('home/index.html', segment='index', coctails=coctails)
+    return render_template('home/index.html', segment='index', coctails=coctails_edited)
 
 
 @blueprint.route('/index/<coctail_name>')
