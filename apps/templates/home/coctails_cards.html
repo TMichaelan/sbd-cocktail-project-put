@@ -31,10 +31,13 @@
                 <div class="form-group">
                   <label for="nazwa">Coctail Name</label>
                   <input
-                    name="nazwa"
                     type="text"
+                    pattern="[a-zA-Z0-9\s_-]{4,50}" 
+                    name="nazwa"
                     class="form-control"
                     placeholder="Coctail"
+                    title="4 to 50 characters, letters and numbers only"
+                    required
                   />
                 </div>
               </div>
@@ -76,6 +79,7 @@
                     cols="80"
                     class="form-control"
                     placeholder="Here can be your Note"
+                    required
                   ></textarea>
                 </div>
               </div>
@@ -91,6 +95,7 @@
                     placeholder="Count"
                     min = 0
                     max = 15
+                    required
                   />
                 </div>
               </div>
