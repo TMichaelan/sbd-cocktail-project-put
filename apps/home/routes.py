@@ -41,11 +41,17 @@ def index():
         cur.execute(querry_reviews)
         reviews = cur.fetchall()
 
+        querry_som_reviews =  "select * FROM \"koktajl_sommelier\" WHERE koktajl_nazwa=\'{}\'".format(coctails[i][0])
+        cur.execute(querry_som_reviews)
+        som_reviews = cur.fetchall()
+
+
         mark = 0
         count_mark = 0
 
         coctails_edited.append([coctails[i][0],coctails[i][1],coctails[i][2],coctails[i][3]])
         coctails_edited[i][2] = 'There Are No Ratings Yet'
+        coctails_edited[i][3] = 'There Are No Ratings Yet'
 
         for review in reviews:   
             print(review)
@@ -57,6 +63,20 @@ def index():
                 coctails_edited[i][2] = mark/count_mark
             if count_mark == 0:
                 coctails_edited[i][2] = 0
+
+        mark1 = 0
+        count_mark1 = 0
+
+        for som_review in som_reviews:   
+            if som_review[3]:
+                count_mark1+=1
+                mark1 += som_review[3]
+
+            if count_mark1 != 0:
+                coctails_edited[i][3] = mark1/count_mark1
+            if count_mark1 == 0:
+                coctails_edited[i][3] = 0
+            
 
     cur.close()
     conn.close()
