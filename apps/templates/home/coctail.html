@@ -41,6 +41,17 @@
             width: 500px;
             clear: left;
         }
+        .card{
+            height: 100%;
+            /* margin-bottom: 1%; */
+            /* margin-top: 2%; */
+        }
+        .row{
+            /* height: 100%; */
+        }
+        .col-lg-4{
+            margin-bottom: 2%;
+        }
     </style>
 
     <div class="content">
@@ -103,35 +114,37 @@
                         </div>         
                     </div>
                 </div>
-                <div class="col-lg-4">
-                    <div class="card card-chart">
-                        <div class="card-header">
-                            <h3 class="card-title"><i class="text-primary"></i>Sommelier :</h3>
-                        </div>
-                        <div class="card-body">
-                            <table class="table">
-                                <tr>
-                                  <th>Sommelier</th>
-                                  <th>Review</th>
-                                  <th>Grade</th>
-                                </tr>
-                                {% for sommelier in sommeliers %}
-                        
-                                <tr>
-                                  <td>{{ sommelier[1] }}</td>
-                                  <td>{{ sommelier[2] }}</td>
-                                  <td>{{ sommelier[3] }}</td>
-                                </tr>
-                                {% endfor %}
-                            </table>
-                            {% if sommeliers|length == 0 %}
-                            <i class="text-primary"></i>There are no reviews from sommeliers yet...</h3>
-                            {% endif %}
-                        </div>         
-                    </div>
-                </div>
+                
             </div>
         <div class="row">
+            <div class="col-lg-4">
+                <div class="card card-chart">
+                    <div class="card-header">
+                        <h3 class="card-title"><i class="text-primary"></i>Sommelier :</h3>
+                    </div>
+                    <div class="card-body">
+                        <table class="table">
+                            <tr>
+                              <th>Sommelier</th>
+                              <th>Review</th>
+                              <th>Grade</th>
+                            </tr>
+                            {% for sommelier in sommeliers %}
+                    
+                            <tr>
+                              <td>{{ sommelier[1] }}</td>
+                              <td>{{ sommelier[2] }}</td>
+                              <td>{{ sommelier[3] }}</td>
+                            </tr>
+                            {% endfor %}
+                        </table>
+                        {% if sommeliers|length == 0 %}
+                        <i class="text-primary"></i>There are no reviews from sommeliers yet...</h3>
+                        {% endif %}
+                    </div>         
+                </div>
+            </div>
+            <div class="col-lg-4">
                     <div class="card card-chart">
                         <div class="card-header">
                             <h3 class="card-title"><i class="text-primary"></i>Reviews:</h3>
@@ -149,6 +162,7 @@
                             {% endfor %}
                             {% endif %}
                         </div>         
+                    </div>
                     </div>
             
             </div>
