@@ -24,7 +24,7 @@ def get_coctails():
 def get_odpowiedz_koktajl():
     conn = psycopg2.connect('postgresql://joramba:admin@localhost:5432/bazy_danych')
     cur = conn.cursor()
-    cur.execute("SELECT * FROM \"odpowiedz_koktajl\"")
+    cur.execute("SELECT * FROM \"odpowiedz_koktajl\" order by id")
     koktail_review = cur.fetchall()
     cur.close()
     conn.close()
