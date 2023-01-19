@@ -17,6 +17,22 @@
    .table{
     width: 150%;
    }
+   .modify-header{
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+   }
+   .modify-header i{
+    font-size: 20px;
+   }
+   .modify-header i:hover{
+    cursor: pointer;
+
+   }
+   #modify-form{
+    display: none;
+   }
   </style>
   <div class="content">
     <div class="row">
@@ -65,6 +81,59 @@
             </form>
           </div>
         </div>
+
+        <div id="modify-form" class="card">
+          <div class="card-header modify-header">
+            <h5 class="title">Modify Sommelier</h5>
+            <i class="tim-icons icon-simple-remove hide-modify-form"></i>
+          </div>
+          <div class="card-body">
+            <form id="modform" method="post">
+              <div class="row">
+                <div class="col-md-6 pr-md-1">
+                  <div class="form-group">
+                    <label for="name">Pseodonim</label>
+                    <input id="input-name" name="name" type="text" class="form-control" placeholder="Pseodonim">
+                    <input id="input-id" style="display: none;" name="id" type="text" class="form-control" placeholder="id">
+                  </div>
+                </div>
+                <div class="col-md-6 pl-md-1">
+                  <div class="form-group">
+                    <label for="coctail">Choose a coctail:</label>
+                    <select id="coctail_modify" name="coctail">
+                      {% for coctail in coctails %}
+                        <option value="{{coctail[0]}}">{{coctail[0]}}</option>
+                      {% endfor %}
+                    </select>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-8">
+                  <div class="form-group">
+                    <label for="recencja">Recencja</label>
+                    <textarea id="input-recenzja" name="recencja" rows="4" cols="80" class="form-control" placeholder="Here can be your Review"></textarea>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6 pl-md-1">
+                <div class="form-group">
+                  <label for="ocena">Ocena</label>
+                  <input id="input-ocena" name="ocena" type="text" class="form-control" placeholder="Grade">
+                </div>
+              </div>
+              <div class="card-footer">
+                
+                
+                <!-- <button class="prevent btn btn-primary" onclick="modifyUser($('#input-id').val())">Modify</button> -->
+
+                <button class="prevent btn btn-primary" onclick="modifyUser()">Modify</button>
+              </div>
+            </form>
+          </div>
+        </div>
+        
+
         <table class="table">
           <tr>
             <th>Koktajl</th>
@@ -81,7 +150,7 @@
             <td>{{coctails_som[i][2]}}</td>
             <td>{{coctails_som[i][3]}}</td>
             <td><button class="btn btn-primary" onclick="deleteSommelier('{{coctails_som[i][4]}}')">Delete</button></td>
-            <td><button class="btn btn-primary" onclick="demo.showNotification('top','center')">Modify</button></td>
+            <td><button class="modify-button btn btn-primary" onclick="getSommeliersData('{{coctails_som[i][4]}}')">Modify</button></td>
           </tr>
           {%endfor%} 
           <!-- here is a for-loop to give us all the socks -->
@@ -110,19 +179,60 @@
     return false;
   }
 
-  function modifyUser(id) {
+  function modifyUser() {
+    let form = document.getElementById("modform");
+    let formData = new FormData(form);
+    const name = formData.get('name');
+    const coctail = formData.get('coctail');
+    const recenzja = formData.get('recencja');
+    const ocena = formData.get('ocena');
+    const id = formData.get('id');
+
     $.ajax({
-      url: '/modify-user',
+      url: '/modify-sommelier',
       type: 'PUT',
-      data: {id: id},
+      data: {name, coctail, recenzja, ocena, id},
       success: function(result) {
-        // Handle successful modification
+        alert("Sommeliers has been modified!");
+        window.location.reload(true)
       },
       error: function(error) {
         // Handle error
       }
     });
   }
+
+  function getSommeliersData(id) {
+        id = decodeURIComponent(id);
+
+        $.ajax({
+            url: '/get-sommelier-data',
+            type: "GET",
+            data: {id: id},
+            success: function(data) {
+                console.log(data);
+                $("#input-name").val(data.sommelier);
+                $("#input-recenzja").val(data.recenzja);
+                $("#input-ocena").val(data.grade);
+                $("#coctail_modify").val(data.coctail);
+                $("#input-id").val(data.id);
+                $("#modify-form").show();
+            },
+            error: function(error) {
+                // handle error response here
+                console.log(error);
+            }
+        });
+    }
+
+    document.querySelector(".prevent").addEventListener("click", (e)=>{
+      e.preventDefault();
+    });
+
+    document.querySelector(".hide-modify-form").addEventListener("click", ()=>{
+      $("#modify-form").hide();
+    })
+
 </script>
 
 {% endblock content %}

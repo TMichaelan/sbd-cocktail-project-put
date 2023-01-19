@@ -165,7 +165,6 @@ def sommelier():
         users = get_sommeliers()
         coctails = get_coctails()
         coctails_som = get_coctail_sommelier()
-        print(coctails_som)
 
         # Serve the file (if exists) from app/templates/home/FILE.html
         segment = get_segment(request)
@@ -429,8 +428,6 @@ def delete_review():
 def delete_sommelier():
     # user_id = request.json
     name = request.form.get('name')
-    
-    print(name)
     try:
         conn = psycopg2.connect('postgresql://joramba:admin@localhost:5432/bazy_danych')
         cursor = conn.cursor()
@@ -469,6 +466,41 @@ def modifyBarman():
         return jsonify({"error": str(error)}), 500 
 
 
+@blueprint.route('/modify-sommelier', methods=['PUT'])
+def modifySommelier():
+    id = request.form.get('id')
+    name = request.form.get('name')
+    coctail = request.form.get('coctail')
+    recenzja = request.form.get('recenzja')
+    ocena = request.form.get('ocena')
+
+
+
+
+
+    try:
+        conn = psycopg2.connect('postgresql://joramba:admin@localhost:5432/bazy_danych')
+        cursor = conn.cursor()
+
+        try: 
+            querry_add_sommelier = 'INSERT INTO \"sommelier\" VALUES (\'{}\');'.format(name)
+            cursor.execute(querry_add_sommelier)
+            conn.commit()
+        except Exception as err:
+            print(f'error occurred: {err}')
+            conn.rollback()
+
+        query = f"UPDATE \"koktajl_sommelier\" SET koktajl_nazwa=\'{coctail}\',sommelier_pseudonim=\'{name}\',recenzja=\'{recenzja}\',ocena=\'{ocena}\' WHERE id=\'{id}\';"
+        cursor.execute(query)
+        conn.commit()
+        count = cursor.rowcount
+        cursor.close()
+        conn.close()
+        return jsonify({"message": f"{count} user modified"}), 200
+    except (Exception, psycopg2.Error) as error :
+        return jsonify({"error": str(error)}), 500 
+
+
 @blueprint.route('/get-barman-data', methods=(['GET']))
 def getBarmanData():
     name = request.args.get('name')
@@ -481,6 +513,23 @@ def getBarmanData():
         cursor.close()
         conn.close()
         return jsonify({"name": barman_data[0], "surname": barman_data[1],"phone": barman_data[2], "address": barman_data[3],"id": barman_data[4], }), 200
+
+    except (Exception, psycopg2.Error) as error :
+        return jsonify({"error": str(error)}), 500
+
+
+@blueprint.route('/get-sommelier-data', methods=(['GET']))
+def getSommelierData():
+    id = request.args.get('id')
+    try:
+        conn = psycopg2.connect('postgresql://joramba:admin@localhost:5432/bazy_danych')
+        cursor = conn.cursor()
+        query = f"SELECT * FROM \"koktajl_sommelier\" WHERE id=\'{id}\'"
+        cursor.execute(query)
+        sommelier_data = cursor.fetchone()
+        cursor.close()
+        conn.close()
+        return jsonify({"coctail": sommelier_data[0], "sommelier": sommelier_data[1],"recenzja": sommelier_data[2], "grade": sommelier_data[3],"id": sommelier_data[4], }), 200
 
     except (Exception, psycopg2.Error) as error :
         return jsonify({"error": str(error)}), 500
@@ -551,7 +600,7 @@ def delete_users():
 
         cursor.execute(querry_delete_przepis)
         conn.commit()
-        
+
         count = cursor.rowcount
         cursor.close()
         conn.close()

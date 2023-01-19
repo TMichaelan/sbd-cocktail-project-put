@@ -42,7 +42,7 @@ def get_questionnaire():
 def get_coctail_sommelier():
     conn = psycopg2.connect('postgresql://joramba:admin@localhost:5432/bazy_danych')
     cur = conn.cursor()
-    cur.execute("SELECT * FROM \"koktajl_sommelier\"")
+    cur.execute("SELECT * FROM \"koktajl_sommelier\" order by id")
     coctail_som = cur.fetchall()
     cur.close()
     conn.close()
