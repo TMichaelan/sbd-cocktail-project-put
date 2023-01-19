@@ -49,6 +49,8 @@
                     type="text"
                     class="form-control"
                     placeholder="Image"
+                    title="links only"
+                    pattern="https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_\+.~#?&\/=]*)"
                   />
                 </div>
               </div>
@@ -195,9 +197,9 @@
       document.querySelector(".ingredients").innerHTML += `
         <div class="form-group">
           <label for="ingredient${i}">Ingredient ${i + 1}: </label>
-          <input name="ingredient${i}" type="text" class="count" placeholder="Ingredient">
+          <input name="ingredient${i}" type="text" title="4 to 50 characters, letters only" class="count" placeholder="Ingredient" pattern="[a-zA-Z\s_-]{4,50}" required>
           <label for="measure${i}">Measure: </label>
-          <input name="measure${i}" type="text" class="count" placeholder="Measure">
+          <input name="measure${i}" type="text" class="count" placeholder="Measure" title="Use format: 1/2, 3/4" required>
         </div>
       `;
     }

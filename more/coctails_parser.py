@@ -354,8 +354,8 @@ def start(start_id,amount):
             # kategoria_koktajl()
             # kategoria_koktajli_koktajl()
             # skladnik_przepis()
-            # user_reviews()
-            # add_sommelier()
+            user_reviews()
+            add_sommelier()
             sommelier_reviews()
             
         except Exception as err:
