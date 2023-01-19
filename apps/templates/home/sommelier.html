@@ -47,7 +47,7 @@
                 <div class="col-md-6 pr-md-1">
                   <div class="form-group">
                     <label for="name">Pseodonim</label>
-                    <input name="name" type="text" class="form-control" placeholder="Pseodonim">
+                    <input name="name" type="text" class="form-control" placeholder="Pseodonim" required pattern="^[a-zA-Z0-9_-\s]{4,30}$" title="4 to 30 characters, letters and numbers only"/>>
                   </div>
                 </div>
                 <div class="col-md-6 pl-md-1">
@@ -65,14 +65,14 @@
                 <div class="col-md-8">
                   <div class="form-group">
                     <label for="recencja">Recencja</label>
-                    <textarea name="recencja" rows="4" cols="80" class="form-control" placeholder="Here can be your Review"></textarea>
+                    <textarea id='recencja_text'name="recencja" type="text" rows="4" cols="80" class="form-control" placeholder="Here can be your Review" required></textarea>
                   </div>
                 </div>
               </div>
               <div class="col-md-6 pl-md-1">
                 <div class="form-group">
                   <label for="ocena">Ocena</label>
-                  <input name="ocena" type="text" class="form-control" placeholder="Grade">
+                  <input name="ocena" type="number" class="form-control" placeholder="Grade" min="1" max="5">
                 </div>
               </div>
               <div class="card-footer">
@@ -93,7 +93,7 @@
                 <div class="col-md-6 pr-md-1">
                   <div class="form-group">
                     <label for="name">Pseodonim</label>
-                    <input id="input-name" name="name" type="text" class="form-control" placeholder="Pseodonim">
+                    <input id="input-name" name="name" type="text" class="form-control" placeholder="Pseodonim" required pattern="^[a-zA-Z0-9_-\s]{4,30}$" title="4 to 30 characters, letters and numbers only"/>
                     <input id="input-id" style="display: none;" name="id" type="text" class="form-control" placeholder="id">
                   </div>
                 </div>
@@ -119,15 +119,11 @@
               <div class="col-md-6 pl-md-1">
                 <div class="form-group">
                   <label for="ocena">Ocena</label>
-                  <input id="input-ocena" name="ocena" type="text" class="form-control" placeholder="Grade">
+                  <input id="input-ocena" name="ocena" type="number" class="form-control" placeholder="Grade" min="1" max="5" required>
                 </div>
               </div>
               <div class="card-footer">
-                
-                
-                <!-- <button class="prevent btn btn-primary" onclick="modifyUser($('#input-id').val())">Modify</button> -->
-
-                <button class="prevent btn btn-primary" onclick="modifyUser()">Modify</button>
+                <button type="submit" class="prevent btn btn-primary" onclick="modifyUser()">Modify</button>
               </div>
             </form>
           </div>
@@ -162,6 +158,11 @@
 
   
 <script>
+  
+  const PatternName = /^[a-zA-Z0-9_-]{4,30}$/;
+  
+  console.log(PatternName.test("Zxsdaas1"));
+
   function deleteSommelier(name) {
     $.ajax({
       url: '/delete-sommelier',
