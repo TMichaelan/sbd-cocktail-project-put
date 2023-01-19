@@ -60,7 +60,7 @@ def index():
                 mark += review[2]
 
             if count_mark != 0:
-                coctails_edited[i][2] = mark/count_mark
+                coctails_edited[i][2] = round(mark/count_mark,2)
             if count_mark == 0:
                 coctails_edited[i][2] = 0
 
@@ -73,7 +73,7 @@ def index():
                 mark1 += som_review[3]
 
             if count_mark1 != 0:
-                coctails_edited[i][3] = mark1/count_mark1
+                coctails_edited[i][3] = round(mark1/count_mark1,2)
             if count_mark1 == 0:
                 coctails_edited[i][3] = 0
             
@@ -132,16 +132,14 @@ def product_page(coctail_name):
         coctail_edited = [coctail[0],coctail[1],coctail[2],coctail[3]]
 
         if count_mark != 0:
-            coctail_edited[2] = mark/count_mark
+            coctail_edited[2] = round(mark/count_mark,2)
         else:
             coctail_edited[2] = 'There are no ratings yet'
 
         querry_sommielier =  "select * FROM \"koktajl_sommelier\" WHERE koktajl_nazwa=\'{}\'".format(coctail_name)
         cur.execute(querry_sommielier)
         sommeliers = cur.fetchall()
-        
-        print(sommeliers)
-
+    
         cur.close()
         conn.close()
     except Exception as err:
@@ -159,11 +157,8 @@ def sommelier():
         recencja = request.form['recencja']
         ocena = request.form['ocena']
 
-        # print(username, email, password, github)
-
         conn = psycopg2.connect('postgresql://joramba:admin@localhost:5432/bazy_danych')
         cur = conn.cursor()
-
 
         try: 
             querry_add_user = 'INSERT INTO \"sommelier\" VALUES (\'{}\');'.format(name)
