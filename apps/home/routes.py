@@ -670,6 +670,40 @@ def getSommelierData():
         return jsonify({"error": str(error)}), 500
 
 
+@blueprint.route('/get-coctails-data', methods=(['GET']))
+def getCoctailsData():
+    name = request.args.get('name')
+    print(name)
+
+    try:
+        conn = psycopg2.connect('postgresql://joramba:admin@localhost:5432/bazy_danych')
+        cursor = conn.cursor()
+        query_koktajl = f"SELECT * FROM \"koktajl\" WHERE nazwa=\'{name}\'"
+        query_przepis = f"SELECT * FROM \"przepis\" WHERE nazwa_przepisa=\'{name}\'"
+        query_koktajli_koktajl = f"SELECT * FROM \"kategoria_koktajli_koktajl\" WHERE koktajl_nazwa=\'{name}\'"
+        query_skladnik_przepis = f"SELECT * FROM \"skladnik_przepis\" WHERE przepis_nazwa_przepisa=\'{name}\'"
+
+        cursor.execute(query_koktajl)
+        coctail_data = cursor.fetchone()
+
+        cursor.execute(query_przepis)
+        przepis_data = cursor.fetchone()
+
+        cursor.execute(query_koktajli_koktajl)
+        kategoria_data = cursor.fetchone()
+
+        cursor.execute(query_skladnik_przepis)
+        skladniki_data = cursor.fetchall()
+
+        cursor.close()
+        conn.close()
+
+        return jsonify({"coctail": coctail_data[0], "image": coctail_data[1],"kategoria": kategoria_data[0], "note": przepis_data[2],"count": przepis_data[1], "skladniki": skladniki_data}), 200
+
+    except (Exception, psycopg2.Error) as error :
+        return jsonify({"error": str(error)}), 500
+
+
 @blueprint.route('/get-review-data', methods=(['GET']))
 def getReviewData():
     id = request.args.get('id')
