@@ -255,7 +255,7 @@
           <label for="ingredient${i}">Ingredient ${i + 1}: </label>
           <input name="ingredient${i}" type="text" title="4 to 50 characters, letters only" class="count" placeholder="Ingredient" pattern="[a-zA-Z\s_-]{4,50}" required>
           <label for="measure${i}">Measure: </label>
-          <input name="measure${i}" type="text" class="count" placeholder="Measure" title="Use format: 1/2, 3/4" required>
+          <input name="measure${i}" type="text" class="count" placeholder="Measure" title="Use format: 1/2, 3/4" pattern="[1-9/]{3,5}" required>
         </div>
       `;
     }
