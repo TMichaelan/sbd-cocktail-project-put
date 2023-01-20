@@ -1,11 +1,3 @@
-/*
-
-=========================================================
-* AppSeed - Simple SCSS compiler via Gulp
-=========================================================
-
-*/
-
 var autoprefixer = require('gulp-autoprefixer');
 var browserSync = require('browser-sync').create();
 var cleanCss = require('gulp-clean-css');
@@ -15,8 +7,6 @@ var sass = require('gulp-sass')(require('node-sass'));
 var wait = require('gulp-wait');
 var sourcemaps = require('gulp-sourcemaps');
 var rename = require("gulp-rename");
-
-// Define COMMON paths
 
 const paths = {
     src: {
