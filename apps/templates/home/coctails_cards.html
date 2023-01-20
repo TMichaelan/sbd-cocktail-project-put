@@ -23,6 +23,21 @@
   .card form label + .form-control {
     margin-bottom: 5px;
   }
+  .modify-header{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+   }
+  .modify-header i{
+    font-size: 20px;
+  }
+  .modify-header i:hover{
+    cursor: pointer;
+  }
+  #modify-form{
+    display: none;
+  }
 </style>
 <div class="content">
   <div class="row">
@@ -122,6 +137,109 @@
           </form>
         </div>
       </div>
+
+      <div id="modify-form" class="card">
+        <div class="card-header modify-header">
+          <h5 class="title">Modify Coctail</h5>
+          <i class="tim-icons icon-simple-remove hide-modify-form"></i>
+        </div>
+        <div class="card-body">
+          <form method="post">
+            <div class="row">
+              <div class="col-md-6 pr-md-1">
+                <div class="form-group">
+                  <label for="nazwa">Coctail Name</label>
+                  <input
+                    id="coctail_name-modify"
+                    type="text"
+                    pattern="[a-zA-Z0-9\s_-]{4,50}"
+                    name="nazwa"
+                    class="form-control"
+                    placeholder="Coctail"
+                    title="4 to 50 characters, letters and numbers only"
+                    required
+                  />
+                  <div class="message"></div>
+                </div>
+              </div>
+              <div class="col-md-6 pl-md-1">
+                <div class="form-group">
+                  <label for="obraz">Link to image</label>
+                  <input
+                    id="image-modify"
+                    name="obraz"
+                    type="text"
+                    class="form-control"
+                    placeholder="Image"
+                    title="links only"
+                    pattern="https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_\+.~#?&\/=]*)"
+                  />
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6 pr-md-1">
+                <div class="form-group">
+                  <label for="coctail">Choose a category:</label>
+                  <select id="coctail-modify" name="coctail">
+                    <option value="Alcoholic">Alcoholic</option>
+                    <option value="Non Alcoholic">Non Alcoholic</option>
+                  </select>
+                </div>
+              </div>
+              <div class="col-md-6 pl-md-1">
+                <div class="form-group"></div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-8">
+                <div class="form-group">
+                  <label for="notatka">Note</label>
+                  <textarea
+                    id="note-modify"
+                    name="notatka"
+                    rows="4"
+                    cols="80"
+                    class="form-control"
+                    placeholder="Here can be your Note"
+                    required
+                  ></textarea>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6 pr-md-1">
+                <div class="form-group">
+                  <label for="count">Count of Ingredients</label>
+                  <input
+                    id="count-modify"
+                    name="count"
+                    type="number"
+                    class="count-modify"
+                    placeholder="Count"
+                    min="0"
+                    max="15"
+                    required
+                  />
+                </div>
+              </div>
+              <div class="col-md-6 pr-md-1 ingredients-modify"></div>
+            </div>
+
+            <div class="card-footer card-add">
+              <button
+                type="submit"
+                class="add-coctail-btn btn btn-fill btn-primary"
+                onclick="modifyUser()"
+              >
+                Modify
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+      
       <table class="table">
         <tr>
           <th>Coctail Name</th>
@@ -155,7 +273,7 @@
           <td>
             <button
               class="btn btn-primary"
-              onclick="modifyUser()"
+              onclick="getCoctailData('{{user[0]}}')"
             >
               Modify
             </button>
@@ -167,6 +285,77 @@
   </div>
 </div>
 <script>
+  // function modifyUser() {
+  //   // if (confirm("Are you sure you want to modify this post?")) {
+  //     let form = document.getElementById("modform");
+  //     let formData = new FormData(form);
+  //     const name = formData.get("name");
+  //     const coctail = formData.get("coctail");
+  //     const recenzja = formData.get("recencja");
+  //     const ocena = formData.get("ocena");
+  //     const id = formData.get("id");
+
+  //     $.ajax({
+  //       url: "/modify-sommelier",
+  //       type: "PUT",
+  //       data: { name, coctail, recenzja, ocena, id },
+  //       success: function (result) {
+  //         alert("Post has been successfully modified!");
+  //         window.location.reload(true);
+  //       },
+  //       error: function (error) {
+  //         // Handle error
+  //       },
+  //     });
+  //   // }
+  // }
+
+  function getCoctailData(name) {
+    name = decodeURIComponent(name);
+    console.log(name);
+    $.ajax({
+      url: "/get-coctails-data",
+      type: "GET",
+      data: { name: name },
+      success: function (data) {
+        console.log(data);
+        $("#coctail_name-modify").val(data.coctail);
+        $("#image-modify").val(data.image);
+        $("#note-modify").val(data.note);
+        $("#count-modify").val(data.count);
+
+        document.querySelector(".ingredients-modify").innerHTML = ``;
+        for (let i = 0; i < data.count; i++) {
+          document.querySelector(".ingredients-modify").innerHTML += `
+            <div class="form-group">
+              <label for="ingredient${i}">Ingredient ${i + 1}: </label>
+              <input id="ingredient${i}" name="ingredient${i}" type="text" title="4 to 50 characters, letters only" class="count" placeholder="Ingredient" pattern="[a-zA-Z\s_-]{4,50}" required>
+              <label for="measure${i}">Measure: </label>
+              <input id="measure${i}" name="measure${i}" type="text" class="count" placeholder="Measure" title="Use format: 1/2, 3/4" required>
+            </div>
+          `;
+        }
+        for (let i = 0; i < data.count; i++){
+          $(`#ingredient${i}`).val(data.skladniki[i][0]);
+          $(`#measure${i}`).val(data.skladniki[i][2]);
+        }
+        $("#modify-form").show();
+      },
+      error: function (error) {
+        // handle error response here
+        console.log(error);
+      },
+    });
+  }
+
+  // document.querySelector(".prevent").addEventListener("click", (e) => {
+  //   e.preventDefault();
+  // });
+
+  document.querySelector(".hide-modify-form").addEventListener("click", () => {
+    $("#modify-form").hide();
+  });
+
   function checkPK(id) {
     const input = document.querySelector(`#${id}`);
 
@@ -229,23 +418,24 @@
     }
   }
 
-  function modifyUser(id) {
-    if( confirm("Are you sure you want to modify this coctail?") ) {  
-      $.ajax({
-        url: "/modify-user",
-        type: "PUT",
-        data: { id: id },
-        success: function (result) {
-          //alert("Coctail has been successfully modified!");
-        },
-        error: function (error) {
-          // Handle error
-        },
-      });
-    }
-  }
+  // function modifyUser(id) {
+  //   if( confirm("Are you sure you want to modify this coctail?") ) {  
+  //     $.ajax({
+  //       url: "/modify-user",
+  //       type: "PUT",
+  //       data: { id: id },
+  //       success: function (result) {
+  //         //alert("Coctail has been successfully modified!");
+  //       },
+  //       error: function (error) {
+  //         // Handle error
+  //       },
+  //     });
+  //   }
+  // }
 
   const count = document.querySelector(".count");
+  console.log(count);
   count.addEventListener("change", (e) => {
     document.querySelector(".ingredients").innerHTML = "";
 
@@ -255,7 +445,24 @@
           <label for="ingredient${i}">Ingredient ${i + 1}: </label>
           <input name="ingredient${i}" type="text" title="4 to 50 characters, letters only" class="count" placeholder="Ingredient" pattern="[a-zA-Z\s_-]{4,50}" required>
           <label for="measure${i}">Measure: </label>
-          <input name="measure${i}" type="text" class="count" placeholder="Measure" title="Use format: 1/2, 3/4" pattern="[1-9/]{3,5}" required>
+          <input name="measure${i}" type="text" class="count" placeholder="Measure" title="Use format: 1/2, 3/4" required>
+        </div>
+      `;
+    }
+  });
+
+  const countModify = document.querySelector(".count-modify");
+  console.log(countModify);
+  countModify.addEventListener("change", (e) => {
+    document.querySelector(".ingredients-modify").innerHTML = "";
+
+    for (let i = 0; i < e.target.value; i++) {
+      document.querySelector(".ingredients-modify").innerHTML += `
+        <div class="form-group">
+          <label for="ingredient${i}">Ingredient ${i + 1}: </label>
+          <input name="ingredient${i}" type="text" title="4 to 50 characters, letters only" class="count" placeholder="Ingredient" pattern="[a-zA-Z\s_-]{4,50}" required>
+          <label for="measure${i}">Measure: </label>
+          <input name="measure${i}" type="text" class="count" placeholder="Measure" title="Use format: 1/2, 3/4" required>
         </div>
       `;
     }
