@@ -15,7 +15,7 @@ from apps.authentication.models import Users
 from apps.authentication.util import verify_pass
 
 #postgress
-from apps.costyl import postgrees_connect
+from apps.db_funcs import postgrees_connect
 import psycopg2
 
 
