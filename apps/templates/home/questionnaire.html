@@ -259,7 +259,6 @@
   });
 
   function countFunc(num, questions_list) {
-    console.log(questions_list);
     for (let i = 0; i < num; i++) {
       document.querySelector(".questions-modify").innerHTML += `
           <div id="question-group-${i}" class="form-group">
@@ -282,7 +281,6 @@
   let questions_list = [];
   const countMod = document.querySelector(".count-modify");
   countMod.addEventListener("change", (e) => {
-    console.log(e.target.value);
     document.querySelector(".questions-modify").innerHTML = "";
     for (let i = 0; i < e.target.value; i++) {
       document.querySelector(".questions-modify").innerHTML += `
@@ -310,6 +308,7 @@
   function getQuestionnaireData(name) {
     name = decodeURIComponent(name);
     removeFormQuestions();
+    oldDataFunc(name)
 
     $.ajax({
       url: "/get-questionnaire-data",
@@ -329,29 +328,64 @@
     });
   }
 
+
+
+
+
+  let old_name, old_count,old_questions,old_questions_names = [], old_questions_texts = [];
+  function oldDataFunc(name){
+
+    $.ajax({
+      url: "/get-questionnaire-data",
+      type: "GET",
+      data: { name: name },
+      success: function (data) {
+
+         old_name = data.name
+         old_count = data.count
+         old_questions = data.questions;
+
+      },
+      error: function (error) {
+        // handle error response here
+        console.log(error);
+      },
+    });
+  }
+  
+
   function modifyQuestionnaire() {
     let form = document.getElementById("modform");
     let formData = new FormData(form);
 
     const name = formData.get("name");
     const count = formData.get("count");
-    let question_names_desc = [];
+    let question_names = [];
+    let question_texts = [];
+    oldDataFunc(name)
+
     for (let i = 0; i <= 10; i++) {
       if (formData.get("question_name" + i) != null) {
-        question = "question" + i;
-
-        question_names_desc.push([
-          formData.get("question_name" + i),
-          formData.get("question_text" + i),
-        ]);
+        question = "question" + i
+        question_names.push([formData.get("question_name" + i)]);
+        question_texts.push([formData.get("question_text" + i)]); 
       }
     }
 
-    console.log(question_names_desc);
+    for (let i = 0; i <= 10; i++) {
+      if (old_questions[i] != null)
+      {
+        old_questions_names.push([old_questions[i][0]]);
+        old_questions_texts.push([old_questions[i][1]]);
+      }
+    }
+
+
+
     $.ajax({
       type: "PUT",
       url: "/modify-questionnaire",
-      data: { name: name, count: count, questions: question_names_desc },
+      data: { name: name, count: count, question_names: question_names,question_texts:question_texts, old_name: old_name, old_count: old_count, old_questions_names: old_questions_names,old_questions_texts,old_questions_texts},
       success: function (data) {
         // handle success response here
         alert("questionaire has been modified!");
