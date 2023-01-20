@@ -1,7 +1,3 @@
-# -*- encoding: utf-8 -*-
-"""
-Copyright (c) 2019 - present AppSeed.us
-"""
 import psycopg2
 from apps.home import blueprint
 from flask import render_template, request, redirect, jsonify
@@ -17,8 +13,6 @@ import random
 @blueprint.route('/index')
 @login_required
 def index():
-    # costyl()
-
     conn = psycopg2.connect('postgresql://joramba:admin@localhost:5432/bazy_danych')
     cur = conn.cursor()
 
@@ -36,7 +30,6 @@ def index():
     
 
     for i in range(len(coctails)):
-
         querry_reviews =  "select * FROM \"odpowiedz_koktajl\" WHERE koktajl_nazwa=\'{}\'".format(coctails[i][0])
         cur.execute(querry_reviews)
         reviews = cur.fetchall()
@@ -44,7 +37,6 @@ def index():
         querry_som_reviews =  "select * FROM \"koktajl_sommelier\" WHERE koktajl_nazwa=\'{}\'".format(coctails[i][0])
         cur.execute(querry_som_reviews)
         som_reviews = cur.fetchall()
-
 
         mark = 0
         count_mark = 0
@@ -86,7 +78,6 @@ def index():
 
 @blueprint.route('/index/<coctail_name>')
 def product_page(coctail_name):
-
     coctail_name =  " ".join(coctail_name.split('-'))
 
     try:
@@ -148,9 +139,7 @@ def product_page(coctail_name):
     return render_template('home/coctail.html', coctail=coctail_edited, recipe=recipe, ingredients = ingredients, category= category, reviews=reviews, sommeliers=sommeliers)
 
 @blueprint.route('/sommelier.html',methods=('GET', 'POST'))
-# @login_required
 def sommelier():
-
     if request.method == 'POST':
         name = request.form['name']
         coctail = request.form['coctail']
@@ -175,7 +164,6 @@ def sommelier():
         conn.close()
         return redirect('sommelier.html')
 
-
     try:
         users = get_sommeliers()
         coctails = get_coctails()
@@ -192,7 +180,6 @@ def sommelier():
 
 
 @blueprint.route('/add_review.html',methods=('GET', 'POST'))
-# @login_required
 def review():
 
     if request.method == 'POST':
@@ -212,12 +199,10 @@ def review():
         querry_add_coctail = 'INSERT INTO \"odpowiedz_koktajl\" VALUES (\'{}\', \'{}\', \'{}\');'.format(question_text, coctail, ocena)
         cur.execute(querry_add_coctail)
 
-     
         conn.commit()
         cur.close()
         conn.close()
         return redirect('add_review.html')
-
 
     try:
         coctails = get_coctails()
@@ -234,7 +219,6 @@ def review():
 
 
 @blueprint.route('/questionnaire.html',methods=('GET', 'POST'))
-# @login_required
 def questionnaire():
     if request.method == 'POST':
         name = request.form['name']
@@ -265,20 +249,17 @@ def questionnaire():
         conn.close()
         return redirect('questionnaire.html')
 
-
     try:
         users = get_questionnaire()
         segment = get_segment(request)
         return render_template("home/questionnaire.html" , segment=segment, users=users)
     except TemplateNotFound:
         return render_template('home/page-404.html'), 404
-
     except:
         return render_template('home/page-500.html'), 500
 
 
 @blueprint.route('/questions.html',methods=('GET', 'POST'))
-# @login_required
 def question():
     try:
         users = get_questions()
@@ -293,7 +274,6 @@ def question():
 
 @blueprint.route('/delete-questionnaire', methods=['DELETE'])
 def delete_questionnaire():
-    # user_id = request.json
     name = request.form.get('name')
 
     try:
@@ -309,7 +289,6 @@ def delete_questionnaire():
         cursor.close()
         conn.close()
         return jsonify({"message": f"{count} user deleted"}), 200
-        # return redirect('/', code=302)
 
     except (Exception, psycopg2.Error) as error :
         return jsonify({"error": str(error)}), 500
@@ -317,7 +296,6 @@ def delete_questionnaire():
 
 @blueprint.route('/coctails_cards.html',methods=('GET', 'POST'))
 def coctails_cards():
-
     if request.method == 'POST':
         nazwa = request.form['nazwa']
         obraz = request.form['obraz']
@@ -333,21 +311,11 @@ def coctails_cards():
         querry_add_przepis = 'INSERT INTO \"przepis\" VALUES (\'{}\', \'{}\', \'{}\');'.format(nazwa, count, notatka)
         querry_add_coctail = 'INSERT INTO \"koktajl\" VALUES (\'{}\', \'{}\');'.format(nazwa, obraz)
 
-
-        # try: 
-        #     querry_add_category = 'INSERT INTO \"kategoria_koktajli\" VALUES (\'{}\');'.format(category)
-        #     cur.execute(querry_add_category)
-        # except Exception as err:
-        #     print(f'error occurred: {err}')
-
-
-
         cur.execute(querry_add_przepis)
         cur.execute(querry_add_coctail)
 
         conn.commit()
 
-        
         querry_add_category_koktail = 'INSERT INTO \"kategoria_koktajli_koktajl\" VALUES (\'{}\', \'{}\');'.format(category, nazwa)
         cur.execute(querry_add_category_koktail)
 
@@ -379,8 +347,6 @@ def coctails_cards():
         cur = conn.cursor()
 
         coctails = get_coctails()
-
-        # print(coctai)
         coctails_edited = []
 
         for i in range(len(coctails)):
@@ -416,7 +382,6 @@ def coctails_cards():
 
 @blueprint.route('/delete-review', methods=['DELETE'])
 def delete_review():
-    # user_id = request.json
     name = request.form.get('name')
     print(name)
 
@@ -440,7 +405,6 @@ def delete_review():
 
 @blueprint.route('/delete-sommelier', methods=['DELETE'])
 def delete_sommelier():
-    # user_id = request.json
     name = request.form.get('name')
     try:
         conn = psycopg2.connect('postgresql://joramba:admin@localhost:5432/bazy_danych')
@@ -452,7 +416,6 @@ def delete_sommelier():
         cursor.close()
         conn.close()
         return jsonify({"message": f"{count} user deleted"}), 200
-        # return redirect('/', code=302)
 
     except (Exception, psycopg2.Error) as error :
         return jsonify({"error": str(error)}), 500
@@ -747,7 +710,6 @@ def getQuestionnaire():
   
 @blueprint.route('/delete-barman', methods=['DELETE'])
 def delete_user():
-    # user_id = request.json
     name = request.form.get('name')
 
     try:
@@ -760,7 +722,6 @@ def delete_user():
         cursor.close()
         conn.close()
         return jsonify({"message": f"{count} user deleted"}), 200
-        # return redirect('/', code=302)
 
     except (Exception, psycopg2.Error) as error :
         return jsonify({"error": str(error)}), 500
@@ -804,71 +765,44 @@ def getAnkietadata():
 
 @blueprint.route('/delete-user', methods=['DELETE'])
 def delete_users():
-    # user_id = request.json
     name = request.form.get('name')
-    print(name)
 
-    conn = psycopg2.connect('postgresql://joramba:admin@localhost:5432/bazy_danych')
-    cursor = conn.cursor()
-    querry_delete_odpowiedz_koktajl = f"DELETE FROM \"odpowiedz_koktajl\" WHERE koktajl_nazwa=\'{name}\'"
-    querry_delete_koktajl_sommelier = f"DELETE FROM \"koktajl_sommelier\" WHERE koktajl_nazwa=\'{name}\'"
+    try:
+        conn = psycopg2.connect('postgresql://joramba:admin@localhost:5432/bazy_danych')
+        cursor = conn.cursor()
+        querry_delete_odpowiedz_koktajl = f"DELETE FROM \"odpowiedz_koktajl\" WHERE koktajl_nazwa=\'{name}\'"
+        querry_delete_koktajl_sommelier = f"DELETE FROM \"koktajl_sommelier\" WHERE koktajl_nazwa=\'{name}\'"
 
-    query_delete_skladnik_przepis = f"DELETE FROM \"skladnik_przepis\" WHERE przepis_nazwa_przepisa=\'{name}\'"
-    querry_delete_kategoria_koktajli_koktajl = f"DELETE FROM \"kategoria_koktajli_koktajl\" WHERE koktajl_nazwa=\'{name}\'"
-    querry_delete_koktajl = f"DELETE FROM \"koktajl\" WHERE nazwa=\'{name}\'"
-    querry_delete_przepis = f"DELETE FROM \"przepis\" WHERE nazwa_przepisa=\'{name}\'"
+        query_delete_skladnik_przepis = f"DELETE FROM \"skladnik_przepis\" WHERE przepis_nazwa_przepisa=\'{name}\'"
+        querry_delete_kategoria_koktajli_koktajl = f"DELETE FROM \"kategoria_koktajli_koktajl\" WHERE koktajl_nazwa=\'{name}\'"
+        querry_delete_koktajl = f"DELETE FROM \"koktajl\" WHERE nazwa=\'{name}\'"
+        querry_delete_przepis = f"DELETE FROM \"przepis\" WHERE nazwa_przepisa=\'{name}\'"
 
+        cursor.execute(querry_delete_odpowiedz_koktajl)
+        conn.commit()
 
-    cursor.execute(querry_delete_odpowiedz_koktajl)
-    conn.commit()
+        cursor.execute(querry_delete_koktajl_sommelier)
+        conn.commit()
 
-    cursor.execute(querry_delete_koktajl_sommelier)
-    conn.commit()
+        cursor.execute(query_delete_skladnik_przepis)
+        conn.commit()
 
-    cursor.execute(query_delete_skladnik_przepis)
-    conn.commit()
+        cursor.execute(querry_delete_kategoria_koktajli_koktajl)
+        conn.commit()
 
-    cursor.execute(querry_delete_kategoria_koktajli_koktajl)
-    conn.commit()
+        cursor.execute(querry_delete_koktajl)
+        conn.commit()
 
-    cursor.execute(querry_delete_koktajl)
-    conn.commit()
+        cursor.execute(querry_delete_przepis)
+        conn.commit()
 
-    cursor.execute(querry_delete_przepis)
-    conn.commit()
+        count = cursor.rowcount
+        cursor.close()
+        conn.close()
+        return jsonify({"message": f"{count} user deleted"}), 200
 
-    count = cursor.rowcount
-    cursor.close()
-    conn.close()
-    return jsonify({"message": f"{count} user deleted"}), 200
-    # try:
-    #     conn = psycopg2.connect('postgresql://joramba:admin@localhost:5432/bazy_danych')
-    #     cursor = conn.cursor()
-    #     query_delete_skladnik_przepis = f"DELETE FROM \"skladnik_przepis\" WHERE przepis_nazwa_przepisa=\'{name}\'"
-    #     querry_delete_kategoria_koktajli_koktajl = f"DELETE FROM \"kategoria_koktajli_koktajl\" WHERE koktajl_nazwa=\'{name}\'"
-    #     querry_delete_koktajl = f"DELETE FROM \"koktajl\" WHERE nazwa=\'{name}\'"
-    #     querry_delete_przepis = f"DELETE FROM \"przepis\" WHERE nazwa_przepisa=\'{name}\'"
-
-    #     cursor.execute(query_delete_skladnik_przepis)
-    #     conn.commit()
-
-    #     cursor.execute(querry_delete_kategoria_koktajli_koktajl)
-    #     conn.commit()
-
-    #     cursor.execute(querry_delete_koktajl)
-    #     conn.commit()
-
-    #     cursor.execute(querry_delete_przepis)
-    #     conn.commit()
-
-    #     count = cursor.rowcount
-    #     cursor.close()
-    #     conn.close()
-    #     return jsonify({"message": f"{count} user deleted"}), 200
-    #     # return redirect('/', code=302)
-
-    # except (Exception, psycopg2.Error) as error :
-    #     return jsonify({"error": str(error)}), 500
+    except (Exception, psycopg2.Error) as error :
+        return jsonify({"error": str(error)}), 500
 
 
 
@@ -882,8 +816,6 @@ def barman():
         phone = request.form['phone']
         adres = request.form['adres']
 
-        # print(username, email, password, github)
-
         conn = psycopg2.connect('postgresql://joramba:admin@localhost:5432/bazy_danych')
         cur = conn.cursor()
         querry_add_barman = 'INSERT INTO \"barman\" VALUES (\'{}\', \'{}\', \'{}\',\'{}\');'.format(name, surname, phone, adres)
@@ -896,7 +828,6 @@ def barman():
 
     try:
         barmans = get_barmans()
-        # Serve the file (if exists) from app/templates/home/FILE.html
         segment = get_segment(request)
         return render_template("home/barman.html" , segment=segment, barmans=barmans)
     except TemplateNotFound:
@@ -916,7 +847,6 @@ def barman():
 
     try:
         users = costyl()
-        # Serve the file (if exists) from app/templates/home/FILE.html
         segment = get_segment(request)
         return render_template("home/coctails_cards.html" , segment=segment, users=users)
     except TemplateNotFound:
@@ -935,10 +865,8 @@ def route_template(template):
         if not template.endswith('.html'):
             template += '.html'
 
-        # Detect the current page
         segment = get_segment(request)        
-        
-        # Serve the file (if exists) from app/templates/home/FILE.html
+
         return render_template("home/" + template, segment=segment)
 
     except TemplateNotFound:
@@ -948,16 +876,11 @@ def route_template(template):
         return render_template('home/page-500.html'), 500
 
 
-# Helper - Extract current page name from request
 def get_segment(request):
-
     try:
-
         segment = request.path.split('/')[-1]
-
         if segment == '':
             segment = 'index'
-
         return segment
 
     except:

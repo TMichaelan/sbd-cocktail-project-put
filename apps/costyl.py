@@ -1,8 +1,6 @@
 import psycopg2
 from flask import render_template
 
-
-
 def get_barmans():
     conn = psycopg2.connect('postgresql://joramba:admin@localhost:5432/bazy_danych')
     cur = conn.cursor()
