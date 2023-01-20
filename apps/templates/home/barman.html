@@ -155,14 +155,14 @@
 <script>
 
    function deleteBarman(name) {
-    if( confirm("Really Delete this post?") ) {  
+    if( confirm("Are you sure to delete this barman?") ) {  
     $.ajax({
       url: '/delete-barman',
       type: 'DELETE',
       data: {name: name},
       
       success: function(result) {
-        
+        alert("Barman has been successfully deleted!");
         showNotificationDelete('top','center')
         window.location.reload(true);
         
@@ -199,7 +199,7 @@
     }
 
   function modifyUser() {
-
+    if( confirm("Are you sure to modify this barman?") ) {  
         let form = document.getElementById("modform");
         let formData = new FormData(form);
         const name = formData.get('name');
@@ -214,7 +214,7 @@
             data: {name: name, surname: surname, phone: phone, adress: adress, id: id},
             success: function(data) {
                 // handle success response here
-                alert("User has been modified!");
+                alert("Barman has been successfully modified!");
                 window.location.reload(true)
             },
 
@@ -224,6 +224,7 @@
             }
         });
     }
+  }
 
   document.querySelector(".prevent").addEventListener("click", (e)=>{
     e.preventDefault();

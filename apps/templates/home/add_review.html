@@ -126,7 +126,7 @@
                       <label for="question_text">Review: </label>
                       <textarea id="question_text_modify" name="question_text" rows="4" cols="80" class="form-control" placeholder="Enter the Question"></textarea>
                       <label for="ocena">Ocena</label>
-                      <input id="ocena_modify" name="ocena" type="text" class="form-control" placeholder="Grade">
+                      <input id="ocena_modify" name="ocena" type="number" class="form-control" placeholder="Grade" min="1" max="5">
                   </div>
                 </div>
               </div>
@@ -165,24 +165,26 @@
   
 <script>
   function deleteReview(name) {
-    $.ajax({
-      url: '/delete-review',
-      type: 'DELETE',
-      data: {name: name},
-      
-      success: function(result) {
-        window.location.reload(true);
-      },
-      error: function(error) {
-        // Handle error
-      }
-    }); 
-    return false;
+    if( confirm("Are you sure to delete this review?") ) { 
+      $.ajax({
+        url: '/delete-review',
+        type: 'DELETE',
+        data: {name: name},
+        
+        success: function(result) {
+          alert("Review has been successfully deleted!");
+          window.location.reload(true);
+        },
+        error: function(error) {
+          // Handle error
+        }
+      }); 
+      return false;
+    }
   }
 
   function getReviewData(id) {
         id = decodeURIComponent(id);
-        console.log(id);
 
         $.ajax({
             url: '/get-review-data',
@@ -233,27 +235,29 @@
   }
 
   function modifyReview() {
-    let form = document.getElementById("modform");
-    let formData = new FormData(form);
+    if( confirm("Are you sure to modify this review?") ) { 
+      let form = document.getElementById("modform");
+      let formData = new FormData(form);
 
-    const coctail = formData.get('coctail');
-    const questionnaire = formData.get('questionnaire');
-    const question_text = formData.get('question_text');
-    const ocena = formData.get('ocena');
-    const id = formData.get('id');
+      const coctail = formData.get('coctail');
+      const questionnaire = formData.get('questionnaire');
+      const question_text = formData.get('question_text');
+      const ocena = formData.get('ocena');
+      const id = formData.get('id');
 
-    $.ajax({
-      url: '/modify-review',
-      type: 'PUT',
-      data: {coctail, questionnaire, question_text, ocena, id},
-      success: function(result) {
-        alert("Sommeliers has been modified!");
-        window.location.reload(true)
-      },
-      error: function(error) {
-        // Handle error
-      }
-    });
+      $.ajax({
+        url: '/modify-review',
+        type: 'PUT',
+        data: {coctail, questionnaire, question_text, ocena, id},
+        success: function(result) {
+          alert("Review has been successfully modified!");
+          window.location.reload(true)
+        },
+        error: function(error) {
+          // Handle error
+        }
+      });
+    }
   }
 
   const questionnaire = document.querySelector("#questionnaire");
@@ -268,7 +272,7 @@
         <label for="question_text">Review: </label>
         <textarea name="question_text" rows="4" cols="80" class="form-control" placeholder="Enter the Question"></textarea>
         <label for="ocena">Ocena</label>
-        <input name="ocena" type="text" class="form-control" placeholder="Grade">
+        <input name="ocena" type="number" class="form-control" placeholder="Grade" min="1" max="5">
     </div>
   `;
   }

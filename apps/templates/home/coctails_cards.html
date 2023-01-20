@@ -155,7 +155,7 @@
           <td>
             <button
               class="btn btn-primary"
-              onclick="demo.showNotification('top','center')"
+              onclick="modifyUser()"
             >
               Modify
             </button>
@@ -211,33 +211,38 @@
   checkPK("coctail_name");
 
   function deleteUser(name) {
-    $.ajax({
-      url: "/delete-user",
-      type: "DELETE",
-      data: { name: name },
+    if( confirm("Are you sure you want to delete this coctail?") ) {  
+      $.ajax({
+        url: "/delete-user",
+        type: "DELETE",
+        data: { name: name },
 
-      success: function (result) {
-        window.location.reload(true);
-      },
-      error: function (error) {
-        // Handle error
-      },
-    });
-    return false;
+        success: function (result) {
+          alert("Coctail has been successfully deleted!");
+          window.location.reload(true);
+        },
+        error: function (error) {
+          // Handle error
+        },
+      });
+      return false;
+    }
   }
 
   function modifyUser(id) {
-    $.ajax({
-      url: "/modify-user",
-      type: "PUT",
-      data: { id: id },
-      success: function (result) {
-        // Handle successful modification
-      },
-      error: function (error) {
-        // Handle error
-      },
-    });
+    if( confirm("Are you sure you want to modify this coctail?") ) {  
+      $.ajax({
+        url: "/modify-user",
+        type: "PUT",
+        data: { id: id },
+        success: function (result) {
+          //alert("Coctail has been successfully modified!");
+        },
+        error: function (error) {
+          // Handle error
+        },
+      });
+    }
   }
 
   const count = document.querySelector(".count");

@@ -164,43 +164,47 @@
   console.log(PatternName.test("Zxsdaas1"));
 
   function deleteSommelier(name) {
+    if( confirm("Are you sure you want to delete this post?") ) {  
     $.ajax({
       url: '/delete-sommelier',
       type: 'DELETE',
       data: {name: name},
       
       success: function(result) {
+        alert("Post has been successfully deleted!");
         window.location.reload(true);
-        console.log(data)
       },
       error: function(error) {
         // Handle error
       }
     }); 
     return false;
+    }
   }
 
   function modifyUser() {
-    let form = document.getElementById("modform");
-    let formData = new FormData(form);
-    const name = formData.get('name');
-    const coctail = formData.get('coctail');
-    const recenzja = formData.get('recencja');
-    const ocena = formData.get('ocena');
-    const id = formData.get('id');
+    if( confirm("Are you sure you want to modify this post?") ) {  
+      let form = document.getElementById("modform");
+      let formData = new FormData(form);
+      const name = formData.get('name');
+      const coctail = formData.get('coctail');
+      const recenzja = formData.get('recencja');
+      const ocena = formData.get('ocena');
+      const id = formData.get('id');
 
-    $.ajax({
-      url: '/modify-sommelier',
-      type: 'PUT',
-      data: {name, coctail, recenzja, ocena, id},
-      success: function(result) {
-        alert("Sommeliers has been modified!");
-        window.location.reload(true)
-      },
-      error: function(error) {
-        // Handle error
-      }
-    });
+      $.ajax({
+        url: '/modify-sommelier',
+        type: 'PUT',
+        data: {name, coctail, recenzja, ocena, id},
+        success: function(result) {
+          alert("Post has been successfully modified!");
+          window.location.reload(true)
+        },
+        error: function(error) {
+          // Handle error
+        }
+      });
+    }
   }
 
   function getSommeliersData(id) {
@@ -211,7 +215,6 @@
         type: "GET",
         data: {id: id},
         success: function(data) {
-            console.log(data);
             $("#input-name").val(data.sommelier);
             $("#input-recenzja").val(data.recenzja);
             $("#input-ocena").val(data.grade);

@@ -679,34 +679,67 @@ def delete_users():
     name = request.form.get('name')
     print(name)
 
-    try:
-        conn = psycopg2.connect('postgresql://joramba:admin@localhost:5432/bazy_danych')
-        cursor = conn.cursor()
-        query_delete_skladnik_przepis = f"DELETE FROM \"skladnik_przepis\" WHERE przepis_nazwa_przepisa=\'{name}\'"
-        querry_delete_kategoria_koktajli_koktajl = f"DELETE FROM \"kategoria_koktajli_koktajl\" WHERE koktajl_nazwa=\'{name}\'"
-        querry_delete_koktajl = f"DELETE FROM \"koktajl\" WHERE nazwa=\'{name}\'"
-        querry_delete_przepis = f"DELETE FROM \"przepis\" WHERE nazwa_przepisa=\'{name}\'"
+    conn = psycopg2.connect('postgresql://joramba:admin@localhost:5432/bazy_danych')
+    cursor = conn.cursor()
+    querry_delete_odpowiedz_koktajl = f"DELETE FROM \"odpowiedz_koktajl\" WHERE koktajl_nazwa=\'{name}\'"
+    querry_delete_koktajl_sommelier = f"DELETE FROM \"koktajl_sommelier\" WHERE koktajl_nazwa=\'{name}\'"
 
-        cursor.execute(query_delete_skladnik_przepis)
-        conn.commit()
+    query_delete_skladnik_przepis = f"DELETE FROM \"skladnik_przepis\" WHERE przepis_nazwa_przepisa=\'{name}\'"
+    querry_delete_kategoria_koktajli_koktajl = f"DELETE FROM \"kategoria_koktajli_koktajl\" WHERE koktajl_nazwa=\'{name}\'"
+    querry_delete_koktajl = f"DELETE FROM \"koktajl\" WHERE nazwa=\'{name}\'"
+    querry_delete_przepis = f"DELETE FROM \"przepis\" WHERE nazwa_przepisa=\'{name}\'"
 
-        cursor.execute(querry_delete_kategoria_koktajli_koktajl)
-        conn.commit()
 
-        cursor.execute(querry_delete_koktajl)
-        conn.commit()
+    cursor.execute(querry_delete_odpowiedz_koktajl)
+    conn.commit()
 
-        cursor.execute(querry_delete_przepis)
-        conn.commit()
+    cursor.execute(querry_delete_koktajl_sommelier)
+    conn.commit()
 
-        count = cursor.rowcount
-        cursor.close()
-        conn.close()
-        return jsonify({"message": f"{count} user deleted"}), 200
-        # return redirect('/', code=302)
+    cursor.execute(query_delete_skladnik_przepis)
+    conn.commit()
 
-    except (Exception, psycopg2.Error) as error :
-        return jsonify({"error": str(error)}), 500
+    cursor.execute(querry_delete_kategoria_koktajli_koktajl)
+    conn.commit()
+
+    cursor.execute(querry_delete_koktajl)
+    conn.commit()
+
+    cursor.execute(querry_delete_przepis)
+    conn.commit()
+
+    count = cursor.rowcount
+    cursor.close()
+    conn.close()
+    return jsonify({"message": f"{count} user deleted"}), 200
+    # try:
+    #     conn = psycopg2.connect('postgresql://joramba:admin@localhost:5432/bazy_danych')
+    #     cursor = conn.cursor()
+    #     query_delete_skladnik_przepis = f"DELETE FROM \"skladnik_przepis\" WHERE przepis_nazwa_przepisa=\'{name}\'"
+    #     querry_delete_kategoria_koktajli_koktajl = f"DELETE FROM \"kategoria_koktajli_koktajl\" WHERE koktajl_nazwa=\'{name}\'"
+    #     querry_delete_koktajl = f"DELETE FROM \"koktajl\" WHERE nazwa=\'{name}\'"
+    #     querry_delete_przepis = f"DELETE FROM \"przepis\" WHERE nazwa_przepisa=\'{name}\'"
+
+    #     cursor.execute(query_delete_skladnik_przepis)
+    #     conn.commit()
+
+    #     cursor.execute(querry_delete_kategoria_koktajli_koktajl)
+    #     conn.commit()
+
+    #     cursor.execute(querry_delete_koktajl)
+    #     conn.commit()
+
+    #     cursor.execute(querry_delete_przepis)
+    #     conn.commit()
+
+    #     count = cursor.rowcount
+    #     cursor.close()
+    #     conn.close()
+    #     return jsonify({"message": f"{count} user deleted"}), 200
+    #     # return redirect('/', code=302)
+
+    # except (Exception, psycopg2.Error) as error :
+    #     return jsonify({"error": str(error)}), 500
 
 
 
