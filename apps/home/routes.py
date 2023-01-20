@@ -480,6 +480,117 @@ def modifyBarman():
         return jsonify({"error": str(error)}), 500 
 
 
+@blueprint.route('/modify-questionnaire', methods=['PUT'])
+def modifyQuestionnaire():
+   
+    name = request.form.get('name')
+    count = request.form.get('count')
+    
+    question_names_desc = request.form.get('questions')
+
+    print(request.form)
+    print(request.form['questions'])
+    print(name)
+    print(count)
+    # print(question_names_desc)
+    return jsonify({}), 200
+    # conn = psycopg2.connect('postgresql://joramba:admin@localhost:5432/bazy_danych')
+    # cur = conn.cursor()
+    # # querry_add_user = 'INSERT INTO \"ankieta\" VALUES (\'{}\', \'{}\');'.format(name, count)
+    # update_add_pytaniee = f"UPDATE \"ankieta\" SET nazwa=\'{name}\',ilosc_pytan=\'{count}\' WHERE nazwa=\'{name}\';"
+    # cur.execute(update_add_pytaniee)
+    # conn.commit()
+
+    # for i in range(int(count)):
+    #     question_name = question_names_desc[i][0]
+    #     text = question_names_desc[i][1]
+ 
+    #     try: 
+    #         # querry_add_pytanie = 'INSERT INTO \"pytanie\" VALUES (\'{}\', \'{}\');'.format(question_name, text)
+    #         update_add_pytanie = f"UPDATE \"pytanie\" SET nazwa_pytanie=\'{question_name}\',tekst_pytania=\'{text}\' WHERE nazwa_pytanie=\'{question_name}\';"
+    #         cur.execute(update_add_pytanie)
+    #     except Exception as err:
+    #         print(f'error occurred: {err}')
+
+        # querry_add_ankieta_pytanie = 'INSERT INTO \"ankieta_pytanie\" VALUES (\'{}\', \'{}\');'.format(name, question_name)
+        # update_add_pytanie = f"UPDATE \"ankieta_pytanie\" SET ankieta_nazwa=\'{name}\',pytanie_nazwa_pytanie=\'{text}\' WHERE nazwa_pytanie=\'{question_name}\';"
+        # conn.commit()
+        # cur.execute(querry_add_ankieta_pytanie)
+                
+    # conn.commit()
+    # cur.close()
+    # conn.close()
+    # return redirect('questionnaire.html')
+
+    # id = request.form.get('id')
+
+    # surname = request.form.get('surname')
+    # phone = request.form.get('phone')
+    # adress = request.form.get('adress')
+
+    # try:
+    #     conn = psycopg2.connect('postgresql://joramba:admin@localhost:5432/bazy_danych')
+    #     cursor = conn.cursor()
+    #     query = f"UPDATE \"barman\" SET imie=\'{name}\',nazwisko=\'{surname}\',numer_telefonu=\'{phone}\',adres=\'{adress}\' WHERE id=\'{id}\';"
+    #     cursor.execute(query)
+    #     conn.commit()
+    #     count = cursor.rowcount
+    #     cursor.close()
+    #     conn.close()
+    #     return jsonify({"message": f"{count} user modified"}), 200
+    # except (Exception, psycopg2.Error) as error :
+    #     return jsonify({"error": str(error)}), 500 
+
+
+@blueprint.route('/get-questionnaire-data', methods=(['GET']))
+def getQuestionnaireData():
+    name = request.args.get('name')
+    try:
+        conn = psycopg2.connect('postgresql://joramba:admin@localhost:5432/bazy_danych')
+        cursor = conn.cursor()
+        query = f"SELECT * FROM \"ankieta\" WHERE nazwa=\'{name}\'"
+        cursor.execute(query)
+        questionnaire_data = cursor.fetchone()
+        cursor.close()
+        conn.close()
+
+        try:
+            conn = psycopg2.connect('postgresql://joramba:admin@localhost:5432/bazy_danych')
+            cursor = conn.cursor()
+            query = f"SELECT pytanie_nazwa_pytanie FROM \"ankieta_pytanie\" WHERE ankieta_nazwa=\'{name}\'"
+            cursor.execute(query)
+            questions_name = cursor.fetchall()
+            cursor.close()
+            conn.close()
+        except (Exception, psycopg2.Error) as error :
+            return jsonify({"error": str(error)}), 500
+
+        questions_name_list = []
+
+        for questions_name in questions_name:
+            questions_name_list.append(questions_name[0])
+
+        questions = []
+        try:
+            for question in questions_name_list:
+                conn = psycopg2.connect('postgresql://joramba:admin@localhost:5432/bazy_danych')
+                cursor = conn.cursor()
+                query = f"SELECT tekst_pytania FROM \"pytanie\" WHERE nazwa_pytanie=\'{question}\'"
+                cursor.execute(query)
+                questions_desc = cursor.fetchone()
+
+                questions.append([question,questions_desc[0]])
+                cursor.close()
+                conn.close()
+        except (Exception, psycopg2.Error) as error :
+            return jsonify({"error": str(error)}), 500
+
+        return jsonify({"name": questionnaire_data[0], "count": questionnaire_data[1],"questions": questions}), 200
+
+    except (Exception, psycopg2.Error) as error :
+        return jsonify({"error": str(error)}), 500
+
+
 @blueprint.route('/modify-sommelier', methods=['PUT'])
 def modifySommelier():
     id = request.form.get('id')
