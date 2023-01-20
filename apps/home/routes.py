@@ -585,6 +585,53 @@ def modifySommelier():
         return jsonify({"error": str(error)}), 500 
 
 
+@blueprint.route('/modify-coctail', methods=['PUT'])
+def modifyCoctail():
+    nazwa = request.form.get('nazwa')
+    obraz = request.form.get('obraz')
+    category = request.form.get('category')
+    notatka = request.form.get('notatka')
+    count = request.form.get('count')
+
+    conn = psycopg2.connect('postgresql://joramba:admin@localhost:5432/bazy_danych')
+    cursor = conn.cursor()
+
+    try: 
+        querry_add_sommelier = 'INSERT INTO \"sommelier\" VALUES (\'{}\');'.format(name)
+        cursor.execute(querry_add_sommelier)
+        conn.commit()
+    except Exception as err:
+        print(f'error occurred: {err}')
+        conn.rollback()
+
+    query = f"UPDATE \"koktajl_sommelier\" SET koktajl_nazwa=\'{coctail}\',sommelier_pseudonim=\'{name}\',recenzja=\'{recenzja}\',ocena=\'{ocena}\' WHERE id=\'{id}\';"
+    cursor.execute(query)
+    conn.commit()
+    count = cursor.rowcount
+    cursor.close()
+    conn.close()
+    return jsonify({"message": f"{count} user modified"}), 200
+    # try:
+    #     conn = psycopg2.connect('postgresql://joramba:admin@localhost:5432/bazy_danych')
+    #     cursor = conn.cursor()
+
+    #     try: 
+    #         querry_add_sommelier = 'INSERT INTO \"sommelier\" VALUES (\'{}\');'.format(name)
+    #         cursor.execute(querry_add_sommelier)
+    #         conn.commit()
+    #     except Exception as err:
+    #         print(f'error occurred: {err}')
+    #         conn.rollback()
+
+    #     query = f"UPDATE \"koktajl_sommelier\" SET koktajl_nazwa=\'{coctail}\',sommelier_pseudonim=\'{name}\',recenzja=\'{recenzja}\',ocena=\'{ocena}\' WHERE id=\'{id}\';"
+    #     cursor.execute(query)
+    #     conn.commit()
+    #     count = cursor.rowcount
+    #     cursor.close()
+    #     conn.close()
+    #     return jsonify({"message": f"{count} user modified"}), 200
+    # except (Exception, psycopg2.Error) as error :
+    #     return jsonify({"error": str(error)}), 500 
 
 @blueprint.route('/modify-review', methods=['PUT'])
 def modifyReview():

@@ -144,7 +144,7 @@
           <i class="tim-icons icon-simple-remove hide-modify-form"></i>
         </div>
         <div class="card-body">
-          <form method="post">
+          <form id="modform" method="post">
             <div class="row">
               <div class="col-md-6 pr-md-1">
                 <div class="form-group">
@@ -156,8 +156,7 @@
                     name="nazwa"
                     class="form-control"
                     placeholder="Coctail"
-                    title="4 to 50 characters, letters and numbers only"
-                    required
+                    readonly
                   />
                   <div class="message"></div>
                 </div>
@@ -230,7 +229,7 @@
               <button
                 type="submit"
                 class="add-coctail-btn btn btn-fill btn-primary"
-                onclick="modifyUser()"
+                onclick="modifyCoctail()"
               >
                 Modify
               </button>
@@ -285,30 +284,32 @@
   </div>
 </div>
 <script>
-  // function modifyUser() {
-  //   // if (confirm("Are you sure you want to modify this post?")) {
-  //     let form = document.getElementById("modform");
-  //     let formData = new FormData(form);
-  //     const name = formData.get("name");
-  //     const coctail = formData.get("coctail");
-  //     const recenzja = formData.get("recencja");
-  //     const ocena = formData.get("ocena");
-  //     const id = formData.get("id");
+  function modifyCoctail() {
+    // if (confirm("Are you sure you want to modify this post?")) {
+      let form = document.getElementById("modform");
+      let formData = new FormData(form);
 
-  //     $.ajax({
-  //       url: "/modify-sommelier",
-  //       type: "PUT",
-  //       data: { name, coctail, recenzja, ocena, id },
-  //       success: function (result) {
-  //         alert("Post has been successfully modified!");
-  //         window.location.reload(true);
-  //       },
-  //       error: function (error) {
-  //         // Handle error
-  //       },
-  //     });
-  //   // }
-  // }
+      const nazwa = formData.get("nazwa");
+      const obraz = formData.get("obraz");
+
+      const category = formData.get("coctail");
+      const notatka = formData.get("notatka");
+      const count = formData.get("count");
+
+      $.ajax({
+        url: "/modify-sommelier",
+        type: "PUT",
+        data: { nazwa, obraz, category, notatka, count },
+        success: function (result) {
+          alert("Post has been successfully modified!");
+          window.location.reload(true);
+        },
+        error: function (error) {
+          // Handle error
+        },
+      });
+    // }
+  }
 
   function getCoctailData(name) {
     name = decodeURIComponent(name);
@@ -435,7 +436,6 @@
   // }
 
   const count = document.querySelector(".count");
-  console.log(count);
   count.addEventListener("change", (e) => {
     document.querySelector(".ingredients").innerHTML = "";
 
@@ -452,7 +452,6 @@
   });
 
   const countModify = document.querySelector(".count-modify");
-  console.log(countModify);
   countModify.addEventListener("change", (e) => {
     document.querySelector(".ingredients-modify").innerHTML = "";
 
