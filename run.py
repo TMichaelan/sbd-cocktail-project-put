@@ -4,6 +4,7 @@ Copyright (c) 2019 - present AppSeed.us
 """
 
 import os
+import flask
 from   flask_migrate import Migrate
 from   flask_minify  import Minify
 from   sys import exit
@@ -33,8 +34,11 @@ if not DEBUG:
     
 if DEBUG:
     app.logger.info('DEBUG       = ' + str(DEBUG)             )
+    
     app.logger.info('DBMS        = ' + app_config.SQLALCHEMY_DATABASE_URI)
+
     app.logger.info('ASSETS_ROOT = ' + app_config.ASSETS_ROOT )
+
 
 if __name__ == "__main__":
     app.run()

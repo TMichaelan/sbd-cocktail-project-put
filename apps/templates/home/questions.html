@@ -1,0 +1,102 @@
+ {% extends "layouts/base.html" %}
+
+{% block title %} User Profile {% endblock %} 
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+  <style>
+  .card {
+    width: 150%;
+  }
+  .card .card-footer {
+    padding: 0;
+  }
+  .table {
+    width: 150%;
+  }
+
+  .card label {
+    margin: 0 10px 0 20px;
+  }
+  </style>
+  <div class="content">
+    <div class="row">
+      <div class="col-md-8">
+        <table class="table">
+          <tr>
+            <th>Name of Question</th>
+            <th>Question</th>>
+          </tr>
+    
+          <!-- here is a for-loop to give us all the socks -->
+          {% for user in users %}
+          <tr>
+            <td>{{user[0]}}</td>
+            <td>{{user[1]}}</td>
+          </tr>
+          {% endfor %}
+        </table>
+      </div>
+    </div>
+  </div>
+
+  
+<script>
+  function deleteQuestionnaire(name) {
+    $.ajax({
+      url: '/delete-questionnaire',
+      type: 'DELETE',
+      data: {name: name},
+      
+      success: function(result) {
+        window.location.reload(true);
+        console.log(data)
+      },
+      error: function(error) {
+        // Handle error
+      }
+    }); 
+    return false;
+  }
+
+  function modifyUser(id) {
+    $.ajax({
+      url: '/modify-user',
+      type: 'PUT',
+      data: {id: id},
+      success: function(result) {
+        // Handle successful modification
+      },
+      error: function(error) {
+        // Handle error
+      }
+    });
+  }
+
+  const count = document.querySelector(".count");
+  count.addEventListener("change", (e) => {
+    console.log(e.target.value);
+    document.querySelector(".questions").innerHTML = "";
+    
+
+    for (let i = 0; i < e.target.value; i++) {
+      document.querySelector(".questions").innerHTML += `
+        <div class="form-group">
+          <label for="question_name${i}">Name of Question ${i + 1}: </label>
+          <input name="question_name${i}" type="text" class="count" placeholder="Name of Question">
+          <div class="form-group">
+            <label for="question_text${i}">Text: </label>
+            <textarea name="question_text${i}" rows="3" cols="50" class="form-control" placeholder="Enter the Question"></textarea>
+          </div>
+        </div>
+      `;
+    }})
+</script>
+
+{% endblock content %}
+
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}{% endblock javascripts %}

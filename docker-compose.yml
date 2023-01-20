@@ -7,18 +7,18 @@ services:
     networks:
       - db_network
       - web_network
-  nginx:
-    container_name: nginx
-    restart: always
-    image: "nginx:latest"
-    ports:
-      - "5085:5085"
-    volumes:
-      - ./nginx:/etc/nginx/conf.d
-    networks:
-      - web_network
-    depends_on: 
-      - appseed-app
+  # nginx:
+  #   container_name: nginx
+  #   restart: always
+  #   image: "nginx:latest"
+  #   ports:
+  #     - "5085:5085"
+  #   volumes:
+  #     - ./nginx:/etc/nginx/conf.d
+  #   networks:
+  #     - web_network
+  #   depends_on: 
+  #     - appseed-app
   db:
     image: postgres:latest
     #restart: always
@@ -38,19 +38,19 @@ services:
   #   networks:
   #     - db_network
 
-  pgadmin:
-    image: dpage/pgadmin4:latest
-    #restart: always
-    ports:
-      - "5050:5050"
-    environment:
-      PGADMIN_DEFAULT_EMAIL: admin@admin.com
-      PGADMIN_DEFAULT_PASSWORD: zaq1@WSX
-      PGADMIN_LISTEN_PORT: 5050
-    volumes:
-      - pgadmin-data:/var/lib/pgadmin
-    networks:
-      - db_network
+  # pgadmin:
+  #   image: dpage/pgadmin4:latest
+  #   #restart: always
+  #   ports:
+  #     - "5050:5050"
+  #   environment:
+  #     PGADMIN_DEFAULT_EMAIL: admin@admin.com
+  #     PGADMIN_DEFAULT_PASSWORD: zaq1@WSX
+  #     PGADMIN_LISTEN_PORT: 5050
+  #   volumes:
+  #     - pgadmin-data:/var/lib/pgadmin
+  #   networks:
+  #     - db_network
 
 networks:
   db_network:

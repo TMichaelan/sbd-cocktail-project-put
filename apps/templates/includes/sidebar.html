@@ -16,56 +16,63 @@
                 <li class="{% if 'index' in segment %} active {% endif %} ">
                     <a href="/">
                         <i class="tim-icons icon-chart-pie-36"></i>
-                        <p>Dashboard</p>
+                        <p>Coctails</p>
                     </a>
                 </li>
 
                 <li class="{% if 'coctails_cards' in segment %} active {% endif %}">
                     <a href="/coctails_cards.html">
-                        <i class="tim-icons icon-single-02"></i>
+                        <i class="tim-icons icon-image-02"></i>
                         <p>Coctails cards</p>
                     </a>
                 </li>
-                
-                <li class="{% if 'coctails_modify' in segment %} active {% endif %}">
-                    <a href="/coctails_modify.html">
+
+                <li class="{% if 'barman' in segment %} active {% endif %}">
+                    <a href="/barman.html">
                         <i class="tim-icons icon-single-02"></i>
-                        <p>Coctails modify</p>
+                        <p>Barman</p>
                     </a>
                 </li>
 
-                <li class="{% if 'coctails_form' in segment %} active {% endif %}">
-                    <a href="/coctails_form.html">
-                        <i class="tim-icons icon-single-02"></i>
-                        <p>Coctails form</p>
+
+                <li class="{% if 'questionnaire' in segment %} active {% endif %}">
+                    <a href="/questionnaire.html">
+                        <i class="tim-icons icon-book-bookmark"></i>
+                        <p>Questionnaire</p>
                     </a>
                 </li>
                 
-                <li class="{% if 'coctails_emploee' in segment %} active {% endif %}">
-                    <a href="/coctails_emploee.html">
+                <!-- <li class="{% if 'questions' in segment %} active {% endif %}">
+                    <a href="/questions.html">
                         <i class="tim-icons icon-single-02"></i>
-                        <p>Coctails emploee</p>
+                        <p>Questions</p>
+                    </a>
+                </li> -->
+                
+                <li class="{% if 'add_review' in segment %} active {% endif %}">
+                    <a href="/add_review.html">
+                        <i class="tim-icons icon-paper"></i>
+                        <p>Add Review as User</p>
                     </a>
                 </li>
-                
 
+                <li class="{% if 'sommelier' in segment %} active {% endif %}">
+                    <a href="/sommelier.html">
+                        <i class="tim-icons icon-badge"></i>
+                        <p>Add Review as Sommelier</p>
+                    </a>
+                </li>
 
-                <li class="{% if 'user' in segment %} active {% endif %}">
+                <!-- <li class="{% if 'user' in segment %} active {% endif %}">
                     <a href="/user.html">
                         <i class="tim-icons icon-single-02"></i>
                         <p>User Profile</p>
                     </a>
-                </li>
-                <li class="{% if 'icons' in segment %} active {% endif %}">
+                </li> -->
+                <!-- <li class="{% if 'icons' in segment %} active {% endif %}">
                     <a href="/icons.html">
                         <i class="tim-icons icon-atom"></i>
                         <p>Icons</p>
-                    </a>
-                </li>
-                <li class="{% if 'map' in segment %} active {% endif %}">
-                    <a href="/map.html">
-                        <i class="tim-icons icon-pin"></i>
-                        <p>Maps</p>
                     </a>
                 </li>
                 <li class="{% if 'notifications' in segment %} active {% endif %}">
@@ -73,19 +80,19 @@
                         <i class="tim-icons icon-bell-55"></i>
                         <p>Notifications</p>
                     </a>
-                </li> 
-                <li class="{% if 'tables' in segment %} active {% endif %}">
+                </li>  -->
+                <!-- <li class="{% if 'tables' in segment %} active {% endif %}">
                     <a href="/tables.html">
                         <i class="tim-icons icon-puzzle-10"></i>
                         <p>Table List</p>
                     </a>
-                </li>
-                <li class="{% if 'typography' in segment %} active {% endif %}">
+                </li> -->
+                <!-- <li class="{% if 'typography' in segment %} active {% endif %}">
                     <a href="/typography.html">
                         <i class="tim-icons icon-align-center"></i>
                         <p>Typography</p>
                     </a>
-                </li>
+                </li> -->
     
                 <li>
                     <a href="{{ url_for('authentication_blueprint.logout') }}">
