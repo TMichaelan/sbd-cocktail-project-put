@@ -1,208 +1,277 @@
-{% extends "layouts/base.html" %}
-
-{% block title %} User Profile {% endblock %} 
+{% extends "layouts/base.html" %} {% block title %} User Profile {% endblock %}
 
 <!-- Specific Page CSS goes HERE  -->
-{% block stylesheets %}{% endblock stylesheets %}
-
-{% block content %}
-  <style>
-    .card {
-      width: 150%;
-    }
-    .card .card-footer{
-      
-      padding: 0;
-    }
-   .table{
+{% block stylesheets %}{% endblock stylesheets %} {% block content %}
+<style>
+  .card {
     width: 150%;
-   }
-   .modify-header{
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-      justify-content: space-between;
-   }
-   .modify-header i{
+  }
+  .card .card-footer {
+    padding: 0;
+  }
+  .table {
+    width: 150%;
+  }
+  .modify-header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .modify-header i {
     font-size: 20px;
-   }
-   .modify-header i:hover{
+  }
+  .modify-header i:hover {
     cursor: pointer;
-
-   }
-   #modify-form{
+  }
+  #modify-form {
     display: none;
-   }
-  </style>
-  <div class="content">
-    <div class="row">
-      <div class="col-md-8">
-        <div class="card">
-          <div class="card-header">
-            <h5 class="title">Add Sommelier</h5>
-          </div>
-          <div class="card-body">
-            <form method="post">
-              <div class="row">
-                <div class="col-md-6 pr-md-1">
-                  <div class="form-group">
-                    <label for="name">Pseodonim</label>
-                    <input name="name" type="text" class="form-control" placeholder="Pseodonim" required pattern="^[a-zA-Z0-9_-\s]{4,30}$" title="4 to 30 characters, letters and numbers only"/>>
-                  </div>
-                </div>
-                <div class="col-md-6 pl-md-1">
-                  <div class="form-group">
-                    <label for="coctail">Choose a coctail:</label>
-                    <select id="coctail" name="coctail">
-                      {% for coctail in coctails %}
-                        <option value="{{coctail[0]}}">{{coctail[0]}}</option>
-                      {% endfor %}
-                    </select>
-                  </div>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-md-8">
-                  <div class="form-group">
-                    <label for="recencja">Recencja</label>
-                    <textarea id='recencja_text'name="recencja" type="text" rows="4" cols="80" class="form-control" placeholder="Here can be your Review" required></textarea>
-                  </div>
+  }
+</style>
+<div class="content">
+  <div class="row">
+    <div class="col-md-8">
+      <div class="card">
+        <div class="card-header">
+          <h5 class="title">Add Sommelier</h5>
+        </div>
+        <div class="card-body">
+          <form method="post">
+            <div class="row">
+              <div class="col-md-6 pr-md-1">
+                <div class="form-group">
+                  <label for="name">Pseodonim</label>
+                  <input
+                    name="name"
+                    type="text"
+                    class="form-control"
+                    placeholder="Pseodonim"
+                    pattern="[a-zA-Z0-9\s_-]{4,50}"
+                    title="4 to 30 characters, letters and numbers only"
+                    required
+                  />>
                 </div>
               </div>
               <div class="col-md-6 pl-md-1">
                 <div class="form-group">
-                  <label for="ocena">Ocena</label>
-                  <input name="ocena" type="number" class="form-control" placeholder="Grade" min="1" max="5">
+                  <label for="coctail">Choose a coctail:</label>
+                  <select id="coctail" name="coctail">
+                    {% for coctail in coctails %}
+                    <option value="{{coctail[0]}}">{{coctail[0]}}</option>
+                    {% endfor %}
+                  </select>
                 </div>
               </div>
-              <div class="card-footer">
-                <button type="submit" class="btn btn-fill btn-primary">Add Sommelier</button>
-              </div>
-            </form>
-          </div>
-        </div>
-
-        <div id="modify-form" class="card">
-          <div class="card-header modify-header">
-            <h5 class="title">Modify Sommelier</h5>
-            <i class="tim-icons icon-simple-remove hide-modify-form"></i>
-          </div>
-          <div class="card-body">
-            <form id="modform" method="post">
-              <div class="row">
-                <div class="col-md-6 pr-md-1">
-                  <div class="form-group">
-                    <label for="name">Pseodonim</label>
-                    <input id="input-name" name="name" type="text" class="form-control" placeholder="Pseodonim" required pattern="^[a-zA-Z0-9_-\s]{4,30}$" title="4 to 30 characters, letters and numbers only"/>
-                    <input id="input-id" style="display: none;" name="id" type="text" class="form-control" placeholder="id">
-                  </div>
-                </div>
-                <div class="col-md-6 pl-md-1">
-                  <div class="form-group">
-                    <label for="coctail">Choose a coctail:</label>
-                    <select id="coctail_modify" name="coctail">
-                      {% for coctail in coctails %}
-                        <option value="{{coctail[0]}}">{{coctail[0]}}</option>
-                      {% endfor %}
-                    </select>
-                  </div>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-md-8">
-                  <div class="form-group">
-                    <label for="recencja">Recencja</label>
-                    <textarea id="input-recenzja" name="recencja" rows="4" cols="80" class="form-control" placeholder="Here can be your Review" required></textarea>
-                  </div>
-                </div>
-              </div>
-              <div class="col-md-6 pl-md-1">
+            </div>
+            <div class="row">
+              <div class="col-md-8">
                 <div class="form-group">
-                  <label for="ocena">Ocena</label>
-                  <input id="input-ocena" name="ocena" type="number" class="form-control" placeholder="Grade" min="1" max="5" required>
+                  <label for="recencja">Recencja</label>
+                  <textarea
+                    id="recencja_text"
+                    name="recencja"
+                    type="text"
+                    rows="4"
+                    cols="80"
+                    class="form-control"
+                    placeholder="Here can be your Review"
+                    required
+                  ></textarea>
                 </div>
               </div>
-              <div class="card-footer">
-                <button type="submit" class="prevent btn btn-primary" onclick="modifyUser()">Modify</button>
+            </div>
+            <div class="col-md-6 pl-md-1">
+              <div class="form-group">
+                <label for="ocena">Ocena</label>
+                <input
+                  name="ocena"
+                  type="number"
+                  class="form-control"
+                  placeholder="Grade"
+                  min="1"
+                  max="5"
+                />
               </div>
-            </form>
-          </div>
+            </div>
+            <div class="card-footer">
+              <button type="submit" class="btn btn-fill btn-primary">
+                Add Sommelier
+              </button>
+            </div>
+          </form>
         </div>
-        
-
-        <table class="table">
-          <tr>
-            <th>Koktajl</th>
-            <th>Pseodonim</th>
-            <th>Recencja</th>
-            <th>Ocena</th>
-            <th></th>
-            <th></th>
-          </tr>
-          {%for i in range(0, len)%} 
-          <tr>
-            <td>{{coctails_som[i][0]}}</td>
-            <td>{{coctails_som[i][1]}}</td>
-            <td>{{coctails_som[i][2]}}</td>
-            <td>{{coctails_som[i][3]}}</td>
-            <td><button class="btn btn-primary" onclick="deleteSommelier('{{coctails_som[i][4]}}')">Delete</button></td>
-            <td><button class="modify-button btn btn-primary" onclick="getSommeliersData('{{coctails_som[i][4]}}')">Modify</button></td>
-          </tr>
-          {%endfor%} 
-          <!-- here is a for-loop to give us all the socks -->
-
-        </table>
       </div>
+
+      <div id="modify-form" class="card">
+        <div class="card-header modify-header">
+          <h5 class="title">Modify Sommelier</h5>
+          <i class="tim-icons icon-simple-remove hide-modify-form"></i>
+        </div>
+        <div class="card-body">
+          <form id="modform" method="post">
+            <div class="row">
+              <div class="col-md-6 pr-md-1">
+                <div class="form-group">
+                  <label for="name">Pseodonim</label>
+                  <input
+                    id="input-name"
+                    name="name"
+                    type="text"
+                    class="form-control"
+                    placeholder="Pseodonim"
+                    pattern="[a-zA-Z0-9\s_-]{4,50}"
+                    title="4 to 50 characters, letters and numbers only"
+                    required
+                  />
+                  <input
+                    id="input-id"
+                    style="display: none"
+                    name="id"
+                    type="text"
+                    class="form-control"
+                    placeholder="id"
+                  />
+                </div>
+              </div>
+              <div class="col-md-6 pl-md-1">
+                <div class="form-group">
+                  <label for="coctail">Choose a coctail:</label>
+                  <select id="coctail_modify" name="coctail">
+                    {% for coctail in coctails %}
+                    <option value="{{coctail[0]}}">{{coctail[0]}}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-8">
+                <div class="form-group">
+                  <label for="recencja">Recencja</label>
+                  <textarea
+                    id="input-recenzja"
+                    name="recencja"
+                    rows="4"
+                    cols="80"
+                    class="form-control"
+                    placeholder="Here can be your Review"
+                    required
+                  ></textarea>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6 pl-md-1">
+              <div class="form-group">
+                <label for="ocena">Ocena</label>
+                <input
+                  id="input-ocena"
+                  name="ocena"
+                  type="number"
+                  class="form-control"
+                  placeholder="Grade"
+                  min="1"
+                  max="5"
+                  required
+                />
+              </div>
+            </div>
+            <div class="card-footer">
+              <button
+                type="submit"
+                class="prevent btn btn-primary"
+                onclick="modifyUser()"
+              >
+                Modify
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <table class="table">
+        <tr>
+          <th>Koktajl</th>
+          <th>Pseodonim</th>
+          <th>Recencja</th>
+          <th>Ocena</th>
+          <th></th>
+          <th></th>
+        </tr>
+        {%for i in range(0, len)%}
+        <tr>
+          <td>{{coctails_som[i][0]}}</td>
+          <td>{{coctails_som[i][1]}}</td>
+          <td>{{coctails_som[i][2]}}</td>
+          <td>{{coctails_som[i][3]}}</td>
+          <td>
+            <button
+              class="btn btn-primary"
+              onclick="deleteSommelier('{{coctails_som[i][4]}}')"
+            >
+              Delete
+            </button>
+          </td>
+          <td>
+            <button
+              class="modify-button btn btn-primary"
+              onclick="getSommeliersData('{{coctails_som[i][4]}}')"
+            >
+              Modify
+            </button>
+          </td>
+        </tr>
+        {%endfor%}
+        <!-- here is a for-loop to give us all the socks -->
+      </table>
     </div>
   </div>
+</div>
 
-  
 <script>
-  
   const PatternName = /^[a-zA-Z0-9_-]{4,30}$/;
-  
+
   console.log(PatternName.test("Zxsdaas1"));
 
   function deleteSommelier(name) {
-    if( confirm("Are you sure you want to delete this post?") ) {  
-    $.ajax({
-      url: '/delete-sommelier',
-      type: 'DELETE',
-      data: {name: name},
-      
-      success: function(result) {
-        alert("Post has been successfully deleted!");
-        window.location.reload(true);
-      },
-      error: function(error) {
-        // Handle error
-      }
-    }); 
-    return false;
+    if (confirm("Are you sure you want to delete this post?")) {
+      $.ajax({
+        url: "/delete-sommelier",
+        type: "DELETE",
+        data: { name: name },
+
+        success: function (result) {
+          alert("Post has been successfully deleted!");
+          window.location.reload(true);
+        },
+        error: function (error) {
+          // Handle error
+        },
+      });
+      return false;
     }
   }
 
   function modifyUser() {
-    if( confirm("Are you sure you want to modify this post?") ) {  
+    if (confirm("Are you sure you want to modify this post?")) {
       let form = document.getElementById("modform");
       let formData = new FormData(form);
-      const name = formData.get('name');
-      const coctail = formData.get('coctail');
-      const recenzja = formData.get('recencja');
-      const ocena = formData.get('ocena');
-      const id = formData.get('id');
+      const name = formData.get("name");
+      const coctail = formData.get("coctail");
+      const recenzja = formData.get("recencja");
+      const ocena = formData.get("ocena");
+      const id = formData.get("id");
 
       $.ajax({
-        url: '/modify-sommelier',
-        type: 'PUT',
-        data: {name, coctail, recenzja, ocena, id},
-        success: function(result) {
+        url: "/modify-sommelier",
+        type: "PUT",
+        data: { name, coctail, recenzja, ocena, id },
+        success: function (result) {
           alert("Post has been successfully modified!");
-          window.location.reload(true)
+          window.location.reload(true);
         },
-        error: function(error) {
+        error: function (error) {
           // Handle error
-        }
+        },
       });
     }
   }
@@ -211,36 +280,34 @@
     id = decodeURIComponent(id);
 
     $.ajax({
-        url: '/get-sommelier-data',
-        type: "GET",
-        data: {id: id},
-        success: function(data) {
-            $("#input-name").val(data.sommelier);
-            $("#input-recenzja").val(data.recenzja);
-            $("#input-ocena").val(data.grade);
-            $("#coctail_modify").val(data.coctail);
-            $("#input-id").val(data.id);
-            $("#modify-form").show();
-        },
-        error: function(error) {
-            // handle error response here
-            console.log(error);
-        }
+      url: "/get-sommelier-data",
+      type: "GET",
+      data: { id: id },
+      success: function (data) {
+        $("#input-name").val(data.sommelier);
+        $("#input-recenzja").val(data.recenzja);
+        $("#input-ocena").val(data.grade);
+        $("#coctail_modify").val(data.coctail);
+        $("#input-id").val(data.id);
+        $("#modify-form").show();
+      },
+      error: function (error) {
+        // handle error response here
+        console.log(error);
+      },
     });
   }
 
-  document.querySelector(".prevent").addEventListener("click", (e)=>{
+  document.querySelector(".prevent").addEventListener("click", (e) => {
     e.preventDefault();
   });
 
-  document.querySelector(".hide-modify-form").addEventListener("click", ()=>{
+  document.querySelector(".hide-modify-form").addEventListener("click", () => {
     $("#modify-form").hide();
-  })
-
+  });
 </script>
 
 {% endblock content %}
-
 
 <!-- Specific Page JS goes HERE  -->
 {% block javascripts %}{% endblock javascripts %}

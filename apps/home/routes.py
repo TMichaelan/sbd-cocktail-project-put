@@ -768,7 +768,6 @@ def delete_user():
 @blueprint.route('/get_coctail_data', methods=(['GET']))
 def getCoctaildata():
     name = request.args.get('name')
-    print(name)
 
     try:
         conn = psycopg2.connect('postgresql://joramba:admin@localhost:5432/bazy_danych')
@@ -782,7 +781,26 @@ def getCoctaildata():
 
     except (Exception, psycopg2.Error) as error :
         return jsonify({"error": str(error)}), 500
+
+
+@blueprint.route('/get_ankieta_data', methods=(['GET']))
+def getAnkietadata():
+    name = request.args.get('name')
+    
+    try:
+        conn = psycopg2.connect('postgresql://joramba:admin@localhost:5432/bazy_danych')
+        cursor = conn.cursor()
+        query = f"SELECT * FROM \"ankieta\" WHERE nazwa=\'{name}\'"
+        cursor.execute(query)
+        coctail_data = cursor.fetchone()
+        cursor.close()
+        conn.close()
+        return jsonify(coctail_data), 200
+
+    except (Exception, psycopg2.Error) as error :
+        return jsonify({"error": str(error)}), 500
         
+
 
 @blueprint.route('/delete-user', methods=['DELETE'])
 def delete_users():

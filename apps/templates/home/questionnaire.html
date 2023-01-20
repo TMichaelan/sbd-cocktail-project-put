@@ -1,12 +1,8 @@
-{% extends "layouts/base.html" %}
-
-{% block title %} User Profile {% endblock %} 
+{% extends "layouts/base.html" %} {% block title %} User Profile {% endblock %}
 
 <!-- Specific Page CSS goes HERE  -->
-{% block stylesheets %}{% endblock stylesheets %}
-
-{% block content %}
-  <style>
+{% block stylesheets %}{% endblock stylesheets %} {% block content %}
+<style>
   .card {
     width: 150%;
   }
@@ -21,198 +17,276 @@
     margin: 0 10px 0 20px;
   }
 
-  .modify-header{
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-      justify-content: space-between;
-   }
-   .modify-header i{
+  .modify-header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .modify-header i {
     font-size: 20px;
-   }
-   .modify-header i:hover{
+  }
+  .modify-header i:hover {
     cursor: pointer;
-
-   }
-   #modify-questionnaire{
+  }
+  #modify-questionnaire {
     display: none;
-   }
-
-  </style>
-  <div class="content">
-    <div class="row">
-      <div class="col-md-8">
-        <div id="add-questionnaire" class="card">
-          <div class="card-header">
-            <h5 class="title">Add Questionnaire</h5>
-          </div>
-          <div class="card-body">
-            <form method="post">
-              <div class="row">
-                <div class="col-md-6 pr-md-1">
-                  <div class="form-group">
-                    <label for="name">Name of questionnaire</label>
-                    <input name="name" type="text" class="form-control" placeholder="Name">
-                  </div>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-md-6 pr-md-1">
-                  <div class="form-group">
-                    <label for="count">Count of questions</label>
-                    <input
-                      name="count"
-                      type="number"
-                      class="count"
-                      placeholder="Count"
-                      min = 0
-                      max = 10
-                      value="0"
-                    />
-                  </div>
-                </div>
-                <div class="col-md-6 pr-md-1 questions"></div>
-
-              </div>
-              <div class="card-footer">
-                <button type="submit" class="btn btn-fill btn-primary">Add Questionnaire</button>
-              </div>
-            </form>
-          </div>
+  }
+</style>
+<div class="content">
+  <div class="row">
+    <div class="col-md-8">
+      <div id="add-questionnaire" class="card">
+        <div class="card-header">
+          <h5 class="title">Add Questionnaire</h5>
         </div>
-        <div id="modify-questionnaire" class="card">
-          <div class="card-header">
-            <h5 class="title">Modify Questionnaire</h5>
-          </div>
-          <div class="card-body">
-            <form id="modform" method="post">
-              <div class="row">
-                <div class="col-md-6 pr-md-1">
-                  <div class="form-group">
-                    <label for="name">Name of questionnaire</label>
-                    <input id="input-name" name="name" type="text" class="form-control" placeholder="Name">
-                  </div>
+        <div class="card-body">
+          <form method="post">
+            <div class="row">
+              <div class="col-md-6 pr-md-1">
+                <div class="form-group">
+                  <label for="name">Name of questionnaire</label>
+                  <input
+                    id="questionnaire_name"
+                    name="name"
+                    type="text"
+                    class="form-control"
+                    placeholder="Name"
+                    pattern="[a-zA-Z0-9\s_-]{4,50}"
+                    title="4 to 50 characters, letters and numbers only"
+                    required
+                  />
+                  <div class="message"></div>
                 </div>
               </div>
-              <div class="row">
-                <div class="col-md-6 pr-md-1">
-                  <div class="form-group">
-                    <label for="count">Count of questions</label>
-                    <input
-                      name="count"
-                      type="number"
-                      class="count-modify"
-                      placeholder="Count"
-                      min = 0
-                      max = 10
-                      value="0"
-                      id="input-count"
-                    />
-                  </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6 pr-md-1">
+                <div class="form-group">
+                  <label for="count">Count of questions</label>
+                  <input
+                    name="count"
+                    type="number"
+                    class="count"
+                    placeholder="Count"
+                    min="0"
+                    max="10"
+                    value="0"
+                  />
                 </div>
-                <div class="col-md-6 pr-md-1 questions-modify"></div>
-
               </div>
-              <div class="card-footer">
-                <button class="prevent btn btn-primary" onclick="modifyQuestionnaire()">Modify</button>
-              </div>
-            </form>
-          </div>
+              <div class="col-md-6 pr-md-1 questions"></div>
+            </div>
+            <div class="card-footer questionnaire-add">
+              <button type="submit" class="add-questionnaire-btn btn btn-fill btn-primary">
+                Add Questionnaire
+              </button>
+            </div>
+          </form>
         </div>
-        <table class="table">
-          <tr>
-            <th>Name of questionnaire</th>
-            <th>Count of questions</th>
-            <th></th>
-            <th></th>
-          </tr>
-    
-          <!-- here is a for-loop to give us all the socks -->
-          {% for user in users %}
-          <tr>
-            <td>{{user[0]}}</td>
-            <td>{{user[1]}}</td>
-            <td><button class="btn btn-primary" onclick="deleteQuestionnaire('{{user[0]}}')">Delete</button></td>
-            <td><button class="modify-button btn btn-primary" onclick="getQuestionnaireData('{{user[0]}}')">Modify</button></td>
-          </tr>
-          {% endfor %}
-        </table>
       </div>
+      <div id="modify-questionnaire" class="card">
+        <div class="card-header">
+          <h5 class="title">Modify Questionnaire</h5>
+        </div>
+        <div class="card-body">
+          <form id="modform" method="post">
+            <div class="row">
+              <div class="col-md-6 pr-md-1">
+                <div class="form-group">
+                  <label for="name">Name of questionnaire</label>
+                  <input
+                    id="input-name"
+                    name="name"
+                    type="text"
+                    class="form-control"
+                    placeholder="Name"
+                    pattern="[a-zA-Z0-9\s_-]{4,50}"
+                    title="4 to 50 characters, letters and numbers only"
+                    required
+                  />
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6 pr-md-1">
+                <div class="form-group">
+                  <label for="count">Count of questions</label>
+                  <input
+                    name="count"
+                    type="number"
+                    class="count-modify"
+                    placeholder="Count"
+                    min="0"
+                    max="10"
+                    value="0"
+                    id="input-count"
+                  />
+                </div>
+              </div>
+              <div class="col-md-6 pr-md-1 questions-modify"></div>
+            </div>
+            <div class="card-footer">
+              <button
+                class="prevent btn btn-primary"
+                onclick="modifyQuestionnaire()"
+              >
+                Modify
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+      <table class="table">
+        <tr>
+          <th>Name of questionnaire</th>
+          <th>Count of questions</th>
+          <th></th>
+          <th></th>
+        </tr>
+
+        <!-- here is a for-loop to give us all the socks -->
+        {% for user in users %}
+        <tr>
+          <td>{{user[0]}}</td>
+          <td>{{user[1]}}</td>
+          <td>
+            <button
+              class="btn btn-primary"
+              onclick="deleteQuestionnaire('{{user[0]}}')"
+            >
+              Delete
+            </button>
+          </td>
+          <td>
+            <button
+              class="modify-button btn btn-primary"
+              onclick="getQuestionnaireData('{{user[0]}}')"
+            >
+              Modify
+            </button>
+          </td>
+        </tr>
+        {% endfor %}
+      </table>
     </div>
   </div>
+</div>
 
-  
 <script>
+  function checkPK(id) {
+    const input = document.querySelector(`#${id}`);
+
+    input.addEventListener("input", (e) => {
+      $.ajax({
+        url: "/get_ankieta_data",
+        type: "GET",
+        data: { name: e.target.value },
+
+        success: function (result) {
+          const message = document.querySelector(".message");
+          const btn = document.querySelector(".add-questionnaire-btn");
+          const btn_form = document.querySelector(".questionnaire-add");
+
+          if (result != null) {
+            console.log("Already exist");
+            message.style.color = "red";
+            message.innerHTML = "Questionnaire name is NOT available";
+
+            btn.addEventListener("click", (e) => {
+              e.preventDefault();
+            });
+          } else {
+            console.log("This name is available");
+            message.style.color = "green";
+            message.innerHTML = "Questionnaire name is available";
+            btn_form.innerHTML = `
+            <button type="submit" class="add-questionnaire-btn btn btn-fill btn-primary">
+                Add Questionnaire
+              </button>
+            `;
+          }
+        },
+        error: function (error) {
+          // Handle error
+        },
+      });
+      return false;
+    });
+  }
+
+  checkPK("questionnaire_name");
+
+
   function deleteQuestionnaire(name) {
-    $.ajax({
-      url: '/delete-questionnaire',
-      type: 'DELETE',
-      data: {name: name},
-      
-      success: function(result) {
-        window.location.reload(true);
-        console.log(data)
-      },
-      error: function(error) {
-        // Handle error
-      }
-    }); 
-    return false;
+    if (confirm("Are you sure you want to delete this questionnaire?")) {
+      $.ajax({
+        url: "/delete-questionnaire",
+        type: "DELETE",
+        data: { name: name },
+
+        success: function (result) {
+          alert("Questionnaire has been successfully deleted!");
+          window.location.reload(true);
+          console.log(data);
+        },
+        error: function (error) {
+          // Handle error
+        },
+      });
+      return false;
+    }
   }
 
   const count = document.querySelector(".count");
   count.addEventListener("change", (e) => {
     console.log(e.target.value);
     document.querySelector(".questions").innerHTML = "";
-    
 
     for (let i = 0; i < e.target.value; i++) {
       document.querySelector(".questions").innerHTML += `
         <div class="form-group">
           <label for="question_name${i}">Name of Question ${i + 1}: </label>
-          <input name="question_name${i}" type="text" class="count" placeholder="Name of Question">
+          <input name="question_name${i}" type="text" class="count" placeholder="Name of Question" pattern="[a-zA-Z0-9\\s_-]{4,50}" title="4 to 50 characters, letters and numbers only" required>
           <div class="form-group">
             <label for="question_text${i}">Text: </label>
             <textarea name="question_text${i}" rows="3" cols="50" class="form-control" placeholder="Enter the Question"></textarea>
           </div>
         </div>
       `;
-    }})
+    }
+  });
 
-
-
-    function countFunc(num, questions_list){
-      console.log(questions_list)
-      for (let i = 0; i < num; i++) {
-        
-        document.querySelector(".questions-modify").innerHTML += `
+  function countFunc(num, questions_list) {
+    console.log(questions_list);
+    for (let i = 0; i < num; i++) {
+      document.querySelector(".questions-modify").innerHTML += `
           <div id="question-group-${i}" class="form-group">
             <label for="question_name${i}">Name of Question ${i + 1}: </label>
-            <input id="question_num-${i}" name="question_name${i}" type="text" class="count-mod" placeholder="Name of Question">
+            <input id="question_num-${i}" name="question_name${i}" type="text" class="count-mod" placeholder="Name of Question" pattern="[a-zA-Z0-9\\s_-]{4,50}" title="4 to 50 characters, letters and numbers only" required>
             <div class="form-group">
               <label for="question_text${i}">Text: </label>
               <textarea id="question-text-${i}" name="question_text${i}" rows="3" cols="50" class="form-control" placeholder="Enter the Question"></textarea>
             </div>
           </div>
-        `; 
-      }
-
-      for (let i = 0; i < num; i++) {
-        $("#question_num-"+i).val(questions_list[i][0]);
-        $("#question-text-"+i).val(questions_list[i][1]);  
-      }
-
+        `;
     }
 
-    let questions_list = []
-    const countMod = document.querySelector(".count-modify");
-    countMod.addEventListener("change", (e) => {
-      console.log(e.target.value);
-      document.querySelector(".questions-modify").innerHTML = "";
-      for (let i = 0; i < e.target.value; i++) {
-        document.querySelector(".questions-modify").innerHTML += `
+    for (let i = 0; i < num; i++) {
+      $("#question_num-" + i).val(questions_list[i][0]);
+      $("#question-text-" + i).val(questions_list[i][1]);
+    }
+  }
+
+  let questions_list = [];
+  const countMod = document.querySelector(".count-modify");
+  countMod.addEventListener("change", (e) => {
+    console.log(e.target.value);
+    document.querySelector(".questions-modify").innerHTML = "";
+    for (let i = 0; i < e.target.value; i++) {
+      document.querySelector(".questions-modify").innerHTML += `
           <div class="form-group">
-            <label for="question_name${i}">Name of Question ${i+1}: </label>
+            <label for="question_name${i}">Name of Question ${i + 1}: </label>
             <input id="question_num-${i}" name="question_name${i}" type="text" class="count-modify" placeholder="Name of Question">
             <div class="form-group">
               <label for="question_text${i}">Text: </label>
@@ -220,106 +294,103 @@
             </div>
           </div>
         `;
-      }
-
-      for (let i = 0; i < e.target.value; i++) {
-        $("#question_num-"+i).val(questions_list[i][0]);
-        $("#question-text-"+i).val(questions_list[i][1]);  
-      }
-
-    })
-
-    function removeFormQuestions(){
-      document.querySelector(".questions-modify").innerHTML = "";
     }
 
-    
-
-
-    function getQuestionnaireData(name) {
-        
-        name = decodeURIComponent(name);
-        removeFormQuestions();
-
-        $.ajax({
-            url: '/get-questionnaire-data',
-            type: "GET",
-            data: {name: name},
-            success: function(data) {
-                $("#input-name").val(data.name);
-                $("#input-count").val(data.count);
-                countFunc(data.count,data.questions)
-                questions_list = data.questions
-                $("#modify-questionnaire").show();
-            },
-            error: function(error) {
-                // handle error response here
-                console.log(error);
-            }
-        });
+    for (let i = 0; i < e.target.value; i++) {
+      $("#question_num-" + i).val(questions_list[i][0]);
+      $("#question-text-" + i).val(questions_list[i][1]);
     }
+  });
+
+  function removeFormQuestions() {
+    document.querySelector(".questions-modify").innerHTML = "";
+  }
+
+  function getQuestionnaireData(name) {
+    name = decodeURIComponent(name);
+    removeFormQuestions();
+
+    $.ajax({
+      url: "/get-questionnaire-data",
+      type: "GET",
+      data: { name: name },
+      success: function (data) {
+        $("#input-name").val(data.name);
+        $("#input-count").val(data.count);
+        countFunc(data.count, data.questions);
+        questions_list = data.questions;
+        $("#modify-questionnaire").show();
+      },
+      error: function (error) {
+        // handle error response here
+        console.log(error);
+      },
+    });
+  }
 
   function modifyQuestionnaire() {
+    let form = document.getElementById("modform");
+    let formData = new FormData(form);
 
-        let form = document.getElementById("modform");
-        let formData = new FormData(form);
+    const name = formData.get("name");
+    const count = formData.get("count");
+    let question_names_desc = [];
+    for (let i = 0; i <= 10; i++) {
+      if (formData.get("question_name" + i) != null) {
+        question = "question" + i;
 
-        const name = formData.get('name');
-        const count = formData.get('count');
-        let question_names_desc = []
-        for (let i = 0; i <= 10; i++) {
-          if (formData.get('question_name'+i) != null) {
-            
-            question = 'question' + i; 
-
-          question_names_desc.push([formData.get('question_name'+i),formData.get('question_text'+i)])
-        }
+        question_names_desc.push([
+          formData.get("question_name" + i),
+          formData.get("question_text" + i),
+        ]);
       }
-        
-        console.log(question_names_desc)
-        $.ajax({
-            type: "PUT",
-            url: '/modify-questionnaire',
-            data: {name: name, count: count, questions: question_names_desc},
-            success: function(data) {
-                // handle success response here
-                alert("questionaire has been modified!");
-                // window.location.reload(true)
-            },
-            error: function(error) {
-                // handle error response here
-                console.log(error);
-            }
-        });
     }
 
-  document.querySelector(".prevent").addEventListener("click", (e)=>{
+    console.log(question_names_desc);
+    $.ajax({
+      type: "PUT",
+      url: "/modify-questionnaire",
+      data: { name: name, count: count, questions: question_names_desc },
+      success: function (data) {
+        // handle success response here
+        alert("questionaire has been modified!");
+        // window.location.reload(true)
+      },
+      error: function (error) {
+        // handle error response here
+        console.log(error);
+      },
+    });
+  }
+
+  document.querySelector(".prevent").addEventListener("click", (e) => {
     e.preventDefault();
-  })
-  document.querySelector(".hide-modify-form").addEventListener("click", ()=>{
+  });
+  document.querySelector(".hide-modify-form").addEventListener("click", () => {
     $("#modify-form").hide();
-  })
+  });
 
   function showNotificationDelete(from, align) {
     color = Math.floor(2);
 
-    $.notify({
-      icon: "tim-icons icon-bell-55",
-      message: "The record has been <b>Deleted successefuly</b>"
-
-    }, {
-      type: type[color],
-      timer: 8000,
-      placement: {
-        from: from,
-        align: align
+    $.notify(
+      {
+        icon: "tim-icons icon-bell-55",
+        message: "The record has been <b>Deleted successefuly</b>",
+      },
+      {
+        type: type[color],
+        timer: 8000,
+        placement: {
+          from: from,
+          align: align,
+        },
       }
-    });
+    );
   }
 </script>
 
 {% endblock content %}
-
 
 <!-- Specific Page JS goes HERE  -->
 {% block javascripts %}{% endblock javascripts %}
