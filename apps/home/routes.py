@@ -485,42 +485,59 @@ def modifyQuestionnaire():
    
     name = request.form.get('name')
     count = request.form.get('count')
-    
-    question_names_desc = request.form.get('questions')
+    question_names = []
+    question_texts = []
+    old_name = request.form.get('old_name')
+    old_count = request.form.get('old_count')
+    old_question_names = []
+    old_question_texts = []
 
-    print(request.form)
-    print(request.form['questions'])
-    print(name)
-    print(count)
-    # print(question_names_desc)
-    return jsonify({}), 200
-    # conn = psycopg2.connect('postgresql://joramba:admin@localhost:5432/bazy_danych')
-    # cur = conn.cursor()
-    # # querry_add_user = 'INSERT INTO \"ankieta\" VALUES (\'{}\', \'{}\');'.format(name, count)
-    # update_add_pytaniee = f"UPDATE \"ankieta\" SET nazwa=\'{name}\',ilosc_pytan=\'{count}\' WHERE nazwa=\'{name}\';"
-    # cur.execute(update_add_pytaniee)
-    # conn.commit()
+    for i in range(int(old_count)):
+        oqnames = request.form.get(f"old_questions_names[{i}][]")
+        oqtext = request.form.get(f"old_questions_texts[{i}][]")
+        old_question_names.append(oqnames)
+        old_question_texts.append(oqtext)
 
-    # for i in range(int(count)):
-    #     question_name = question_names_desc[i][0]
-    #     text = question_names_desc[i][1]
- 
-    #     try: 
-    #         # querry_add_pytanie = 'INSERT INTO \"pytanie\" VALUES (\'{}\', \'{}\');'.format(question_name, text)
-    #         update_add_pytanie = f"UPDATE \"pytanie\" SET nazwa_pytanie=\'{question_name}\',tekst_pytania=\'{text}\' WHERE nazwa_pytanie=\'{question_name}\';"
-    #         cur.execute(update_add_pytanie)
-    #     except Exception as err:
-    #         print(f'error occurred: {err}')
+    for i in range(int(count)):
+        qname = [request.form.get(f"question_names[{i}][]")]
+        qtext = [request.form.get(f"question_texts[{i}][]")]
+        question_names.append(qname)
+        question_texts.append(qtext)
+
+    conn = psycopg2.connect('postgresql://joramba:admin@localhost:5432/bazy_danych')
+    cur = conn.cursor()
+    # querry_add_user = 'INSERT INTO \"ankieta\" VALUES (\'{}\', \'{}\');'.format(name, count)
+    # for i in range(len(question_names)):
+    # print(f"UPDATE \"ankieta\" SET nazwa=\'{name}\',ilosc_pytan=\'{count}\' WHERE nazwa=\'{name}\';")
+    # print(name, count)
+
+    update_add_pytaniee = f"UPDATE \"ankieta\" SET nazwa=\'{name}\',ilosc_pytan=\'{count}\' WHERE nazwa=\'{old_name}\';"
+    cur.execute(update_add_pytaniee)
+    conn.commit()
+
+    for i in range(int(count)):
+        
+        try: 
+            # querry_add_pytanie = 'INSERT INTO \"pytanie\" VALUES (\'{}\', \'{}\');'.format(question_name, text)
+            update_add_pytanie = f"UPDATE \"pytanie\" SET nazwa_pytanie=\'{question_names[i][0]}\',tekst_pytania=\'{question_texts[i][0]}\' WHERE nazwa_pytanie=\'{old_question_names[i][0]}\';"
+            cur.execute(update_add_pytanie)
+        except Exception as err:
+            print(f'error occurred: {err}')
+            try:
+                querry_add_pytanie = 'INSERT INTO \"pytanie\" VALUES (\'{}\', \'{}\');'.format(question_names[i][0], question_texts[i][0])
+                cur.execute(querry_add_pytanie)
+            except Exception as err:
+                print(f'error occurred: {err}')
 
         # querry_add_ankieta_pytanie = 'INSERT INTO \"ankieta_pytanie\" VALUES (\'{}\', \'{}\');'.format(name, question_name)
-        # update_add_pytanie = f"UPDATE \"ankieta_pytanie\" SET ankieta_nazwa=\'{name}\',pytanie_nazwa_pytanie=\'{text}\' WHERE nazwa_pytanie=\'{question_name}\';"
-        # conn.commit()
-        # cur.execute(querry_add_ankieta_pytanie)
+        update_add_pytanie = f"UPDATE \"ankieta_pytanie\" SET ankieta_nazwa=\'{name}\',pytanie_nazwa_pytanie=\'{question_names[i][0]}\' WHERE ankieta_nazwa=\'{name}\';"
+        conn.commit()
+        cur.execute(update_add_pytanie)
                 
     # conn.commit()
     # cur.close()
     # conn.close()
-    # return redirect('questionnaire.html')
+    return redirect('questionnaire.html')
 
     # id = request.form.get('id')
 
