@@ -13,70 +13,75 @@ import random
 @blueprint.route('/index')
 @login_required
 def index():
-    conn = psycopg2.connect('postgresql://joramba:admin@localhost:5432/bazy_danych')
-    cur = conn.cursor()
 
-    querry_cotails = "select * FROM \"koktajl\" "
-    cur.execute(querry_cotails)
-    all_coctails = cur.fetchall()
+    try:
+        conn = psycopg2.connect('postgresql://joramba:admin@localhost:5432/bazy_danych')
+        cur = conn.cursor()
 
-    random_indexes = random.sample(range(len(all_coctails)), 9)
-    
-    coctails = []
-    coctails_edited = []
-    for index in random_indexes:
-        coctails.append(all_coctails[index])
+        querry_cotails = "select * FROM \"koktajl\" "
+        cur.execute(querry_cotails)
+        all_coctails = cur.fetchall()
 
-    
+        random_indexes = random.sample(range(len(all_coctails)), 9)
+        
+        coctails = []
+        coctails_edited = []
+        for index in random_indexes:
+            coctails.append(all_coctails[index])
 
-    for i in range(len(coctails)):
-        querry_reviews =  "select * FROM \"odpowiedz_koktajl\" WHERE koktajl_nazwa=\'{}\'".format(coctails[i][0])
-        cur.execute(querry_reviews)
-        reviews = cur.fetchall()
+        
 
-        querry_som_reviews =  "select * FROM \"koktajl_sommelier\" WHERE koktajl_nazwa=\'{}\'".format(coctails[i][0])
-        cur.execute(querry_som_reviews)
-        som_reviews = cur.fetchall()
+        for i in range(len(coctails)):
+            querry_reviews =  "select * FROM \"odpowiedz_koktajl\" WHERE koktajl_nazwa=\'{}\'".format(coctails[i][0])
+            cur.execute(querry_reviews)
+            reviews = cur.fetchall()
 
-        mark = 0
-        count_mark = 0
+            querry_som_reviews =  "select * FROM \"koktajl_sommelier\" WHERE koktajl_nazwa=\'{}\'".format(coctails[i][0])
+            cur.execute(querry_som_reviews)
+            som_reviews = cur.fetchall()
 
-        coctails_edited.append([coctails[i][0],coctails[i][1],coctails[i][2],coctails[i][3]])
-        coctails_edited[i][2] = 'There Are No Ratings Yet'
-        coctails_edited[i][3] = 'There Are No Ratings Yet'
+            mark = 0
+            count_mark = 0
 
-        for review in reviews:   
-            if review[2]:
-                count_mark+=1
-                mark += review[2]
+            coctails_edited.append([coctails[i][0],coctails[i][1],coctails[i][2],coctails[i][3]])
+            coctails_edited[i][2] = 'There Are No Ratings Yet'
+            coctails_edited[i][3] = 'There Are No Ratings Yet'
 
-            if count_mark != 0:
-                coctails_edited[i][2] = round(mark/count_mark,2)
-            if count_mark == 0:
-                coctails_edited[i][2] = 0
+            for review in reviews:   
+                if review[2]:
+                    count_mark+=1
+                    mark += review[2]
 
-        mark1 = 0
-        count_mark1 = 0
+                if count_mark != 0:
+                    coctails_edited[i][2] = round(mark/count_mark,2)
+                if count_mark == 0:
+                    coctails_edited[i][2] = 0
 
-        for som_review in som_reviews:   
-            if som_review[3]:
-                count_mark1+=1
-                mark1 += som_review[3]
+            mark1 = 0
+            count_mark1 = 0
 
-            if count_mark1 != 0:
-                coctails_edited[i][3] = round(mark1/count_mark1,2)
-            if count_mark1 == 0:
-                coctails_edited[i][3] = 0
-            
+            for som_review in som_reviews:   
+                if som_review[3]:
+                    count_mark1+=1
+                    mark1 += som_review[3]
 
-    cur.close()
-    conn.close()
- 
+                if count_mark1 != 0:
+                    coctails_edited[i][3] = round(mark1/count_mark1,2)
+                if count_mark1 == 0:
+                    coctails_edited[i][3] = 0
+                
+
+        cur.close()
+        conn.close()
+
+    except Exception: 
+        return render_template('home/page-404.html'), 404
     return render_template('home/index.html', segment='index', coctails=coctails_edited)
 
 
 @blueprint.route('/index/<coctail_name>')
 def product_page(coctail_name):
+    
     coctail_name =  " ".join(coctail_name.split('-'))
 
     try:
