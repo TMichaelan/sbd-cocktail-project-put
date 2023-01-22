@@ -364,7 +364,7 @@ def coctails_cards():
                     mark += review[2]
 
                 if count_mark != 0:
-                    coctails_edited[i][2] = mark/count_mark
+                    coctails_edited[i][2] = round(mark/count_mark,2)
                 if count_mark == 0:
                     coctails_edited[i][2] = 0
 
