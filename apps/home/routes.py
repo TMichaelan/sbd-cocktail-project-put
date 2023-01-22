@@ -6,7 +6,7 @@ from jinja2 import TemplateNotFound
 import json
 
 
-from apps.db_funcs import costyl, get_odpowiedz_koktajl, get_questions,get_questionnaire,get_coctail_sommelier,get_barmans, get_sommeliers, get_coctails
+from apps.db_funcs import get_odpowiedz_koktajl, get_questions,get_questionnaire,get_coctail_sommelier,get_barmans, get_sommeliers, get_coctails
 import psycopg2
 import random
 
@@ -887,30 +887,6 @@ def barman():
     except TemplateNotFound:
         return render_template('home/page-404.html'), 404
         
-        if username and email and password:
-            conn = psycopg2.connect('postgresql://joramba:admin@localhost:5432/bazy_danych')
-            cur = conn.cursor()
-            querry_add_user = 'INSERT INTO \"Users\" (username, email, password, oauth_github) VALUES (\'{}\', \'{}\', \'{}\',\'{}\');'.format(username, email, password, github)
-            cur.execute(querry_add_user)
-        
-            conn.commit()
-            cur.close()
-            conn.close()
-            return redirect('coctails_cards.html')
-
-
-    try:
-        users = costyl()
-        segment = get_segment(request)
-        return render_template("home/coctails_cards.html" , segment=segment, users=users)
-    except TemplateNotFound:
-        return render_template('home/page-404.html'), 404
-
-    except:
-        return render_template('home/page-500.html'), 500
-
-
-
 @blueprint.route('/<template>', methods=('GET', 'POST'))
 @login_required
 def route_template(template):
