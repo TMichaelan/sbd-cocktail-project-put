@@ -119,8 +119,8 @@ def przepis():
 def koktajl():
     conn = psycopg2.connect(db_url)
     cur = conn.cursor()
-    ocena1 = round(random.uniform(3, 5), 2)
-    ocena2 = round(random.uniform(3, 5), 2)
+    ocena1 = 0
+    ocena2 = 0
     querry = 'INSERT INTO \"koktajl\" VALUES (\'{}\', \'{}\', \'{}\',\'{}\');'.format(coctail_name,coctail_image,ocena1,ocena2) 
 
     try:
@@ -249,7 +249,26 @@ def user_reviews():
         cur.execute(querry_add_coctail)
         conn.commit()
 
+        # querry_reviews =  "select * FROM \"odpowiedz_koktajl\" WHERE koktajl_nazwa=\'{}\'".format(coctail_name)
+        # cur.execute(querry_reviews)
+        # reviews = cur.fetchall()
 
+        # mark = 0
+        # count_mark = 0
+
+        # for review in reviews:   
+        #     if review[2]:
+        #         count_mark+=1
+        #         mark += review[2]
+
+        # if count_mark != 0:
+        #     coctails_edited[i][2] = round(mark/count_mark,2)
+        # if count_mark == 0:
+        #     coctails_edited[i][2] = 0
+        
+        # querry_insert_correct_user_grade = 'update \"koktajl\" set srednia_ocena_użytkownika = =\'{coctails_edited[i][2]}\' where nazwa=\'{}\''.format(coctail_name)
+        # cur.execute(querry_insert_correct_user_grade)
+        # conn.commit()
 
     cur.close()
     conn.close()

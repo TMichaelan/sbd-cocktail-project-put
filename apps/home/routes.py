@@ -118,8 +118,8 @@ def product_page(coctail_name):
         reviews = cur.fetchall()
 
 
-        querry_avarage_grade = "select srednia_ocena(\'{}\')".format(coctail_name)
-        cur.execute(querry_avarage_grade)
+        querry_average_grade = "select srednia_ocena(\'{}\')".format(coctail_name)
+        cur.execute(querry_average_grade)
         grade = cur.fetchone()
         grade = round(grade[0],2)
 
@@ -130,12 +130,19 @@ def product_page(coctail_name):
                 count_mark+=1
                 mark += review[2]
 
+        print(coctail[2])
+        print(coctail[3])
+
         coctail_edited = [coctail[0],coctail[1],coctail[2],coctail[3], grade]
 
         if count_mark != 0:
             coctail_edited[2] = round(mark/count_mark,2)
         else:
             coctail_edited[2] = 'There are no ratings yet'
+
+        # querry_insert_correct_user_grade = 'update \"koktajl\" set srednia_ocena_użytkownika = =\'{coctail_edited[2]}\' where nazwa=\'{}\''.format(coctail_name)
+        # cur.execute(querry_insert_correct_user_grade)
+        # conn.commit()
 
         querry_sommielier =  "select * FROM \"koktajl_sommelier\" WHERE koktajl_nazwa=\'{}\'".format(coctail_name)
         cur.execute(querry_sommielier)
