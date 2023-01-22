@@ -36,18 +36,18 @@ end;
 $BODY$;
 
 
-create function srednia_ocena(nazwa character)
-returns int
+create function srednia_ocena(nazwa_koktajla character)
+returns float
 language plpgsql
 as
 $$
 declare
-   vSrednia integer;
+   vSrednia float;
 begin
 SELECT (srednia_ocena_użytkownika + srednia_ocena_sommeliera)/2 as srednia_ocena
 into vSrednia
-from Koktajl
-where Koktajl.nazwa = nazwa;
+from koktajl
+where koktajl.nazwa = nazwa_koktajla;
    return vSrednia;
 end;
 $$;	

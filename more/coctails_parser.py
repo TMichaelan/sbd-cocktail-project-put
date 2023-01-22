@@ -348,12 +348,12 @@ def start(start_id,amount):
         start_id+=1
         parse_coctail(start_id)
         try:
-            # przepis()
-            # koktajl()
-            # skladnik()
-            # kategoria_koktajl()
-            # kategoria_koktajli_koktajl()
-            # skladnik_przepis()
+            przepis()
+            koktajl()
+            skladnik()
+            kategoria_koktajl()
+            kategoria_koktajli_koktajl()
+            skladnik_przepis()
             user_reviews()
             add_sommelier()
             sommelier_reviews()
