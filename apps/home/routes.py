@@ -112,6 +112,12 @@ def product_page(coctail_name):
         cur.execute(querry_reviews)
         reviews = cur.fetchall()
 
+
+        querry_avarage_grade = "select srednia_ocena(\'{}\')".format(coctail_name)
+        cur.execute(querry_avarage_grade)
+        grade = cur.fetchone()
+        grade = round(grade[0],2)
+
         mark = 0
         count_mark = 0
         for review in reviews:
@@ -119,7 +125,7 @@ def product_page(coctail_name):
                 count_mark+=1
                 mark += review[2]
 
-        coctail_edited = [coctail[0],coctail[1],coctail[2],coctail[3]]
+        coctail_edited = [coctail[0],coctail[1],coctail[2],coctail[3], grade]
 
         if count_mark != 0:
             coctail_edited[2] = round(mark/count_mark,2)
