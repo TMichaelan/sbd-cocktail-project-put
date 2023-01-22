@@ -54,10 +54,10 @@ def index():
 
                 if count_mark != 0:
                     coctails_edited[i][2] = round(mark/count_mark,2)
-                    set_average_grade(coctails_edited[i][0], coctails_edited[i][2], 'user')
+                    # set_average_grade(coctails_edited[i][0], coctails_edited[i][2], 'user')
                 if count_mark == 0:
                     coctails_edited[i][2] = 0
-                    set_average_grade(coctails_edited[i][0], 0, 'user')
+                    # set_average_grade(coctails_edited[i][0], 0, 'user')
 
             
             mark1 = 0
@@ -70,10 +70,10 @@ def index():
 
                 if count_mark1 != 0:
                     coctails_edited[i][3] = round(mark1/count_mark1,2)
-                    set_average_grade(coctails_edited[i][0], coctails_edited[i][3], 'somm')
+                    # set_average_grade(coctails_edited[i][0], coctails_edited[i][3], 'somm')
                 if count_mark1 == 0:
                     coctails_edited[i][3] = 0
-                    set_average_grade(coctails_edited[i][0], 0, 'somm')     
+                    # set_average_grade(coctails_edited[i][0], 0, 'somm')     
 
         cur.close()
         conn.close()
@@ -101,9 +101,12 @@ def product_page(coctail_name):
             return render_template('home/page-404.html'), 404
     except Exception as err:
         print(f'error occurred: {err}')
+
+    
     try:
         conn = psycopg2.connect('postgresql://joramba:admin@localhost:5432/bazy_danych')
         cur = conn.cursor()
+
         querry_cotails = "select * FROM \"przepis\" WHERE nazwa_przepisa=\'{}\'".format(coctail_name)
         cur.execute(querry_cotails)
         recipe = cur.fetchone()
@@ -125,7 +128,9 @@ def product_page(coctail_name):
         querry_average_grade = "select srednia_ocena(\'{}\')".format(coctail_name)
         cur.execute(querry_average_grade)
         grade = cur.fetchone()
-        grade = round(grade[0],2)
+        
+        grade = round(grade[0], 2)
+
 
         mark = 0
         count_mark = 0
@@ -144,20 +149,25 @@ def product_page(coctail_name):
         else:
             coctail_edited[2] = 'There are no ratings yet'
 
-        # querry_insert_correct_user_grade = 'update \"koktajl\" set srednia_ocena_użytkownika = =\'{coctail_edited[2]}\' where nazwa=\'{}\''.format(coctail_name)
-        # cur.execute(querry_insert_correct_user_grade)
-        # conn.commit()
+        querry_average_grade = "select srednia_ocena(\'{}\')".format(coctail_name)
+        cur.execute(querry_average_grade)
+        grade = cur.fetchone()
+
 
         querry_sommielier =  "select * FROM \"koktajl_sommelier\" WHERE koktajl_nazwa=\'{}\'".format(coctail_name)
         cur.execute(querry_sommielier)
         sommeliers = cur.fetchall()
-    
+
+        querry_koktail =  "select * FROM \"koktajl\" WHERE nazwa=\'{}\'".format(coctail_name)
+        cur.execute(querry_koktail)
+        koktails = cur.fetchone()
+        
         cur.close()
         conn.close()
     except Exception as err:
         print(f'error occurred: {err}')
     
-    return render_template('home/coctail.html', coctail=coctail_edited, recipe=recipe, ingredients = ingredients, category= category, reviews=reviews, sommeliers=sommeliers)
+    return render_template('home/coctail.html', coctail=coctail_edited, recipe=recipe, ingredients = ingredients, category= category, reviews=reviews, sommeliers=sommeliers, koktails = koktails)
 
 @blueprint.route('/sommelier.html',methods=('GET', 'POST'))
 def sommelier():
@@ -181,6 +191,20 @@ def sommelier():
         querry_add_coctail = 'INSERT INTO \"koktajl_sommelier\" VALUES (\'{}\', \'{}\',\'{}\',\'{}\');'.format(coctail, name, recencja, ocena)
         cur.execute(querry_add_coctail)
         conn.commit()
+
+        querry_reviews =  "select ocena FROM \"koktajl_sommelier\" WHERE koktajl_nazwa=\'{}\'".format(coctail)
+        cur.execute(querry_reviews)
+        reviews = cur.fetchall()
+
+        reviews_edited = []
+        mark = 0
+        count_mark = 0
+        for i in range(len(reviews)):
+            reviews_edited.append(reviews[i][0])
+
+        mark = round(sum(reviews_edited)/len(reviews_edited),2)
+        set_average_grade(coctail, mark, 'somm')
+
         cur.close()
         conn.close()
         return redirect('sommelier.html')
@@ -220,26 +244,19 @@ def review():
 
         conn.commit()
 
-        # mark = 0
-        # count_mark = 0
+        querry_reviews =  "select ocena_uzytkownika FROM \"odpowiedz_koktajl\" WHERE koktajl_nazwa=\'{}\'".format(coctail)
+        cur.execute(querry_reviews)
+        reviews = cur.fetchall()
 
-        # coctails_edited.append([coctails[i][0],coctails[i][1],coctails[i][2],coctails[i][3]])
-        # coctails_edited[i][2] = 'There Are No Ratings Yet'
-        # coctails_edited[i][3] = 'There Are No Ratings Yet'
+        reviews_edited = []
+        mark = 0
+        count_mark = 0
+        for i in range(len(reviews)):
+            reviews_edited.append(reviews[i][0])
 
-        # for review in reviews:   
-        #     if review[2]:
-        #         count_mark+=1
-        #         mark += review[2]
+        mark = round(sum(reviews_edited)/len(reviews_edited),2)
+        set_average_grade(coctail, mark, 'user')
 
-        #     if count_mark != 0:
-        #         coctails_edited[i][2] = round(mark/count_mark,2)
-        #         set_average_grade(coctails_edited[i][0], coctails_edited[i][2], 'user')
-        #     if count_mark == 0:
-        #         coctails_edited[i][2] = 0
-        #         set_average_grade(coctails_edited[i][0], 0, 'user')
-
-        
 
         cur.close()
         conn.close()
@@ -424,6 +441,36 @@ def coctails_cards():
 def delete_review():
     name = request.form.get('name')
 
+    # conn = psycopg2.connect('postgresql://joramba:admin@localhost:5432/bazy_danych')
+    # cursor = conn.cursor()
+    # query = f"DELETE FROM \"odpowiedz_koktajl\" WHERE odpowiedz_tekst_odpowiedzi=\'{name}\'"
+    # querry_delete_review = f"DELETE FROM \"odpowiedz\" WHERE tekst_odpowiedzi=\'{name}\'"
+    # cursor.execute(query)
+    # conn.commit()
+
+    # cursor.execute(querry_delete_review)
+    # conn.commit()
+
+    # querry_reviews =  "select ocena_uzytkownika FROM \"odpowiedz_koktajl\" WHERE koktajl_nazwa=\'{}\'".format(name)
+    # cursor.execute(querry_reviews)
+    # reviews = cursor.fetchall()
+
+    # reviews_edited = []
+    # mark = 0
+    # count_mark = 0
+    # for i in range(len(reviews)):
+    #     reviews_edited.append(reviews[i][0])
+
+    # print(reviews_edited)
+
+    # mark = round(sum(reviews_edited)/len(reviews_edited),2)
+    # set_average_grade(name, mark, 'user')
+
+    # count = cursor.rowcount
+    # cursor.close()
+    # conn.close()
+    # return jsonify({"message": f"{count} user deleted"}), 200
+
     try:
         conn = psycopg2.connect('postgresql://joramba:admin@localhost:5432/bazy_danych')
         cursor = conn.cursor()
@@ -434,6 +481,20 @@ def delete_review():
 
         cursor.execute(querry_delete_review)
         conn.commit()
+
+        # querry_reviews =  "select ocena_uzytkownika FROM \"odpowiedz_koktajl\" WHERE koktajl_nazwa=\'{}\'".format(coctail)
+        # cur.execute(querry_reviews)
+        # reviews = cur.fetchall()
+
+        # reviews_edited = []
+        # mark = 0
+        # count_mark = 0
+        # for i in range(len(reviews)):
+        #     reviews_edited.append(reviews[i][0])
+
+        # mark = round(sum(reviews_edited)/len(reviews_edited),2)
+        # set_average_grade(coctail, mark, 'user')
+
         count = cursor.rowcount
         cursor.close()
         conn.close()
@@ -692,6 +753,20 @@ def modifyReview():
         cursor.execute(query)
         conn.commit()
         count = cursor.rowcount
+
+        # querry_reviews =  "select ocena_uzytkownika FROM \"odpowiedz_koktajl\" WHERE koktajl_nazwa=\'{}\'".format(coctail)
+        # cur.execute(querry_reviews)
+        # reviews = cur.fetchall()
+
+        # reviews_edited = []
+        # mark = 0
+        # count_mark = 0
+        # for i in range(len(reviews)):
+        #     reviews_edited.append(reviews[i][0])
+
+        # mark = round(sum(reviews_edited)/len(reviews_edited),2)
+        # set_average_grade(coctail, mark, 'user')
+
         cursor.close()
         conn.close()
         return jsonify({"message": f"{count} user modified"}), 200
