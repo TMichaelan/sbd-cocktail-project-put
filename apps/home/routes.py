@@ -82,7 +82,7 @@ def index():
 @blueprint.route('/index/<coctail_name>')
 def product_page(coctail_name):
     
-    coctail_name =  " ".join(coctail_name.split('-'))
+    coctail_name =  " ".join(coctail_name.split('-')).replace('\'', '').replace('\"', '')
 
     try:
         conn = psycopg2.connect('postgresql://joramba:admin@localhost:5432/bazy_danych')
