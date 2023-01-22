@@ -1,0 +1,53 @@
+CREATE OR REPLACE PROCEDURE "PoziomTrudnosci"()
+language plpgsql
+AS $BODY$
+declare 
+cnt integer:=(select max(id) from "Przepis");
+begin
+  while cnt>0 loop
+  	if ((select "ilosc_produktow" from "Przepis" 
+	   where id=cnt) >= 1 and (select "ilosc_produktow" from "Przepis" 
+	   where id=cnt) <= 3) then 
+	   
+		update "Przepis"
+		set "notatka" = "notatka" + 'Latwe do przygotowania'
+		where id=cnt;
+		cnt = cnt - 1;
+	END IF;
+	
+	if ((select "ilosc_produktow" from "Przepis" 
+	   where id=cnt) >= 4 and (select "ilosc_produktow" from "Przepis" 
+	   where id=cnt) <= 5) then 
+	   
+		update "Przepis"
+		set "notatka" = "notatka" + 'Srednie do przygotowania'
+		where id=cnt;
+		cnt = cnt - 1;
+	END IF;
+	if ((select "ilosc_produktow" from "Przepis" 
+	   where id=cnt) >= 6) then
+		update "Przepis"
+		set "notatka" = "notatka" +'Trudne do przygotowania'
+		where id=cnt;
+		cnt = cnt - 1;
+	END IF;
+  end loop;
+end; 
+$BODY$;
+
+
+create function srednia_ocena(nazwa character)
+returns int
+language plpgsql
+as
+$$
+declare
+   vSrednia integer;
+begin
+SELECT (srednia_ocena_użytkownika + srednia_ocena_sommeliera)/2 as srednia_ocena
+into vSrednia
+from Koktajl
+where Koktajl.nazwa = nazwa;
+   return vSrednia;
+end;
+$$;	
