@@ -19,6 +19,19 @@ def get_coctails():
     conn.close()
     return koktail
 
+def set_average_grade(coctail, ocena, typ):
+    conn = psycopg2.connect('postgresql://joramba:admin@localhost:5432/bazy_danych')
+    cur = conn.cursor()
+    if (typ == 'user'): 
+        cur.execute(f'update "koktajl" set srednia_ocena_użytkownika = \'{ocena}\' where nazwa = \'{coctail}\'')
+    elif (typ == 'somm'):
+        cur.execute(f'update "koktajl" set srednia_ocena_sommeliera = \'{ocena}\' where nazwa = \'{coctail}\'')
+
+    conn.commit()
+    cur.close()
+    conn.close()
+    return 0
+
 def get_odpowiedz_koktajl():
     conn = psycopg2.connect('postgresql://joramba:admin@localhost:5432/bazy_danych')
     cur = conn.cursor()

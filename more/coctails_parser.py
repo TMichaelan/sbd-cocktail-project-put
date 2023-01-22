@@ -115,7 +115,7 @@ def przepis():
     conn.commit()
     cur.close()
     conn.close()
-
+    
 def koktajl():
     conn = psycopg2.connect(db_url)
     cur = conn.cursor()

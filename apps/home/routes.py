@@ -6,7 +6,7 @@ from jinja2 import TemplateNotFound
 import json
 
 
-from apps.db_funcs import get_odpowiedz_koktajl, get_questions,get_questionnaire,get_coctail_sommelier,get_barmans, get_sommeliers, get_coctails
+from apps.db_funcs import set_average_grade, get_odpowiedz_koktajl, get_questions,get_questionnaire,get_coctail_sommelier,get_barmans, get_sommeliers, get_coctails
 import psycopg2
 import random
 
@@ -54,9 +54,12 @@ def index():
 
                 if count_mark != 0:
                     coctails_edited[i][2] = round(mark/count_mark,2)
+                    set_average_grade(coctails_edited[i][0], coctails_edited[i][2], 'user')
                 if count_mark == 0:
                     coctails_edited[i][2] = 0
+                    set_average_grade(coctails_edited[i][0], 0, 'user')
 
+            
             mark1 = 0
             count_mark1 = 0
 
@@ -67,9 +70,10 @@ def index():
 
                 if count_mark1 != 0:
                     coctails_edited[i][3] = round(mark1/count_mark1,2)
+                    set_average_grade(coctails_edited[i][0], coctails_edited[i][3], 'somm')
                 if count_mark1 == 0:
                     coctails_edited[i][3] = 0
-                
+                    set_average_grade(coctails_edited[i][0], 0, 'somm')     
 
         cur.close()
         conn.close()
@@ -215,6 +219,28 @@ def review():
         cur.execute(querry_add_coctail)
 
         conn.commit()
+
+        # mark = 0
+        # count_mark = 0
+
+        # coctails_edited.append([coctails[i][0],coctails[i][1],coctails[i][2],coctails[i][3]])
+        # coctails_edited[i][2] = 'There Are No Ratings Yet'
+        # coctails_edited[i][3] = 'There Are No Ratings Yet'
+
+        # for review in reviews:   
+        #     if review[2]:
+        #         count_mark+=1
+        #         mark += review[2]
+
+        #     if count_mark != 0:
+        #         coctails_edited[i][2] = round(mark/count_mark,2)
+        #         set_average_grade(coctails_edited[i][0], coctails_edited[i][2], 'user')
+        #     if count_mark == 0:
+        #         coctails_edited[i][2] = 0
+        #         set_average_grade(coctails_edited[i][0], 0, 'user')
+
+        
+
         cur.close()
         conn.close()
         return redirect('add_review.html')
