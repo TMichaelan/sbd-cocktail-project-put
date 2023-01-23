@@ -289,7 +289,24 @@
       const adress = formData.get("adres");
       const id = formData.get("id");
 
-      $.ajax({
+      let name_regex = new RegExp(/[a-zA-Z\s]{2,50}/)
+      let phone_regex = new RegExp(/[0-9]{9}/)
+      let adress_regex = new RegExp(/[a-zA-Z0-9\s_-]{4,50}/)
+      
+      if (!name_regex.test(name)){
+        alert('Name is not correct')
+      }
+      else if (!name_regex.test(surname)){
+        alert('Surname is not correct')
+      }
+      else if (!phone_regex.test(phone)){
+        alert('Phone is not correct')
+      }
+      else if (!adress_regex.test(adress)){
+        alert('Adress is not correct')
+      } else {
+
+        $.ajax({
         type: "PUT",
         url: "/modify-barman",
         data: {
@@ -310,6 +327,8 @@
           console.log(error);
         },
       });
+
+      }
     }
   }
 
