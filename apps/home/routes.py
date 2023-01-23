@@ -784,11 +784,11 @@ def modifyReview():
 
 @blueprint.route('/get-barman-data', methods=(['GET']))
 def getBarmanData():
-    name = request.args.get('name')
+    id = request.args.get('id')
     try:
         conn = psycopg2.connect('postgresql://joramba:admin@localhost:5432/bazy_danych')
         cursor = conn.cursor()
-        query = f"SELECT * FROM \"barman\" WHERE imie=\'{name}\'"
+        query = f"SELECT * FROM \"barman\" WHERE id=\'{id}\'"
         cursor.execute(query)
         barman_data = cursor.fetchone()
         cursor.close()
@@ -890,12 +890,12 @@ def getQuestionnaire():
   
 @blueprint.route('/delete-barman', methods=['DELETE'])
 def delete_user():
-    name = request.form.get('name')
+    id = request.form.get('id')
 
     try:
         conn = psycopg2.connect('postgresql://joramba:admin@localhost:5432/bazy_danych')
         cursor = conn.cursor()
-        query = f"DELETE FROM \"barman\" WHERE imie=\'{name}\'"
+        query = f"DELETE FROM \"barman\" WHERE id=\'{id}\'"
         cursor.execute(query)
         conn.commit()
         count = cursor.rowcount
