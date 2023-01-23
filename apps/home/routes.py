@@ -227,41 +227,45 @@ def sommelier():
 @blueprint.route('/add_review.html',methods=('GET', 'POST'))
 def review():
 
-    if request.method == 'POST':
-        coctail = request.form['coctail']
-        questionnaire = request.form['questionnaire']
-        question_text = request.form['question_text']
-        ocena = request.form['ocena']
-        question_text = question_text.replace('\'', '')
+    try:
+        if request.method == 'POST':
+            coctail = request.form['coctail']
+            questionnaire = request.form['questionnaire']
+            question_text = request.form['question_text']
+            ocena = request.form['ocena']
+            question_text = question_text.replace('\'', '')
 
-        conn = psycopg2.connect('postgresql://joramba:admin@localhost:5432/bazy_danych')
-        cur = conn.cursor()
-        querry_add_odpowiedz= 'INSERT INTO \"odpowiedz\" VALUES (\'{}\');'.format(question_text)
-        cur.execute(querry_add_odpowiedz)
-        conn.commit()
+            conn = psycopg2.connect('postgresql://joramba:admin@localhost:5432/bazy_danych')
+            cur = conn.cursor()
+            querry_add_odpowiedz= 'INSERT INTO \"odpowiedz\" VALUES (\'{}\');'.format(question_text)
+            cur.execute(querry_add_odpowiedz)
+            conn.commit()
 
-        querry_add_coctail = 'INSERT INTO \"odpowiedz_koktajl\" VALUES (\'{}\', \'{}\', \'{}\');'.format(question_text, coctail, ocena)
-        cur.execute(querry_add_coctail)
+            querry_add_coctail = 'INSERT INTO \"odpowiedz_koktajl\" VALUES (\'{}\', \'{}\', \'{}\');'.format(question_text, coctail, ocena)
+            cur.execute(querry_add_coctail)
 
-        conn.commit()
+            conn.commit()
 
-        querry_reviews =  "select ocena_uzytkownika FROM \"odpowiedz_koktajl\" WHERE koktajl_nazwa=\'{}\'".format(coctail)
-        cur.execute(querry_reviews)
-        reviews = cur.fetchall()
+            querry_reviews =  "select ocena_uzytkownika FROM \"odpowiedz_koktajl\" WHERE koktajl_nazwa=\'{}\'".format(coctail)
+            cur.execute(querry_reviews)
+            reviews = cur.fetchall()
 
-        reviews_edited = []
-        mark = 0
-        count_mark = 0
-        for i in range(len(reviews)):
-            reviews_edited.append(reviews[i][0])
+            reviews_edited = []
+            mark = 0
+            count_mark = 0
+            for i in range(len(reviews)):
+                reviews_edited.append(reviews[i][0])
 
-        mark = round(sum(reviews_edited)/len(reviews_edited),2)
-        set_average_grade(coctail, mark, 'user')
+            mark = round(sum(reviews_edited)/len(reviews_edited),2)
+            set_average_grade(coctail, mark, 'user')
 
 
-        cur.close()
-        conn.close()
-        return redirect('add_review.html')
+            cur.close()
+            conn.close()
+            return redirect('add_review.html')
+
+    except Exception as err:
+        print(f'error occurred: {err}')
 
     try:
         coctails = get_coctails()
@@ -872,6 +876,23 @@ def getCoctaildata():
         cursor.close()
         conn.close()
         return jsonify(coctail_data), 200
+
+    except (Exception, psycopg2.Error) as error :
+        return jsonify({"error": str(error)}), 500
+
+@blueprint.route('/get_reviews_data', methods=(['GET']))
+def getReviewsData():
+    name = request.args.get('name')
+    try:
+        conn = psycopg2.connect('postgresql://joramba:admin@localhost:5432/bazy_danych')
+        cursor = conn.cursor()
+        query = f"SELECT * FROM \"odpowiedz_koktajl\" WHERE odpowiedz_tekst_odpowiedzi=\'{name}\'"
+        cursor.execute(query)
+        review_data = cursor.fetchone()
+        print(review_data)
+        cursor.close()
+        conn.close()
+        return jsonify(review_data), 200
 
     except (Exception, psycopg2.Error) as error :
         return jsonify({"error": str(error)}), 500
