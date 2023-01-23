@@ -6,17 +6,17 @@ cnt integer:=(select ilosc_produktow from "przepis" where nazwa_przepisa = nazwa
 begin
   	if (cnt >= 0 and cnt <= 2) then 
 		update "przepis"
-		set "notatka" ='Latwe do przygotowania'
+		set "poziom" ='Latwe do przygotowania'
 		where nazwa_przepisa = nazwa;
 	END IF;
 	if (cnt >= 3 and cnt <= 4) then 
 		update "przepis"
-		set "notatka" = 'Srednie do przygotowania'
+		set "poziom" = 'Srednie do przygotowania'
 		where nazwa_przepisa = nazwa;
 	END IF;
   	if (cnt >= 5) then 
 		update "przepis"
-		set "notatka" = 'Trudne do przygotowania'
+		set "poziom" = 'Trudne do przygotowania'
 		where nazwa_przepisa = nazwa;
 	END IF;
 end; 
