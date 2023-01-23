@@ -229,6 +229,7 @@ def review():
         questionnaire = request.form['questionnaire']
         question_text = request.form['question_text']
         ocena = request.form['ocena']
+        question_text = question_text.replace('\'', '')
 
         conn = psycopg2.connect('postgresql://joramba:admin@localhost:5432/bazy_danych')
         cur = conn.cursor()
