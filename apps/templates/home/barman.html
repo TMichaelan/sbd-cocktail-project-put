@@ -289,9 +289,9 @@
       const adress = formData.get("adres");
       const id = formData.get("id");
 
-      let name_regex = new RegExp(/[a-zA-Z\s]{2,50}/)
-      let phone_regex = new RegExp(/[0-9]{9}/)
-      let adress_regex = new RegExp(/[a-zA-Z0-9\s_-]{4,50}/)
+      let name_regex = new RegExp(/^[a-zA-Z\s]{2,50}$/)
+      let phone_regex = new RegExp(/^[0-9]{9}$/)
+      let adress_regex = new RegExp(/^[a-zA-Z0-9\s_-]{4,50}$/)
       let reg = new RegExp(/'|"|^\s*$/)
       
       if (!name_regex.test(name)){
