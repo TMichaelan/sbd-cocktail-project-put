@@ -111,6 +111,13 @@ def przepis():
     except Exception as err:
         print(f'error occurred: {err}')
         conn.rollback()
+    
+    querry_procedure = 'call poziomTrudnosci(\'{}\')'.format(coctail_name)
+    try:
+        cur.execute(querry_procedure)
+    except Exception as err:
+        print(f'error occurred: {err}')
+        conn.rollback()
 
     conn.commit()
     cur.close()
@@ -249,26 +256,6 @@ def user_reviews():
         cur.execute(querry_add_coctail)
         conn.commit()
 
-        # querry_reviews =  "select * FROM \"odpowiedz_koktajl\" WHERE koktajl_nazwa=\'{}\'".format(coctail_name)
-        # cur.execute(querry_reviews)
-        # reviews = cur.fetchall()
-
-        # mark = 0
-        # count_mark = 0
-
-        # for review in reviews:   
-        #     if review[2]:
-        #         count_mark+=1
-        #         mark += review[2]
-
-        # if count_mark != 0:
-        #     coctails_edited[i][2] = round(mark/count_mark,2)
-        # if count_mark == 0:
-        #     coctails_edited[i][2] = 0
-        
-        # querry_insert_correct_user_grade = 'update \"koktajl\" set srednia_ocena_użytkownika = =\'{coctails_edited[i][2]}\' where nazwa=\'{}\''.format(coctail_name)
-        # cur.execute(querry_insert_correct_user_grade)
-        # conn.commit()
 
     cur.close()
     conn.close()

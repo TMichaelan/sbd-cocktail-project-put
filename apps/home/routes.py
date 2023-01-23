@@ -364,11 +364,16 @@ def coctails_cards():
         conn = psycopg2.connect('postgresql://joramba:admin@localhost:5432/bazy_danych')
         cur = conn.cursor()
         querry_add_przepis = 'INSERT INTO \"przepis\" VALUES (\'{}\', \'{}\', \'{}\');'.format(nazwa, count, notatka)
+
         querry_add_coctail = 'INSERT INTO \"koktajl\" VALUES (\'{}\', \'{}\');'.format(nazwa, obraz)
 
         cur.execute(querry_add_przepis)
         cur.execute(querry_add_coctail)
 
+        conn.commit()
+
+        querry_procedure = 'call poziomTrudnosci(\'{}\')'.format(nazwa)
+        cur.execute(querry_procedure)
         conn.commit()
 
         querry_add_category_koktail = 'INSERT INTO \"kategoria_koktajli_koktajl\" VALUES (\'{}\', \'{}\');'.format(category, nazwa)
@@ -416,6 +421,9 @@ def coctails_cards():
             coctails_edited.append([coctails[i][0],coctails[i][1],coctails[i][2],coctails[i][3]])
             coctails_edited[i][2] = 'There Are No Ratings Yet'
 
+            if (coctails_edited[i][3] == None or coctails_edited[i][3] == 0.0):
+                coctails_edited[i][3] = 'There Are No Ratings Yet'
+
             for review in reviews:   
                 if review[2]:
                     count_mark+=1
@@ -425,6 +433,8 @@ def coctails_cards():
                     coctails_edited[i][2] = round(mark/count_mark,2)
                 if count_mark == 0:
                     coctails_edited[i][2] = 0
+            
+
 
         segment = get_segment(request)
         return render_template("home/coctails_cards.html" , segment=segment, users=coctails_edited)

@@ -1,37 +1,24 @@
-CREATE OR REPLACE PROCEDURE "PoziomTrudnosci"()
+CREATE OR REPLACE PROCEDURE poziomTrudnosci(nazwa character)
 language plpgsql
 AS $BODY$
 declare 
-cnt integer:=(select max(id) from "Przepis");
+cnt integer:=(select ilosc_produktow from "przepis" where nazwa_przepisa = nazwa);
 begin
-  while cnt>0 loop
-  	if ((select "ilosc_produktow" from "Przepis" 
-	   where id=cnt) >= 1 and (select "ilosc_produktow" from "Przepis" 
-	   where id=cnt) <= 3) then 
-	   
-		update "Przepis"
-		set "notatka" = "notatka" + 'Latwe do przygotowania'
-		where id=cnt;
-		cnt = cnt - 1;
+  	if (cnt >= 0 and cnt <= 2) then 
+		update "przepis"
+		set "notatka" ='Latwe do przygotowania'
+		where nazwa_przepisa = nazwa;
 	END IF;
-	
-	if ((select "ilosc_produktow" from "Przepis" 
-	   where id=cnt) >= 4 and (select "ilosc_produktow" from "Przepis" 
-	   where id=cnt) <= 5) then 
-	   
-		update "Przepis"
-		set "notatka" = "notatka" + 'Srednie do przygotowania'
-		where id=cnt;
-		cnt = cnt - 1;
+	if (cnt >= 3 and cnt <= 4) then 
+		update "przepis"
+		set "notatka" = 'Srednie do przygotowania'
+		where nazwa_przepisa = nazwa;
 	END IF;
-	if ((select "ilosc_produktow" from "Przepis" 
-	   where id=cnt) >= 6) then
-		update "Przepis"
-		set "notatka" = "notatka" +'Trudne do przygotowania'
-		where id=cnt;
-		cnt = cnt - 1;
+  	if (cnt >= 5) then 
+		update "przepis"
+		set "notatka" = 'Trudne do przygotowania'
+		where nazwa_przepisa = nazwa;
 	END IF;
-  end loop;
 end; 
 $BODY$;
 
