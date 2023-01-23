@@ -727,6 +727,9 @@ def modifyReview():
 
         cursor.close()
         conn.close()
+
+        update_average_grade(coctail)
+
         return jsonify({"message": f"{count} user modified"}), 200
 
     except (Exception, psycopg2.Error) as error :
