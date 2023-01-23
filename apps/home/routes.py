@@ -766,7 +766,6 @@ def getSommelierData():
 @blueprint.route('/get-coctails-data', methods=(['GET']))
 def getCoctailsData():
     name = request.args.get('name')
-    print(name)
 
     try:
         conn = psycopg2.connect('postgresql://joramba:admin@localhost:5432/bazy_danych')
