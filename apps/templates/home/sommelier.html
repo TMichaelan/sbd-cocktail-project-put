@@ -284,8 +284,8 @@
       type: "GET",
       data: { id: id },
       success: function (data) {
-        $("#input-name").val(data.sommelier);
-        $("#input-recenzja").val(data.recenzja);
+        $("#input-name").val(data.sommelier.trim());
+        $("#input-recenzja").val(data.recenzja.trim());
         $("#input-ocena").val(data.grade);
         $("#coctail_modify").val(data.coctail);
         $("#input-id").val(data.id);

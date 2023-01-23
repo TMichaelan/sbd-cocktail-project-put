@@ -193,7 +193,7 @@
             success: function(data) {
                 console.log(data);
                 $("#coctail_modify").val(data.coctail);
-                $("#question_text_modify").val(data.review);
+                $("#question_text_modify").val(data.review.trim());
                 $("#ocena_modify").val(data.grade);
                 $("#input-id").val(data.id)
                 $("#modify-form").show();
@@ -244,7 +244,6 @@
           }
         },
         error: function(error) {
-            // handle error response here
             console.log(error);
       }
     });
