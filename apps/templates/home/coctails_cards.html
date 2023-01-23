@@ -119,6 +119,7 @@
                     placeholder="Count"
                     min="1"
                     max="15"
+                    value="1"
                     required
                   />
                 </div>
@@ -283,6 +284,24 @@
     </div>
   </div>
 </div>
+
+
+<script>
+  
+for (let i = 0; i < 1; i++) {
+
+document.querySelector(".ingredients").innerHTML += `
+  <div class="form-group">
+    <label for="ingredient${i}">Ingredient ${i + 1}: </label>
+    <input name="ingredient${i}" type="text" title="4 to 50 characters, letters only" class="count" placeholder="Ingredient" pattern="[a-zA-Z\s_-]{4,50}" required>
+    <label for="measure${i}">Measure: </label>
+    <input name="measure${i}" type="text" class="count" placeholder="Measure" title="Use format: 1/2, 3/4" required>
+  </div>
+`;
+}
+
+</script>
+
 <script>
   function modifyCoctail() {
     // if (confirm("Are you sure you want to modify this post?")) {
@@ -436,6 +455,16 @@
   const count = document.querySelector(".count");
   count.addEventListener("change", (e) => {
     document.querySelector(".ingredients").innerHTML = "";
+
+    count.addEventListener("input", function() {
+
+      if (this.value > 15) {
+          this.value = 15;
+      }
+      else if (this.value <= 0) {
+          this.value = 1;
+      }
+      });
 
     for (let i = 0; i < e.target.value; i++) {
       document.querySelector(".ingredients").innerHTML += `
