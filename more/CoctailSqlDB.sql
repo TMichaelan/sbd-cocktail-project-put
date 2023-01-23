@@ -33,16 +33,8 @@ CREATE TABLE IF NOT EXISTS public.barman
     nazwisko character(255) COLLATE pg_catalog."default" NOT NULL,
     numer_telefonu character(255) COLLATE pg_catalog."default" NOT NULL,
     adres character(255) COLLATE pg_catalog."default" NOT NULL,
-    id bigserial NOT NULL,
-    CONSTRAINT barman_pkey PRIMARY KEY (imie)
-);
-
-CREATE TABLE IF NOT EXISTS public.barman_koktajl
-(
-    barman_imie character(255) COLLATE pg_catalog."default" NOT NULL,
-    koktajl_nazwa character(255) COLLATE pg_catalog."default" NOT NULL,
-    id bigint NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 9223372036854775807 CACHE 1 ),
-    CONSTRAINT "barman_Koktajl_pkey" PRIMARY KEY (id)
+	id bigserial NOT NULL,
+    CONSTRAINT barman_pkey PRIMARY KEY (id)
 );
 
 CREATE TABLE IF NOT EXISTS public.czynnosc
@@ -148,6 +140,12 @@ CREATE TABLE IF NOT EXISTS public.sommelier
     CONSTRAINT "PK_sommelier" PRIMARY KEY (pseudonim)
 );
 
+CREATE TABLE IF NOT EXISTS public.barman_koktajl
+(
+    barman_id bigint NOT NULL DEFAULT nextval('barman_id_seq'::regclass),
+    koktajl_nazwa character(255) COLLATE pg_catalog."default" NOT NULL
+);
+
 ALTER TABLE IF EXISTS public.ankieta_pytanie
     ADD CONSTRAINT ankieta_pytanie_ankieta_nazwa_fkey FOREIGN KEY (ankieta_nazwa)
     REFERENCES public.ankieta (nazwa) MATCH SIMPLE
@@ -159,22 +157,6 @@ ALTER TABLE IF EXISTS public.ankieta_pytanie
 ALTER TABLE IF EXISTS public.ankieta_pytanie
     ADD CONSTRAINT ankieta_pytanie_pytanie_nazwa_pytanie_fkey FOREIGN KEY (pytanie_nazwa_pytanie)
     REFERENCES public.pytanie (nazwa_pytanie) MATCH SIMPLE
-    ON UPDATE NO ACTION
-    ON DELETE NO ACTION
-    NOT VALID;
-
-
-ALTER TABLE IF EXISTS public.barman_koktajl
-    ADD CONSTRAINT "barman_Koktajl_Koktajl_nazwa_fkey" FOREIGN KEY (koktajl_nazwa)
-    REFERENCES public.koktajl (nazwa) MATCH SIMPLE
-    ON UPDATE NO ACTION
-    ON DELETE NO ACTION
-    NOT VALID;
-
-
-ALTER TABLE IF EXISTS public.barman_koktajl
-    ADD CONSTRAINT "barman_Koktajl_barman_imie_fkey" FOREIGN KEY (barman_imie)
-    REFERENCES public.barman (imie) MATCH SIMPLE
     ON UPDATE NO ACTION
     ON DELETE NO ACTION
     NOT VALID;
@@ -265,6 +247,22 @@ ALTER TABLE IF EXISTS public.skladnik_przepis
 ALTER TABLE IF EXISTS public.skladnik_przepis
     ADD CONSTRAINT skladnik_przepis_skladnik_nazwa_skladnika_fkey FOREIGN KEY (skladnik_nazwa_skladnika)
     REFERENCES public.skladnik (nazwa_skladnika) MATCH SIMPLE
+    ON UPDATE NO ACTION
+    ON DELETE NO ACTION
+    NOT VALID;
+
+
+ALTER TABLE IF EXISTS public.barman_koktajl
+    ADD FOREIGN KEY (barman_id)
+    REFERENCES public.barman (id) MATCH SIMPLE
+    ON UPDATE NO ACTION
+    ON DELETE NO ACTION
+    NOT VALID;
+
+
+ALTER TABLE IF EXISTS public.barman_koktajl
+    ADD FOREIGN KEY (koktajl_nazwa)
+    REFERENCES public.koktajl (nazwa) MATCH SIMPLE
     ON UPDATE NO ACTION
     ON DELETE NO ACTION
     NOT VALID;
