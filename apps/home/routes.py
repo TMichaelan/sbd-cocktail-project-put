@@ -356,8 +356,11 @@ def coctails_cards():
         obraz = request.form['obraz']
         category = request.form['coctail']
         notatka = request.form['notatka']
-        count = request.form['count']
+        notatka = notatka.replace('\'', '')
         
+        count = request.form['count']
+
+
         if (len(obraz) == 0):
             obraz = 'https://st4.depositphotos.com/14953852/22772/v/600/depositphotos_227725020-stock-illustration-image-available-icon-flat-vector.jpg'
 
@@ -448,36 +451,6 @@ def coctails_cards():
 def delete_review():
     name = request.form.get('name')
 
-    # conn = psycopg2.connect('postgresql://joramba:admin@localhost:5432/bazy_danych')
-    # cursor = conn.cursor()
-    # query = f"DELETE FROM \"odpowiedz_koktajl\" WHERE odpowiedz_tekst_odpowiedzi=\'{name}\'"
-    # querry_delete_review = f"DELETE FROM \"odpowiedz\" WHERE tekst_odpowiedzi=\'{name}\'"
-    # cursor.execute(query)
-    # conn.commit()
-
-    # cursor.execute(querry_delete_review)
-    # conn.commit()
-
-    # querry_reviews =  "select ocena_uzytkownika FROM \"odpowiedz_koktajl\" WHERE koktajl_nazwa=\'{}\'".format(name)
-    # cursor.execute(querry_reviews)
-    # reviews = cursor.fetchall()
-
-    # reviews_edited = []
-    # mark = 0
-    # count_mark = 0
-    # for i in range(len(reviews)):
-    #     reviews_edited.append(reviews[i][0])
-
-    # print(reviews_edited)
-
-    # mark = round(sum(reviews_edited)/len(reviews_edited),2)
-    # set_average_grade(name, mark, 'user')
-
-    # count = cursor.rowcount
-    # cursor.close()
-    # conn.close()
-    # return jsonify({"message": f"{count} user deleted"}), 200
-
     try:
         conn = psycopg2.connect('postgresql://joramba:admin@localhost:5432/bazy_danych')
         cursor = conn.cursor()
@@ -488,19 +461,6 @@ def delete_review():
 
         cursor.execute(querry_delete_review)
         conn.commit()
-
-        # querry_reviews =  "select ocena_uzytkownika FROM \"odpowiedz_koktajl\" WHERE koktajl_nazwa=\'{}\'".format(coctail)
-        # cur.execute(querry_reviews)
-        # reviews = cur.fetchall()
-
-        # reviews_edited = []
-        # mark = 0
-        # count_mark = 0
-        # for i in range(len(reviews)):
-        #     reviews_edited.append(reviews[i][0])
-
-        # mark = round(sum(reviews_edited)/len(reviews_edited),2)
-        # set_average_grade(coctail, mark, 'user')
 
         count = cursor.rowcount
         cursor.close()
@@ -760,19 +720,6 @@ def modifyReview():
         cursor.execute(query)
         conn.commit()
         count = cursor.rowcount
-
-        # querry_reviews =  "select ocena_uzytkownika FROM \"odpowiedz_koktajl\" WHERE koktajl_nazwa=\'{}\'".format(coctail)
-        # cur.execute(querry_reviews)
-        # reviews = cur.fetchall()
-
-        # reviews_edited = []
-        # mark = 0
-        # count_mark = 0
-        # for i in range(len(reviews)):
-        #     reviews_edited.append(reviews[i][0])
-
-        # mark = round(sum(reviews_edited)/len(reviews_edited),2)
-        # set_average_grade(coctail, mark, 'user')
 
         cursor.close()
         conn.close()
