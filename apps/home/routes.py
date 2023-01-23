@@ -102,7 +102,7 @@ def product_page(coctail_name):
     except Exception as err:
         print(f'error occurred: {err}')
 
-    
+
     try:
         conn = psycopg2.connect('postgresql://joramba:admin@localhost:5432/bazy_danych')
         cur = conn.cursor()
@@ -124,14 +124,6 @@ def product_page(coctail_name):
         cur.execute(querry_reviews)
         reviews = cur.fetchall()
 
-
-        querry_average_grade = "select srednia_ocena(\'{}\')".format(coctail_name)
-        cur.execute(querry_average_grade)
-        grade = cur.fetchone()
-        
-        grade = round(grade[0], 2)
-
-
         mark = 0
         count_mark = 0
         for review in reviews:
@@ -139,20 +131,18 @@ def product_page(coctail_name):
                 count_mark+=1
                 mark += review[2]
 
-        print(coctail[2])
-        print(coctail[3])
-
-        coctail_edited = [coctail[0],coctail[1],coctail[2],coctail[3], grade]
-
-        if count_mark != 0:
-            coctail_edited[2] = round(mark/count_mark,2)
-        else:
-            coctail_edited[2] = 'There are no ratings yet'
 
         querry_average_grade = "select srednia_ocena(\'{}\')".format(coctail_name)
         cur.execute(querry_average_grade)
         grade = cur.fetchone()
+        grade = grade[0]
 
+        if (grade == None):
+            grade = 'There Are No Ratings Yet'
+        else:
+            grade = round(grade, 2)
+
+        coctail_edited = [coctail[0],coctail[1],coctail[2],coctail[3], grade]
 
         querry_sommielier =  "select * FROM \"koktajl_sommelier\" WHERE koktajl_nazwa=\'{}\'".format(coctail_name)
         cur.execute(querry_sommielier)
@@ -161,13 +151,20 @@ def product_page(coctail_name):
         querry_koktail =  "select * FROM \"koktajl\" WHERE nazwa=\'{}\'".format(coctail_name)
         cur.execute(querry_koktail)
         koktails = cur.fetchone()
-        
+
+        koktail_edited = [koktails[0],koktails[1],koktails[2],koktails[3]]
+
+        if(koktail_edited[2] == None):
+            koktail_edited[2] = 'There Are no ratings yet'
+
+        if(koktail_edited[3] == None):
+            koktail_edited[3] = 'There Are no ratings yet'
         cur.close()
         conn.close()
     except Exception as err:
         print(f'error occurred: {err}')
     
-    return render_template('home/coctail.html', coctail=coctail_edited, recipe=recipe, ingredients = ingredients, category= category, reviews=reviews, sommeliers=sommeliers, koktails = koktails)
+    return render_template('home/coctail.html', coctail=coctail_edited, recipe=recipe, ingredients = ingredients, category= category, reviews=reviews, sommeliers=sommeliers, koktails = koktail_edited)
 
 @blueprint.route('/sommelier.html',methods=('GET', 'POST'))
 def sommelier():
