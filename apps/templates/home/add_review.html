@@ -126,7 +126,7 @@
                       <label for="question_text">Review: </label>
                       <textarea id="question_text_modify" name="question_text" rows="4" cols="80" class="form-control" placeholder="Enter the Question"></textarea>
                       <label for="ocena">Ocena</label>
-                      <input id="ocena_modify" name="ocena" type="number" class="form-control" placeholder="Grade" min="1" max="5">
+                      <input id="ocena_modify" name="ocena" type="number" class="form-control" placeholder="Grade" min="0" max="5">
                   </div>
                 </div>
               </div>
@@ -182,6 +182,15 @@
       return false;
     }
   }
+
+  var count = document.querySelector("#ocena_modify");
+    count.addEventListener("input", function() {
+        if (this.value > 5) {
+            this.value = 5;
+        } else if (this.value < 0){
+          this.value = 0;
+        }
+    });
 
   function getReviewData(id) {
         id = decodeURIComponent(id);
@@ -287,12 +296,10 @@
         <label for="question_text">Review: </label>
         <textarea name="question_text" rows="4" cols="80" class="form-control" placeholder="Enter the Question"></textarea>
         <label for="ocena">Ocena</label>
-        <input name="ocena" type="number" class="form-control" placeholder="Grade" min="1" max="5">
+        <input name="ocena" type="number" class="form-control" placeholder="Grade" min="0" max="5">
     </div>
   `;
   }
-
-  
 
   questionnaire.addEventListener("change", (e) => {
     createReviewForm();
