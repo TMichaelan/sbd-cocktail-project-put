@@ -32,6 +32,64 @@ def set_average_grade(coctail, ocena, typ):
     conn.close()
     return 0
 
+def update_average_grade(coctail_name):
+    conn = psycopg2.connect('postgresql://joramba:admin@localhost:5432/bazy_danych')
+    cur = conn.cursor()
+
+    user_grades_query = f'select ocena_uzytkownika from "odpowiedz_koktajl" where koktajl_nazwa = \'{coctail_name}\''
+    somm_grades_query = f'select ocena from "koktajl_sommelier" where koktajl_nazwa = \'{coctail_name}\''
+
+    user_grade = 0
+    somm_grade = 0
+    try:
+        cur.execute(user_grades_query)
+        user_grades = cur.fetchall()
+        user_grades_edited = []
+
+        for i in range(len(user_grades)):
+            user_grades_edited.append(user_grades[i][0])
+
+        if len(user_grades_edited) != 0:
+            user_grade = round(sum(user_grades_edited)/len(user_grades_edited),2)
+
+
+    except Exception as err:
+        print(f'error occurred: {err}')
+        conn.rollback()   
+
+    try:
+        cur.execute(somm_grades_query)
+        somm_grades = cur.fetchall()
+        somm_grades_edited = []
+
+        for i in range(len(somm_grades)):
+            somm_grades_edited.append(somm_grades[i][0])
+
+        if len(somm_grades_edited) != 0:
+            somm_grade = round(sum(somm_grades_edited)/len(somm_grades_edited),2)
+        
+    except Exception as err:
+        print(f'error occurred: {err}')
+        conn.rollback()   
+
+
+    try:
+        cur.execute(f'update "koktajl" set srednia_ocena_użytkownika = \'{user_grade}\' where nazwa = \'{coctail_name}\'')
+    except Exception as err:
+        print(f'error occurred: {err}')
+        conn.rollback()  
+    try:
+        cur.execute(f'update "koktajl" set srednia_ocena_sommeliera = \'{somm_grade}\' where nazwa = \'{coctail_name}\'')
+
+    except Exception as err:
+        print(f'error occurred: {err}')
+        conn.rollback()  
+
+    conn.commit()
+    cur.close()
+    conn.close()
+    return 0
+
 def get_odpowiedz_koktajl():
     conn = psycopg2.connect('postgresql://joramba:admin@localhost:5432/bazy_danych')
     cur = conn.cursor()

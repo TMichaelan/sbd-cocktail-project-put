@@ -6,7 +6,7 @@ from jinja2 import TemplateNotFound
 import json
 
 
-from apps.db_funcs import set_average_grade, get_odpowiedz_koktajl, get_questions,get_questionnaire,get_coctail_sommelier,get_barmans, get_sommeliers, get_coctails
+from apps.db_funcs import update_average_grade,set_average_grade, get_odpowiedz_koktajl, get_questions,get_questionnaire,get_coctail_sommelier,get_barmans, get_sommeliers, get_coctails
 import psycopg2
 import random
 
@@ -75,6 +75,7 @@ def index():
                     coctails_edited[i][3] = 0
                     # set_average_grade(coctails_edited[i][0], 0, 'somm')     
 
+        update_average_grade(coctails[i][0])
         cur.close()
         conn.close()
 
@@ -87,6 +88,8 @@ def index():
 def product_page(coctail_name):
     
     coctail_name =  " ".join(coctail_name.split('-')).replace('\'', '').replace('\"', '')
+
+    update_average_grade(coctail_name)
 
     try:
         conn = psycopg2.connect('postgresql://joramba:admin@localhost:5432/bazy_danych')
@@ -464,7 +467,7 @@ def delete_review():
 
         count = cursor.rowcount
         cursor.close()
-        conn.close()
+        conn.close()    
         return jsonify({"message": f"{count} user deleted"}), 200
     except (Exception, psycopg2.Error) as error :
         return jsonify({"error": str(error)}), 500
