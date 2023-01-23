@@ -205,8 +205,24 @@
 
                 questionnaireModify.addEventListener("change", (e) => {
                   console.log(questionnaireModify.value);
-                  getQuestionnaires(questionnaire.value)
-            });
+                  $.ajax({
+                  url: '/get-questionnaire-data',
+                  type: "GET",
+                  data: {name: questionnaireModify.value},
+                  success: function(data) {
+                    console.log(data.questions);
+                    questionsModify.innerHTML = ``;
+                    for(let i=0; i < data.questions.length; i++){
+                      questionsModify.innerHTML += `
+                        <li><label for="question_name">${data.questions[i][1]}</label></li>
+                      `
+                    }
+                  },
+                  error: function(error) {
+                      console.log(error);
+                  }
+                  });
+                });
             },
             error: function(error) {
                 console.log(error);
@@ -220,10 +236,10 @@
         type: "GET",
         data: {name: name},
         success: function(data) {
-          console.log(data);
-          for(let i=0; i <data.length; i++){
+          console.log(data.questions);
+          for(let i=0; i < data.questions.length; i++){
             document.querySelector('.questions').innerHTML += `
-              <li><label for="question_name">${data[i][1]}</label></li>
+              <li><label for="question_name">${data.questions[i][1]}</label></li>
             `
           }
         },
