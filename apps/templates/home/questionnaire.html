@@ -69,9 +69,9 @@
                     type="number"
                     class="count"
                     placeholder="Count"
-                    min="0"
+                    min="1"
                     max="10"
-                    value="0"
+                    value="1"
                   />
                 </div>
               </div>
@@ -173,7 +173,20 @@
     </div>
   </div>
 </div>
-
+<script>
+  for (let i = 0; i < 1; i++) {
+      document.querySelector(".questions").innerHTML += `
+        <div class="form-group">
+          <label for="question_name${i}">Name of Question ${i + 1}: </label>
+          <input name="question_name${i}" type="text" class="count" placeholder="Name of Question" pattern="[a-zA-Z0-9\\s_-]{4,50}" title="4 to 50 characters, letters and numbers only" required>
+          <div class="form-group">
+            <label for="question_text${i}">Text: </label>
+            <textarea name="question_text${i}" rows="3" cols="50" class="form-control" placeholder="Enter the Question"></textarea>
+          </div>
+        </div>
+      `;
+    }
+</script>
 <script>
   function checkPK(id) {
     const input = document.querySelector(`#${id}`);
@@ -240,9 +253,21 @@
   }
 
   const count = document.querySelector(".count");
+
+  count.addEventListener("input", function() {
+
+        if (this.value > 10) {
+            this.value = 10;
+        }
+        else if (this.value <= 0) {
+            this.value = 1;
+        }
+    });
+
   count.addEventListener("change", (e) => {
-    console.log(e.target.value);
     document.querySelector(".questions").innerHTML = "";
+
+    
 
     for (let i = 0; i < e.target.value; i++) {
       document.querySelector(".questions").innerHTML += `
